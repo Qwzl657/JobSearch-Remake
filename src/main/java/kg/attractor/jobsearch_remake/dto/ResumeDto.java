@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-    private Long id;
-    private String username;
-    private String email;
-    private String phoneNumber;
-
+public class ResumeDto {
+    private Integer id;
+    private String name;
+    private Integer categoryId;
+    private double salary;
+    private boolean isActive;
 }
