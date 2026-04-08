@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    // Исправление: принимаем UserDto и возвращаем созданный объект
+
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        // Здесь будет вызов сервиса: userService.save(userDto);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
-    // Исправление: поиск конкретного работодателя по ID через PathVariable
+
     @GetMapping("/employers/{id}")
     public ResponseEntity<UserDto> findEmployer(@PathVariable Long id) {
-        // Поиск...
+
         return ResponseEntity.ok(new UserDto()); // Возвращаем объект, а не строку
     }
 
-    // Исправление: поиск соискателя по ID
+
     @GetMapping("/applicants/{id}")
     public ResponseEntity<UserDto> findApplicant(@PathVariable Long id) {
         return ResponseEntity.ok(new UserDto());
