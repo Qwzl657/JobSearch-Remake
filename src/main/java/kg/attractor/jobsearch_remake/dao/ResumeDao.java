@@ -4,16 +4,22 @@ import kg.attractor.jobsearch_remake.model.Resume;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class ResumeDao {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public List<Resume> findAll() {
+        return jdbcTemplate.query(
+                "SELECT * FROM resumes",
+                new BeanPropertyRowMapper<>(Resume.class)
+        );
+    }
 
     public List<Resume> findByCategory(Integer categoryId) {
         String sql = "SELECT * FROM resumes WHERE category_id = ?";
@@ -23,9 +29,9 @@ public class ResumeDao {
 
     public void create(Resume r) {
         String sql = """
-        INSERT INTO resumes (applicant_id, name, category_id, salary, is_active)
-        VALUES (?, ?, ?, ?, ?)
-    """;
+                INSERT INTO resumes (applicant_id, name, category_id, salary, is_active)
+                VALUES (?, ?, ?, ?, ?)
+                """;
 
         jdbcTemplate.update(sql,
                 r.getApplicantId(),
@@ -37,10 +43,10 @@ public class ResumeDao {
 
     public void update(Resume r) {
         String sql = """
-        UPDATE resumes
-        SET name=?, category_id=?, salary=?, is_active=?
-        WHERE id=?
-    """;
+                UPDATE resumes
+                SET name=?, category_id=?, salary=?, is_active=?
+                WHERE id=?
+                """;
 
         jdbcTemplate.update(sql,
                 r.getName(),
