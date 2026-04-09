@@ -4,20 +4,22 @@ import kg.attractor.jobsearch_remake.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class UserDao {
 
     private final JdbcTemplate jdbcTemplate;
 
     public List<User> findAll() {
-        String sql = "SELECT * FROM users";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
+        return jdbcTemplate.query(
+                "SELECT * FROM users",
+                new BeanPropertyRowMapper<>(User.class)
+        );
     }
 
     public Optional<User> findByEmail(String email) {
@@ -28,21 +30,20 @@ public class UserDao {
         return users.stream().findFirst();
     }
 
-    public List<User> findByName(String name) {
-        String sql = "SELECT * FROM users WHERE name = ?";
-        return jdbcTemplate.query(sql,
-                new BeanPropertyRowMapper<>(User.class), name);
-    }
+    public void create(User u) {
+        String sql = """
+                INSERT INTO users (name, surname, age, email, password, phone_number, avatar, account_type)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """;
 
-    public List<User> findByPhone(String phone) {
-        String sql = "SELECT * FROM users WHERE phone = ?";
-        return jdbcTemplate.query(sql,
-                new BeanPropertyRowMapper<>(User.class), phone);
-    }
-
-    public boolean existsByEmail(String email) {
-        String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
-        return count != null && count > 0;
+        jdbcTemplate.update(sql,
+                u.getName(),
+                u.getSurname(),
+                u.getAge(),
+                u.getEmail(),
+                u.getPassword(),
+                u.getPhoneNumber(),
+                u.getAvatar(),
+                u.getAccountType());
     }
 }
