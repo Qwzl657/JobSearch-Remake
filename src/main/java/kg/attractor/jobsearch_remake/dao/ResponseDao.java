@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.dao;
 
+import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.model.Vacancy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -28,5 +29,16 @@ public class ResponseDao {
 
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(Vacancy.class), userId);
+    }
+
+    public List<User> findUsersByVacancyId(Long vacancyId) {
+        String sql = """
+                SELECT u.* FROM users u
+                JOIN responses r ON u.id = r.user_id
+                WHERE r.vacancy_id = ?
+                """;
+
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(User.class), vacancyId);
     }
 }
