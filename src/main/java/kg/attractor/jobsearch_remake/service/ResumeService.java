@@ -1,4 +1,4 @@
-package kg.attractor.jobsearch_remake.service.impl;
+package kg.attractor.jobsearch_remake.service;
 
 import kg.attractor.jobsearch_remake.dao.ResumeDao;
 import kg.attractor.jobsearch_remake.model.Resume;
