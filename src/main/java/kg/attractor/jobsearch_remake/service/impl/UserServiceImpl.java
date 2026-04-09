@@ -7,8 +7,6 @@ import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -20,12 +18,32 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .username("test")
                 .email("test@mail.com")
-                .password("123")
+                .phoneNumber("123")
                 .build();
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userDao.findAll();
+    public void create(UserDto dto) {
+        User user = User.builder()
+                .name(dto.getUsername())
+                .email(dto.getEmail())
+                .phoneNumber(dto.getPhoneNumber())
+                .build();
+
+        userDao.create(user);
+    }
+
+    @Override
+    public UserDto findById(Long id) {
+        return userDao.findAll().stream()
+                .filter(u -> u.getId().longValue() == id)
+                .findFirst()
+                .map(u -> UserDto.builder()
+                        .id(u.getId().longValue())
+                        .username(u.getName())
+                        .email(u.getEmail())
+                        .phoneNumber(u.getPhoneNumber())
+                        .build())
+                .orElse(null);
     }
 }
