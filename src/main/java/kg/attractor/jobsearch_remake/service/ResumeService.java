@@ -15,6 +15,9 @@ import java.util.List;
 public class ResumeService {
 
     private final ResumeDao resumeDao;
+    private final WorkExperienceInfoService workExperienceInfoService;
+    private final EducationInfoService educationInfoService;
+    private final ContactInfoService contactInfoService;
 
     public List<ResumeDto> getAllDto() {
         log.info("Fetching all resumes");
@@ -50,13 +53,20 @@ public class ResumeService {
     public void create(ResumeDto dto) {
         log.info("Creating resume: {}", dto.getName());
         Resume r = Resume.builder()
-                .applicantId(dto.getApplicantId()) // больше не захардкожен
+                .applicantId(dto.getApplicantId())
                 .name(dto.getName())
                 .categoryId(dto.getCategoryId())
                 .salary(dto.getSalary())
                 .isActive(dto.isActive())
                 .build();
-        resumeDao.create(r);
+
+
+        Integer resumeId = resumeDao.createAndReturnId(r);
+
+
+        workExperienceInfoService.createForResume(resumeId, dto.getWorkExperienceInfos());
+        educationInfoService.createForResume(resumeId, dto.getEducationInfos());
+        contactInfoService.createForResume(resumeId, dto.getContactInfos());
     }
 
     public void update(Integer id, ResumeDto dto) {
@@ -69,10 +79,19 @@ public class ResumeService {
                 .isActive(dto.isActive())
                 .build();
         resumeDao.update(r);
+
+
+        workExperienceInfoService.updateForResume(id, dto.getWorkExperienceInfos());
+        educationInfoService.updateForResume(id, dto.getEducationInfos());
+        contactInfoService.updateForResume(id, dto.getContactInfos());
     }
 
     public void delete(Integer id) {
         log.warn("Deleting resume id: {}", id);
+
+        workExperienceInfoService.deleteByResumeId(id);
+        educationInfoService.deleteByResumeId(id);
+        contactInfoService.deleteByResumeId(id);
         resumeDao.delete(id);
     }
 
@@ -86,6 +105,9 @@ public class ResumeService {
                 .isActive(r.isActive())
                 .createdDate(r.getCreatedDate())
                 .updateTime(r.getUpdateTime())
+                .workExperienceInfos(workExperienceInfoService.getByResumeId(r.getId()))
+                .educationInfos(educationInfoService.getByResumeId(r.getId()))
+                .contactInfos(contactInfoService.getByResumeId(r.getId()))
                 .build();
     }
 }
