@@ -5,8 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -87,4 +91,25 @@ public class ResumeDao {
     public void delete(Integer id) {
         jdbcTemplate.update("DELETE FROM resumes WHERE id = ?", id);
     }
+
+    public Integer createAndReturnId(Resume r) {
+        String sql = """
+            INSERT INTO resumes (applicant_id, name, category_id, salary, is_active, created_date, update_time)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """;
+        jdbcTemplate.update(sql,
+                r.getApplicantId(),
+                r.getName(),
+                r.getCategoryId(),
+                r.getSalary(),
+                r.isActive(),
+                LocalDate.now(),
+                LocalDate.now()
+        );
+        return jdbcTemplate.queryForObject(
+                "SELECT MAX(id) FROM resumes",
+                Integer.class
+        );
+    }
+
 }
