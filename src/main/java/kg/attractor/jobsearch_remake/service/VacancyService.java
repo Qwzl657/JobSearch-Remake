@@ -18,7 +18,6 @@ import java.util.List;
 public class VacancyService {
 
     private final VacancyDao vacancyDao;
-    private final ResponseDao responseDao;
 
     public List<VacancyDto> getAllDto() {
         log.info("Fetching all vacancies");
@@ -56,18 +55,6 @@ public class VacancyService {
         return vacancyDao.findByAuthorId(authorId).stream()
                 .map(this::toDto)
                 .toList();
-    }
-
-    public List<UserDto> getApplicants(Long vacancyId) {
-        log.info("Fetching applicants for vacancy id: {}", vacancyId);
-        return responseDao.findUsersByVacancyId(vacancyId).stream()
-                .map(this::toUserDto)
-                .toList();
-    }
-
-    public void respond(Long userId, Long vacancyId) {
-        log.info("User id: {} responding to vacancy id: {}", userId, vacancyId);
-        responseDao.respond(userId, vacancyId);
     }
 
     public void create(VacancyDto dto) {
@@ -118,15 +105,6 @@ public class VacancyService {
                 .authorId(v.getAuthorId())
                 .createdDate(v.getCreatedDate())
                 .updateTime(v.getUpdateTime())
-                .build();
-    }
-
-    private UserDto toUserDto(User u) {
-        return UserDto.builder()
-                .id(u.getId().longValue())
-                .username(u.getName() + " " + u.getSurname())
-                .email(u.getEmail())
-                .phoneNumber(u.getPhoneNumber())
                 .build();
     }
 }
