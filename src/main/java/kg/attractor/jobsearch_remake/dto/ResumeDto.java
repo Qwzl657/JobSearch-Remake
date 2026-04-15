@@ -1,5 +1,8 @@
 package kg.attractor.jobsearch_remake.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +17,19 @@ import java.util.List;
 @NoArgsConstructor
 public class ResumeDto {
     private Integer id;
+
+    @NotNull(message = "Applicant is required")
     private Integer applicantId;
+
+    @NotBlank(message = "Resume name cannot be blank")
     private String name;
+
+    @NotNull(message = "Category is required")
     private Integer categoryId;
+
+    @Positive(message = "Salary must be positive")
     private double salary;
+
     private boolean isActive;
     private LocalDate createdDate;
     private LocalDate updateTime;
