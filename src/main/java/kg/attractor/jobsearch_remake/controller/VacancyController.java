@@ -17,6 +17,36 @@ public class VacancyController {
 
     private final VacancyService vacancyService;
 
+    @GetMapping
+    public ResponseEntity<List<VacancyDto>> getAllVacancies() {
+        return ResponseEntity.ok(vacancyService.getAllDto());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VacancyDto> getVacancyById(@PathVariable Integer id) {
+        return ResponseEntity.ok(vacancyService.getById(id));
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<VacancyDto>> getByAuthor(@PathVariable Integer authorId) {
+        return ResponseEntity.ok(vacancyService.getByAuthor(authorId));
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<VacancyDto>> getVacanciesByCategory(@PathVariable Integer id) {
+        return ResponseEntity.ok(vacancyService.getByCategory(id));
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<VacancyDto>> getActiveVacancies() {
+        return ResponseEntity.ok(vacancyService.getActive());
+    }
+
+    @GetMapping("/{id}/applicants")
+    public ResponseEntity<List<UserDto>> getApplicantsByVacancy(@PathVariable Long id) {
+        return ResponseEntity.ok(vacancyService.getApplicants(id));
+    }
+
     @PostMapping
     public ResponseEntity<VacancyDto> createVacancy(@RequestBody VacancyDto vacancyDto) {
         vacancyService.create(vacancyDto);
@@ -37,29 +67,9 @@ public class VacancyController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<VacancyDto>> getAllVacancies() {
-        return ResponseEntity.ok(vacancyService.getAllDto());
-    }
-
-    @GetMapping("/category/{id}")
-    public ResponseEntity<List<VacancyDto>> getVacanciesByCategory(@PathVariable Integer id) {
-        return ResponseEntity.ok(vacancyService.getByCategory(id));
-    }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<VacancyDto>> getActiveVacancies() {
-        return ResponseEntity.ok(vacancyService.getActive());
-    }
-
-    @GetMapping("/{id}/applicants")
-    public ResponseEntity<List<UserDto>> getApplicantsByVacancy(@PathVariable Long id) {
-        return ResponseEntity.ok(vacancyService.getApplicants(id));
-    }
-
     @PostMapping("/{id}/respond")
     public ResponseEntity<Void> respondToVacancy(@PathVariable Long id) {
-        Long userId = 1L; // пока захардкодил (потом будет auth)
+        Long userId = 1L;
         vacancyService.respond(userId, id);
         return ResponseEntity.ok().build();
     }
