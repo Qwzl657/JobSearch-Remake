@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,4 +21,6 @@ public class VacancyDto {
     private Integer expTo;
     private boolean isActive;
     private Integer authorId;
+    private LocalDate createdDate;
+    private LocalDate updateTime;
 }
