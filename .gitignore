@@ -35,3 +35,10 @@ build/
 *.xml
 *.iml
 /.idea
+
+# Логи приложения
+/logs/
+*.log
+
+# Файлы дампов памяти и ошибок Java
+hs_err_pid*
