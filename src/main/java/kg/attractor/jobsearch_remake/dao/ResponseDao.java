@@ -16,17 +16,16 @@ public class ResponseDao {
     private final JdbcTemplate jdbcTemplate;
 
     public void respond(Long userId, Long vacancyId) {
-        String sql = "INSERT INTO responses (user_id, vacancy_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, userId, vacancyId);
+        String sql = "INSERT INTO responded_applicants (resume_id, vacancy_id, confirmation) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, userId, vacancyId, false);
     }
 
-    public List<Vacancy> findUserVacancies(Long userId) {
+    public List<Vacancy> findVacanciesByUserId(Long userId) {
         String sql = """
                 SELECT v.* FROM vacancies v
-                JOIN responses r ON v.id = r.vacancy_id
-                WHERE r.user_id = ?
+                JOIN responded_applicants r ON v.id = r.vacancy_id
+                WHERE r.resume_id = ?
                 """;
-
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(Vacancy.class), userId);
     }
@@ -34,10 +33,9 @@ public class ResponseDao {
     public List<User> findUsersByVacancyId(Long vacancyId) {
         String sql = """
                 SELECT u.* FROM users u
-                JOIN responses r ON u.id = r.user_id
+                JOIN responded_applicants r ON u.id = r.resume_id
                 WHERE r.vacancy_id = ?
                 """;
-
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(User.class), vacancyId);
     }
