@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -46,7 +47,7 @@ public class ResumeService {
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("Resume not found with id: {}", id);
-                    return new RuntimeException("Resume not found: " + id);
+                    return new NoSuchElementException("Resume not found: " + id);
                 });
     }
 

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("User not found with id: {}", id);
-                    return new RuntimeException("User not found: " + id);
+                    return new NoSuchElementException("User not found: " + id);
                 });
     }
 
