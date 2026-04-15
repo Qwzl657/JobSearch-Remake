@@ -1,0 +1,30 @@
+2026-04-15 17:22:24 INFO  k.a.j.JobSearchRemakeApplication - Starting JobSearchRemakeApplication using Java 26-ea with PID 24340 (C:\Users\User\OneDrive\Desktop\JobSearch_Remake\target\classes started by User in C:\Users\User\OneDrive\Desktop\JobSearch_Remake)
+2026-04-15 17:22:24 DEBUG k.a.j.JobSearchRemakeApplication - Running with Spring Boot v4.0.5, Spring v7.0.6
+2026-04-15 17:22:24 INFO  k.a.j.JobSearchRemakeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-15 17:22:27 INFO  k.a.j.JobSearchRemakeApplication - Started JobSearchRemakeApplication in 4.035 seconds (process running for 4.494)
+2026-04-15 17:22:27 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-15 17:22:27 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-04-15 17:22:43 INFO  k.a.j.JobSearchRemakeApplication - Starting JobSearchRemakeApplication using Java 26-ea with PID 7888 (C:\Users\User\OneDrive\Desktop\JobSearch_Remake\target\classes started by User in C:\Users\User\OneDrive\Desktop\JobSearch_Remake)
+2026-04-15 17:22:43 DEBUG k.a.j.JobSearchRemakeApplication - Running with Spring Boot v4.0.5, Spring v7.0.6
+2026-04-15 17:22:43 INFO  k.a.j.JobSearchRemakeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-15 17:22:49 INFO  k.a.j.JobSearchRemakeApplication - Started JobSearchRemakeApplication in 6.954 seconds (process running for 7.294)
+2026-04-15 17:22:49 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-15 17:22:49 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-04-15 17:22:56 INFO  k.a.j.JobSearchRemakeApplication - Starting JobSearchRemakeApplication using Java 26-ea with PID 2384 (C:\Users\User\OneDrive\Desktop\JobSearch_Remake\target\classes started by User in C:\Users\User\OneDrive\Desktop\JobSearch_Remake)
+2026-04-15 17:22:56 DEBUG k.a.j.JobSearchRemakeApplication - Running with Spring Boot v4.0.5, Spring v7.0.6
+2026-04-15 17:22:56 INFO  k.a.j.JobSearchRemakeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-15 17:22:59 INFO  k.a.j.JobSearchRemakeApplication - Started JobSearchRemakeApplication in 2.975 seconds (process running for 3.307)
+2026-04-15 17:22:59 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-15 17:22:59 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-04-15 17:24:43 INFO  k.a.j.JobSearchRemakeApplication - Starting JobSearchRemakeApplication using Java 26-ea with PID 22124 (C:\Users\User\OneDrive\Desktop\JobSearch_Remake\target\classes started by User in C:\Users\User\OneDrive\Desktop\JobSearch_Remake)
+2026-04-15 17:24:43 DEBUG k.a.j.JobSearchRemakeApplication - Running with Spring Boot v4.0.5, Spring v7.0.6
+2026-04-15 17:24:43 INFO  k.a.j.JobSearchRemakeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-15 17:24:46 INFO  k.a.j.JobSearchRemakeApplication - Started JobSearchRemakeApplication in 3.453 seconds (process running for 3.79)
+2026-04-15 17:24:46 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-15 17:24:46 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-04-15 17:26:53 INFO  k.a.j.JobSearchRemakeApplication - Starting JobSearchRemakeApplication using Java 26-ea with PID 11788 (C:\Users\User\OneDrive\Desktop\JobSearch_Remake\target\classes started by User in C:\Users\User\OneDrive\Desktop\JobSearch_Remake)
+2026-04-15 17:26:53 DEBUG k.a.j.JobSearchRemakeApplication - Running with Spring Boot v4.0.5, Spring v7.0.6
+2026-04-15 17:26:53 INFO  k.a.j.JobSearchRemakeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-15 17:26:56 INFO  k.a.j.JobSearchRemakeApplication - Started JobSearchRemakeApplication in 3.518 seconds (process running for 3.864)
+2026-04-15 17:26:56 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-15 17:26:56 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'

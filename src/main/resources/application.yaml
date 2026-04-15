@@ -14,7 +14,6 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/master.yaml
 
-
   h2:
     console:
       enabled: true
@@ -22,3 +21,6 @@ spring:
   sql:
     init:
       mode: never
+
+logging:
+  config: classpath:logback-spring.xml
