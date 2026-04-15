@@ -7,46 +7,58 @@ import kg.attractor.jobsearch_remake.dto.VacancyDto;
 import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.model.Vacancy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VacancyService {
 
     private final VacancyDao vacancyDao;
-    private final ResponseDao responseDao;
 
     public List<VacancyDto> getAllDto() {
+        log.info("Fetching all vacancies");
         return vacancyDao.findAll().stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public List<VacancyDto> getByCategory(Integer categoryId) {
+        log.info("Fetching vacancies by category id: {}", categoryId);
         return vacancyDao.findByCategory(categoryId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public List<VacancyDto> getActive() {
+        log.info("Fetching active vacancies");
         return vacancyDao.getActive().stream()
                 .map(this::toDto)
                 .toList();
     }
 
-    public List<UserDto> getApplicants(Long vacancyId) {
-        return responseDao.findUsersByVacancyId(vacancyId).stream()
-                .map(this::toUserDto)
+    public VacancyDto getById(Integer id) {
+        log.info("Fetching vacancy by id: {}", id);
+        return vacancyDao.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> {
+                    log.error("Vacancy not found with id: {}", id);
+                    return new RuntimeException("Vacancy not found: " + id);
+                });
+    }
+
+    public List<VacancyDto> getByAuthor(Integer authorId) {
+        log.info("Fetching vacancies for author id: {}", authorId);
+        return vacancyDao.findByAuthorId(authorId).stream()
+                .map(this::toDto)
                 .toList();
     }
 
-    public void respond(Long userId, Long vacancyId) {
-        responseDao.respond(userId, vacancyId);
-    }
-
     public void create(VacancyDto dto) {
+        log.info("Creating vacancy: {}", dto.getName());
         Vacancy v = Vacancy.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
@@ -57,11 +69,11 @@ public class VacancyService {
                 .isActive(dto.isActive())
                 .authorId(dto.getAuthorId())
                 .build();
-
         vacancyDao.create(v);
     }
 
     public void update(Integer id, VacancyDto dto) {
+        log.info("Updating vacancy id: {}", id);
         Vacancy v = Vacancy.builder()
                 .id(id)
                 .name(dto.getName())
@@ -72,11 +84,11 @@ public class VacancyService {
                 .expTo(dto.getExpTo())
                 .isActive(dto.isActive())
                 .build();
-
         vacancyDao.update(v);
     }
 
     public void delete(Integer id) {
+        log.warn("Deleting vacancy id: {}", id);
         vacancyDao.delete(id);
     }
 
@@ -91,15 +103,8 @@ public class VacancyService {
                 .expTo(v.getExpTo())
                 .isActive(v.isActive())
                 .authorId(v.getAuthorId())
-                .build();
-    }
-
-    private UserDto toUserDto(User u) {
-        return UserDto.builder()
-                .id(u.getId().longValue())
-                .username(u.getName() + " " + u.getSurname())
-                .email(u.getEmail())
-                .phoneNumber(u.getPhoneNumber())
+                .createdDate(v.getCreatedDate())
+                .updateTime(v.getUpdateTime())
                 .build();
     }
 }

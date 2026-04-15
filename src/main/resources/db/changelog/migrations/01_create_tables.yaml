@@ -1,0 +1,265 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tables
+      author: you
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+              - column:
+                  name: surname
+                  type: VARCHAR(100)
+              - column:
+                  name: age
+                  type: INT
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(100)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(50)
+              - column:
+                  name: avatar
+                  type: VARCHAR(255)
+              - column:
+                  name: account_type
+                  type: VARCHAR(20)
+
+        - createTable:
+            tableName: resumes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: applicant_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_resume_user
+                    references: users(id)
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+              - column:
+                  name: category_id
+                  type: INT
+                  constraints:
+                    foreignKeyName: fk_resume_category
+                    references: categories(id)
+              - column:
+                  name: salary
+                  type: DOUBLE
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+              - column:
+                  name: update_time
+                  type: TIMESTAMP
+
+        - createTable:
+            tableName: work_experience_info
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: resume_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_work_resume
+                    references: resumes(id)
+              - column:
+                  name: years
+                  type: INT
+              - column:
+                  name: company_name
+                  type: VARCHAR(100)
+              - column:
+                  name: position
+                  type: VARCHAR(100)
+              - column:
+                  name: responsibilities
+                  type: TEXT
+
+        - createTable:
+            tableName: education_info
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: resume_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_edu_resume
+                    references: resumes(id)
+              - column:
+                  name: institution
+                  type: VARCHAR(100)
+              - column:
+                  name: program
+                  type: VARCHAR(100)
+              - column:
+                  name: start_date
+                  type: TIMESTAMP
+              - column:
+                  name: end_date
+                  type: TIMESTAMP
+              - column:
+                  name: degree
+                  type: VARCHAR(50)
+
+        - createTable:
+            tableName: contact_types
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+
+        - createTable:
+            tableName: contact_info
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: resume_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_contact_resume
+                    references: resumes(id)
+              - column:
+                  name: type_id
+                  type: INT
+                  constraints:
+                    foreignKeyName: fk_contact_type
+                    references: contact_types(id)
+              - column:
+                  name: value
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: vacancies
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: category_id
+                  type: INT
+                  constraints:
+                    foreignKeyName: fk_vacancy_category
+                    references: categories(id)
+              - column:
+                  name: salary
+                  type: DOUBLE
+              - column:
+                  name: exp_from
+                  type: INT
+              - column:
+                  name: exp_to
+                  type: INT
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_vacancy_user
+                    references: users(id)
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+              - column:
+                  name: update_time
+                  type: TIMESTAMP
+
+        - createTable:
+            tableName: responded_applicants
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: resume_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_response_resume
+                    references: resumes(id)
+              - column:
+                  name: vacancy_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_response_vacancy
+                    references: vacancies(id)
+              - column:
+                  name: confirmation
+                  type: BOOLEAN

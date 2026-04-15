@@ -2,6 +2,7 @@ package kg.attractor.jobsearch_remake.controller;
 
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.dto.VacancyDto;
+import kg.attractor.jobsearch_remake.service.ResponseService;
 import kg.attractor.jobsearch_remake.service.VacancyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,37 @@ import java.util.List;
 public class VacancyController {
 
     private final VacancyService vacancyService;
+    private final ResponseService responseService;
+
+    @GetMapping
+    public ResponseEntity<List<VacancyDto>> getAllVacancies() {
+        return ResponseEntity.ok(vacancyService.getAllDto());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VacancyDto> getVacancyById(@PathVariable Integer id) {
+        return ResponseEntity.ok(vacancyService.getById(id));
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<VacancyDto>> getByAuthor(@PathVariable Integer authorId) {
+        return ResponseEntity.ok(vacancyService.getByAuthor(authorId));
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<VacancyDto>> getVacanciesByCategory(@PathVariable Integer id) {
+        return ResponseEntity.ok(vacancyService.getByCategory(id));
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<VacancyDto>> getActiveVacancies() {
+        return ResponseEntity.ok(vacancyService.getActive());
+    }
+
+    @GetMapping("/{id}/applicants")
+    public ResponseEntity<List<UserDto>> getApplicantsByVacancy(@PathVariable Long id) {
+        return ResponseEntity.ok(responseService.getUsersByVacancy(id));
+    }
 
     @PostMapping
     public ResponseEntity<VacancyDto> createVacancy(@RequestBody VacancyDto vacancyDto) {
@@ -37,30 +69,10 @@ public class VacancyController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<VacancyDto>> getAllVacancies() {
-        return ResponseEntity.ok(vacancyService.getAllDto());
-    }
-
-    @GetMapping("/category/{id}")
-    public ResponseEntity<List<VacancyDto>> getVacanciesByCategory(@PathVariable Integer id) {
-        return ResponseEntity.ok(vacancyService.getByCategory(id));
-    }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<VacancyDto>> getActiveVacancies() {
-        return ResponseEntity.ok(vacancyService.getActive());
-    }
-
-    @GetMapping("/{id}/applicants")
-    public ResponseEntity<List<UserDto>> getApplicantsByVacancy(@PathVariable Long id) {
-        return ResponseEntity.ok(vacancyService.getApplicants(id));
-    }
-
     @PostMapping("/{id}/respond")
     public ResponseEntity<Void> respondToVacancy(@PathVariable Long id) {
-        Long userId = 1L; // пока захардкодил (потом будет auth)
-        vacancyService.respond(userId, id);
+        Long userId = 1L;
+        responseService.respond(userId, id);
         return ResponseEntity.ok().build();
     }
 }
