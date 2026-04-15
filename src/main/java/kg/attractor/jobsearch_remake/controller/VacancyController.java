@@ -2,6 +2,7 @@ package kg.attractor.jobsearch_remake.controller;
 
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.dto.VacancyDto;
+import kg.attractor.jobsearch_remake.service.ResponseService;
 import kg.attractor.jobsearch_remake.service.VacancyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 public class VacancyController {
 
     private final VacancyService vacancyService;
+    private final ResponseService responseService;
 
     @GetMapping
     public ResponseEntity<List<VacancyDto>> getAllVacancies() {
@@ -44,7 +46,7 @@ public class VacancyController {
 
     @GetMapping("/{id}/applicants")
     public ResponseEntity<List<UserDto>> getApplicantsByVacancy(@PathVariable Long id) {
-        return ResponseEntity.ok(vacancyService.getApplicants(id));
+        return ResponseEntity.ok(responseService.getUsersByVacancy(id));
     }
 
     @PostMapping
@@ -70,7 +72,7 @@ public class VacancyController {
     @PostMapping("/{id}/respond")
     public ResponseEntity<Void> respondToVacancy(@PathVariable Long id) {
         Long userId = 1L;
-        vacancyService.respond(userId, id);
+        responseService.respond(userId, id);
         return ResponseEntity.ok().build();
     }
 }
