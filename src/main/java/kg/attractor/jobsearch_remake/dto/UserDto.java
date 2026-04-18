@@ -36,4 +36,8 @@ public class UserDto {
     @NotBlank(message = "Account type cannot be blank")
     @Pattern(regexp = "^(APPLICANT|EMPLOYER)$", message = "Account type must be APPLICANT or EMPLOYER")
     private String accountType;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 4, message = "Password must be at least 4 characters")
+    private String password;
 }
