@@ -30,11 +30,9 @@ public class SecurityConfig {
     public JdbcUserDetailsManager userDetailsManager() {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
 
-
         manager.setUsersByUsernameQuery(
                 "SELECT email, password, enabled FROM users WHERE email = ?"
         );
-
 
         manager.setAuthoritiesByUsernameQuery(
                 "SELECT u.email, r.role FROM users u " +
@@ -54,13 +52,31 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> {})
                 .authorizeHttpRequests(auth -> auth
 
+
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+
 
                         .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/resumes/**").permitAll()
 
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+
+                        .requestMatchers(HttpMethod.GET, "/resumes/**").hasAnyRole("APPLICANT", "EMPLOYER")
+                        .requestMatchers(HttpMethod.POST, "/resumes/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.DELETE, "/resumes/**").hasRole("APPLICANT")
+
+                        .requestMatchers(HttpMethod.POST, "/vacancies/**").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.PUT, "/vacancies/**").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.DELETE, "/vacancies/**").hasRole("EMPLOYER")
+
+
+                        .requestMatchers(HttpMethod.POST, "/vacancies/*/respond").hasRole("APPLICANT")
+
+
+                        .requestMatchers(HttpMethod.GET, "/users/**").authenticated()
+
 
                         .anyRequest().authenticated()
                 );
