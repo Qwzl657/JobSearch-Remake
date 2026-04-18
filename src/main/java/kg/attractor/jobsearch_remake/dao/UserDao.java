@@ -52,8 +52,9 @@ public class UserDao {
 
     public void create(User u) {
         String sql = """
-                INSERT INTO users (name, surname, age, email, password, phone_number, avatar, account_type)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO users (name, surname, age, email, password, phone_number, avatar, account_type, enabled, role_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, TRUE,
+                    (SELECT id FROM roles WHERE role = ?))
                 """;
         jdbcTemplate.update(sql,
                 u.getName(),
@@ -63,6 +64,7 @@ public class UserDao {
                 u.getPassword(),
                 u.getPhoneNumber(),
                 u.getAvatar(),
+                u.getAccountType(),
                 u.getAccountType()
         );
     }

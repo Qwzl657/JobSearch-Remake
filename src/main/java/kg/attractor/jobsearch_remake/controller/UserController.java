@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.controller;
 
+import jakarta.validation.Valid;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +38,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         userService.create(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Integer id,
-                                              @RequestBody UserDto userDto) {
+                                              @Valid @RequestBody UserDto userDto) {
         userService.update(id, userDto);
         return ResponseEntity.ok(userDto);
     }

@@ -6,9 +6,11 @@ import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -16,6 +18,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDto> getAll() {
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("User not found with id: {}", id);
-                    return new RuntimeException("User not found: " + id);
+                    return new NoSuchElementException("User not found: " + id);
                 });
     }
 
@@ -60,6 +63,7 @@ public class UserServiceImpl implements UserService {
                 .surname(dto.getSurname())
                 .age(dto.getAge())
                 .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .phoneNumber(dto.getPhoneNumber())
                 .avatar(dto.getAvatar())
                 .accountType(dto.getAccountType())

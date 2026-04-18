@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -46,7 +47,7 @@ public class VacancyService {
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("Vacancy not found with id: {}", id);
-                    return new RuntimeException("Vacancy not found: " + id);
+                    return new NoSuchElementException("Vacancy not found: " + id);
                 });
     }
 
