@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
 
+    private Boolean enabled;
+    private Integer roleId;
     private Integer id;
     private String name;
     private String surname;
