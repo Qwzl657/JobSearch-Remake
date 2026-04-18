@@ -7,7 +7,13 @@ VALUES
     ('EMPLOYER', (SELECT id FROM authorities WHERE authority = 'FULL')),
     ('APPLICANT', (SELECT id FROM authorities WHERE authority = 'FULL'));
 
--- Удаляем старых пользователей
+-- Удаляем зависимые записи сначала
+DELETE FROM responded_applicants;
+DELETE FROM contact_info;
+DELETE FROM education_info;
+DELETE FROM work_experience_info;
+DELETE FROM resumes;
+DELETE FROM vacancies;
 DELETE FROM users;
 
 -- Новые пользователи с зашифрованным паролем (пароль: "password")
