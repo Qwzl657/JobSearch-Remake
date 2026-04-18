@@ -1,0 +1,6 @@
+2026-04-15 20:12:52 INFO  k.a.j.JobSearchRemakeApplication - Starting JobSearchRemakeApplication using Java 26-ea with PID 22120 (C:\Users\User\OneDrive\Desktop\JobSearch_Remake\target\classes started by User in C:\Users\User\OneDrive\Desktop\JobSearch_Remake)
+2026-04-15 20:12:52 DEBUG k.a.j.JobSearchRemakeApplication - Running with Spring Boot v4.0.5, Spring v7.0.6
+2026-04-15 20:12:52 INFO  k.a.j.JobSearchRemakeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-15 20:12:57 INFO  k.a.j.JobSearchRemakeApplication - Started JobSearchRemakeApplication in 5.685 seconds (process running for 6.352)
+2026-04-15 20:12:57 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-15 20:12:57 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
