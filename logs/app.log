@@ -625,3 +625,9 @@ DELETE FROM users [23503-240]
 	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
 	at liquibase.executor.jvm.JdbcExecutor$ExecuteStatementCallback.doInStatement(JdbcExecutor.java:517)
 	... 110 common frames omitted
+2026-04-18 21:50:48 INFO  k.a.j.JobSearchRemakeApplication - Starting JobSearchRemakeApplication using Java 26-ea with PID 16168 (C:\Users\User\OneDrive\Desktop\JobSearch_Remake\target\classes started by User in C:\Users\User\OneDrive\Desktop\JobSearch_Remake)
+2026-04-18 21:50:48 DEBUG k.a.j.JobSearchRemakeApplication - Running with Spring Boot v4.0.5, Spring v7.0.6
+2026-04-18 21:50:48 INFO  k.a.j.JobSearchRemakeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-18 21:50:52 INFO  k.a.j.JobSearchRemakeApplication - Started JobSearchRemakeApplication in 4.045 seconds (process running for 4.385)
+2026-04-18 21:50:52 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-04-18 21:50:52 WARN  o.s.c.events.SpringDocAppInitializer - SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
