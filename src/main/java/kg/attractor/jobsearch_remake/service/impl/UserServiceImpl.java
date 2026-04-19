@@ -21,6 +21,17 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    public UserDto getByEmail(String email) {
+        log.info("Fetching user by email: {}", email);
+        return userDao.findByEmail(email)
+                .map(this::toDto)
+                .orElseThrow(() -> {
+                    log.error("User not found with email: {}", email);
+                    return new NoSuchElementException("User not found: " + email);
+                });
+    }
+
+    @Override
     public List<UserDto> getAll() {
         log.info("Fetching all users");
         return userDao.findAll().stream()

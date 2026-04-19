@@ -7,6 +7,7 @@ import java.util.List;
 public interface UserService {
     List<UserDto> getAll();
     UserDto findById(Integer id);
+    UserDto getByEmail(String email);
     List<UserDto> getEmployers();
     List<UserDto> getApplicants();
     void create(UserDto dto);
