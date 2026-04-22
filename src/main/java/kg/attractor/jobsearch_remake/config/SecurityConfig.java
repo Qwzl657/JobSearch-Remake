@@ -48,35 +48,47 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .httpBasic(httpBasic -> {})
+                .formLogin(form -> form
+                        .loginPage("/auth/login")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/vacancies")
+                        .failureUrl("/auth/login?error=true")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/auth/login")
+                        .permitAll())
                 .authorizeHttpRequests(auth -> auth
 
 
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-
-
-                        .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()
-
-
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/avatars/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
 
+                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/vacancies/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/resumes/**").hasAnyRole("APPLICANT", "EMPLOYER")
+                        .requestMatchers(HttpMethod.POST, "/api/resumes/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.PUT, "/api/resumes/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.DELETE, "/api/resumes/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/api/vacancies/**").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.PUT, "/api/vacancies/**").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/vacancies/**").hasRole("EMPLOYER")
+
+
+                        .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/resumes/**").hasAnyRole("APPLICANT", "EMPLOYER")
                         .requestMatchers(HttpMethod.POST, "/resumes/**").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.DELETE, "/resumes/**").hasRole("APPLICANT")
-
                         .requestMatchers(HttpMethod.POST, "/vacancies/**").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.PUT, "/vacancies/**").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.DELETE, "/vacancies/**").hasRole("EMPLOYER")
-
-
-                        .requestMatchers(HttpMethod.POST, "/vacancies/*/respond").hasRole("APPLICANT")
-
-
-                        .requestMatchers(HttpMethod.GET, "/users/**").authenticated()
-
+                        .requestMatchers("/profile/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
 
                         .anyRequest().authenticated()
                 );
