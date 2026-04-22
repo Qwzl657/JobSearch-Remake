@@ -3,7 +3,17 @@
     <div class="card mx-auto mt-4" style="max-width: 600px;">
         <div class="card-body">
             <h3 class="mb-4">Редактирование профиля</h3>
-            <form action="/profile/edit" method="post">
+            <form action="/profile/edit" method="post" enctype="multipart/form-data">
+                <div class="mb-3 text-center">
+                    <img src="/avatars/${user.avatar!'default.png'}"
+                         class="rounded-circle mb-2"
+                         style="width: 100px; height: 100px; object-fit: cover;"
+                         alt="avatar"/>
+                    <div>
+                        <label class="form-label">Фото профиля</label>
+                        <input type="file" class="form-control" name="avatar" accept="image/*"/>
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label class="form-label">Имя</label>
                     <input type="text" class="form-control" name="name" value="${user.name}"/>
