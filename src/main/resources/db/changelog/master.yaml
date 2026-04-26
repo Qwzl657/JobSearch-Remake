@@ -9,3 +9,7 @@ databaseChangeLog:
       file: db/changelog/migrations/04_insert_security_data.sql
   - include:
       file: db/changelog/migrations/05_insert_test_data.sql
+  - include:
+      file: db/changelog/migrations/06_create_missing_tables.yaml
+  - include:
+      file: db/changelog/migrations/07_insert_categories.sql
