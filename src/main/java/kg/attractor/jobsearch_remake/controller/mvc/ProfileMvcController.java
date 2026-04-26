@@ -1,10 +1,13 @@
 package kg.attractor.jobsearch_remake.controller.mvc;
 
+import kg.attractor.jobsearch_remake.dto.ResumeDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
+import kg.attractor.jobsearch_remake.dto.VacancyDto;
 import kg.attractor.jobsearch_remake.service.ResumeService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import kg.attractor.jobsearch_remake.service.VacancyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +33,25 @@ public class ProfileMvcController {
     private final VacancyService vacancyService;
 
     @GetMapping
-    public String profilePage(Model model, Authentication auth) {
+    public String profilePage(Model model,
+                              Authentication auth,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "5") int size) {
         UserDto user = userService.getByEmail(auth.getName());
         model.addAttribute("user", user);
 
         if (user.getAccountType().equals("APPLICANT")) {
-            model.addAttribute("resumes", resumeService.getByApplicant(user.getId().intValue()));
+            Page<ResumeDto> resumePage = resumeService.getByApplicantPaged(
+                    user.getId().intValue(), page, size);
+            model.addAttribute("resumes", resumePage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", resumePage.getTotalPages());
         } else {
-            model.addAttribute("vacancies", vacancyService.getByAuthor(user.getId().intValue()));
+            Page<VacancyDto> vacancyPage = vacancyService.getByAuthorPaged(
+                    user.getId().intValue(), page, size);
+            model.addAttribute("vacancies", vacancyPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", vacancyPage.getTotalPages());
         }
         return "profile/profile";
     }

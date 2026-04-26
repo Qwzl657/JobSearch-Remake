@@ -1,8 +1,8 @@
 package kg.attractor.jobsearch_remake.service.impl;
 
-import kg.attractor.jobsearch_remake.dao.UserDao;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.model.User;
+import kg.attractor.jobsearch_remake.repository.UserRepository;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,24 +17,13 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Override
-    public UserDto getByEmail(String email) {
-        log.info("Fetching user by email: {}", email);
-        return userDao.findByEmail(email)
-                .map(this::toDto)
-                .orElseThrow(() -> {
-                    log.error("User not found with email: {}", email);
-                    return new NoSuchElementException("User not found: " + email);
-                });
-    }
 
     @Override
     public List<UserDto> getAll() {
         log.info("Fetching all users");
-        return userDao.findAll().stream()
+        return userRepository.findAll().stream()
                 .map(this::toDto)
                 .toList();
     }
@@ -42,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(Integer id) {
         log.info("Fetching user by id: {}", id);
-        return userDao.findById(id)
+        return userRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("User not found with id: {}", id);
@@ -51,9 +40,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getByEmail(String email) {
+        log.info("Fetching user by email: {}", email);
+        return userRepository.findByEmail(email)
+                .map(this::toDto)
+                .orElseThrow(() -> {
+                    log.error("User not found with email: {}", email);
+                    return new NoSuchElementException("User not found: " + email);
+                });
+    }
+
+    @Override
     public List<UserDto> getEmployers() {
         log.info("Fetching all employers");
-        return userDao.findByAccountType("EMPLOYER").stream()
+        return userRepository.findByAccountType("EMPLOYER").stream()
                 .map(this::toDto)
                 .toList();
     }
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getApplicants() {
         log.info("Fetching all applicants");
-        return userDao.findByAccountType("APPLICANT").stream()
+        return userRepository.findByAccountType("APPLICANT").stream()
                 .map(this::toDto)
                 .toList();
     }
@@ -76,30 +76,32 @@ public class UserServiceImpl implements UserService {
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .phoneNumber(dto.getPhoneNumber())
-                .avatar(dto.getAvatar())
+                .avatar(dto.getAvatar() != null ? dto.getAvatar() : "default.png")
                 .accountType(dto.getAccountType())
+                .enabled(true)
                 .build();
-        userDao.create(user);
+        userRepository.save(user);
     }
 
     @Override
     public void update(Integer id, UserDto dto) {
         log.info("Updating user id: {}", id);
-        User user = User.builder()
-                .id(id)
-                .name(dto.getName())
-                .surname(dto.getSurname())
-                .age(dto.getAge())
-                .phoneNumber(dto.getPhoneNumber())
-                .avatar(dto.getAvatar())
-                .build();
-        userDao.update(user);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found: " + id));
+        user.setName(dto.getName());
+        user.setSurname(dto.getSurname());
+        user.setAge(dto.getAge());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        if (dto.getAvatar() != null) {
+            user.setAvatar(dto.getAvatar());
+        }
+        userRepository.save(user);
     }
 
     @Override
     public void delete(Integer id) {
         log.warn("Deleting user id: {}", id);
-        userDao.delete(id);
+        userRepository.deleteById(id);
     }
 
     private UserDto toDto(User u) {

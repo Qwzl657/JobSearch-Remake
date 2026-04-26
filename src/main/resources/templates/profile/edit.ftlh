@@ -1,5 +1,6 @@
 <#import "../layout/base.ftlh" as layout>
 <@layout.base>
+
     <div class="card mx-auto mt-4" style="max-width: 600px;">
         <div class="card-body">
             <h3 class="mb-4">Редактирование профиля</h3>
@@ -28,7 +29,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Телефон</label>
-                    <input type="text" class="form-control" name="phoneNumber" value="${user.phoneNumber}"/>
+                    <input type="text" class="form-control" name="phoneNumber"
+                           value="${user.phoneNumber}"/>
                 </div>
                 <div class="mt-3 d-flex gap-2">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
@@ -37,4 +39,5 @@
             </form>
         </div>
     </div>
+
 </@layout.base>
