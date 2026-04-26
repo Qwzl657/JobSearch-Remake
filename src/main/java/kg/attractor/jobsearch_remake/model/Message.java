@@ -1,9 +1,7 @@
 package kg.attractor.jobsearch_remake.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,11 +9,20 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "messages")
 public class Message {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer respondedApplicants;
-    private String content;
-    private LocalDate timestamp;
 
+    @Column(name = "responded_applicants")
+    private Integer respondedApplicants;
+
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "timestamp")
+    private LocalDate timestamp;
 }

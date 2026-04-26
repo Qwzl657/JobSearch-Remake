@@ -1,9 +1,7 @@
 package kg.attractor.jobsearch_remake.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,14 +9,29 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "education_info")
 public class EducationInfo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer resumeId;
-    private String institution;
-    private String program;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String degree;
 
+    @Column(name = "resume_id")
+    private Integer resumeId;
+
+    @Column(name = "institution")
+    private String institution;
+
+    @Column(name = "program")
+    private String program;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
+    @Column(name = "degree")
+    private String degree;
 }
