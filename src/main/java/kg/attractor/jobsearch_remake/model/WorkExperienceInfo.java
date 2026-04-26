@@ -1,21 +1,32 @@
 package kg.attractor.jobsearch_remake.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "work_experience_info")
 public class WorkExperienceInfo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer resumeId;
-    private Integer years;
-    private String companyName;
-    private String position;
-    private String responsibilities;
 
+    @Column(name = "resume_id")
+    private Integer resumeId;
+
+    @Column(name = "years")
+    private Integer years;
+
+    @Column(name = "company_name")
+    private String companyName;
+
+    @Column(name = "position")
+    private String position;
+
+    @Column(name = "responsibilities")
+    private String responsibilities;
 }
