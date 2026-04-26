@@ -6,6 +6,7 @@ import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.service.ResumeService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/resumes")
@@ -24,14 +26,24 @@ public class ResumeMvcController {
     private final UserService userService;
 
     @GetMapping
-    public String resumesList(Model model) {
-        model.addAttribute("resumes", resumeService.getAllDto());
+    public String resumesList(Model model,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "5") int size) {
+        Page<ResumeDto> resumePage = resumeService.getAllPaged(page, size);
+        model.addAttribute("resumes", resumePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", resumePage.getTotalPages());
         return "resumes/list";
     }
 
     @GetMapping("/all")
-    public String allResumes(Model model) {
-        model.addAttribute("resumes", resumeService.getAllDto());
+    public String allResumes(Model model,
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "5") int size) {
+        Page<ResumeDto> resumePage = resumeService.getAllPaged(page, size);
+        model.addAttribute("resumes", resumePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", resumePage.getTotalPages());
         return "resumes/list";
     }
 
