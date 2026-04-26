@@ -1,8 +1,8 @@
 package kg.attractor.jobsearch_remake.service;
 
-import kg.attractor.jobsearch_remake.dao.EducationInfoDao;
 import kg.attractor.jobsearch_remake.dto.EducationInfoDto;
 import kg.attractor.jobsearch_remake.model.EducationInfo;
+import kg.attractor.jobsearch_remake.repository.EducationInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,31 +14,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EducationInfoService {
 
-    private final EducationInfoDao educationInfoDao;
+    private final EducationInfoRepository educationInfoRepository;
 
     public List<EducationInfoDto> getByResumeId(Integer resumeId) {
         log.info("Fetching education info for resume id: {}", resumeId);
-        return educationInfoDao.findByResumeId(resumeId).stream()
+        return educationInfoRepository.findByResumeId(resumeId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public void createForResume(Integer resumeId, List<EducationInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
-        log.info("Creating {} education entries for resume id: {}", dtos.size(), resumeId);
-        dtos.forEach(dto -> educationInfoDao.create(toModel(resumeId, dto)));
+        log.info("Creating education info for resume id: {}", resumeId);
+        dtos.forEach(dto -> educationInfoRepository.save(toModel(resumeId, dto)));
     }
 
     public void updateForResume(Integer resumeId, List<EducationInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Updating education info for resume id: {}", resumeId);
-        educationInfoDao.deleteByResumeId(resumeId);
+        educationInfoRepository.deleteByResumeId(resumeId);
         createForResume(resumeId, dtos);
     }
 
     public void deleteByResumeId(Integer resumeId) {
-        log.warn("Deleting all education info for resume id: {}", resumeId);
-        educationInfoDao.deleteByResumeId(resumeId);
+        log.warn("Deleting education info for resume id: {}", resumeId);
+        educationInfoRepository.deleteByResumeId(resumeId);
     }
 
     private EducationInfoDto toDto(EducationInfo info) {

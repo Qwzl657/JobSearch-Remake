@@ -1,8 +1,8 @@
 package kg.attractor.jobsearch_remake.service;
 
-import kg.attractor.jobsearch_remake.dao.WorkExperienceInfoDao;
 import kg.attractor.jobsearch_remake.dto.WorkExperienceInfoDto;
 import kg.attractor.jobsearch_remake.model.WorkExperienceInfo;
+import kg.attractor.jobsearch_remake.repository.WorkExperienceInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,31 +14,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WorkExperienceInfoService {
 
-    private final WorkExperienceInfoDao workExperienceInfoDao;
+    private final WorkExperienceInfoRepository workExperienceInfoRepository;
 
     public List<WorkExperienceInfoDto> getByResumeId(Integer resumeId) {
         log.info("Fetching work experience for resume id: {}", resumeId);
-        return workExperienceInfoDao.findByResumeId(resumeId).stream()
+        return workExperienceInfoRepository.findByResumeId(resumeId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public void createForResume(Integer resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
-        log.info("Creating {} work experience entries for resume id: {}", dtos.size(), resumeId);
-        dtos.forEach(dto -> workExperienceInfoDao.create(toModel(resumeId, dto)));
+        log.info("Creating work experience for resume id: {}", resumeId);
+        dtos.forEach(dto -> workExperienceInfoRepository.save(toModel(resumeId, dto)));
     }
 
     public void updateForResume(Integer resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Updating work experience for resume id: {}", resumeId);
-        workExperienceInfoDao.deleteByResumeId(resumeId);
+        workExperienceInfoRepository.deleteByResumeId(resumeId);
         createForResume(resumeId, dtos);
     }
 
     public void deleteByResumeId(Integer resumeId) {
-        log.warn("Deleting all work experience for resume id: {}", resumeId);
-        workExperienceInfoDao.deleteByResumeId(resumeId);
+        log.warn("Deleting work experience for resume id: {}", resumeId);
+        workExperienceInfoRepository.deleteByResumeId(resumeId);
     }
 
     private WorkExperienceInfoDto toDto(WorkExperienceInfo info) {
