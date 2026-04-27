@@ -1,6 +1,6 @@
 package kg.attractor.jobsearch_remake.config;
 
-import kg.attractor.jobsearch_remake.service.UserDetailsServiceImpl;
+import kg.attractor.jobsearch_remake.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -47,7 +46,7 @@ public class SecurityConfig {
                         .failureUrl("/auth/login?error=true")
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/auth/login")
                         .permitAll())
                 .authorizeHttpRequests(auth -> auth

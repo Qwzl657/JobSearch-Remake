@@ -5,6 +5,11 @@
         <div class="card-body">
             <h3 class="mb-4">Редактирование профиля</h3>
             <form action="/profile/edit" method="post" enctype="multipart/form-data">
+                <#if _csrf??>
+                    <input type="hidden"
+                           name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!''}"/>
+                </#if>
                 <div class="mb-3 text-center">
                     <img src="/avatars/${user.avatar!'default.png'}"
                          class="rounded-circle mb-2"

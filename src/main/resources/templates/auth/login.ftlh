@@ -13,6 +13,11 @@
                         <div class="alert alert-danger">Неверный email или пароль</div>
                     </#if>
                     <form action="/auth/login" method="post">
+                        <#if _csrf??>
+                            <input type="hidden"
+                                   name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!''}"/>
+                        </#if>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" class="form-control" name="username" required/>
