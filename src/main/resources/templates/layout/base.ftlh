@@ -11,16 +11,31 @@
         <a class="navbar-brand" href="/">JobSearch</a>
         <div class="navbar-nav ms-auto">
             <a class="nav-link" href="/vacancies">Вакансии</a>
+
             <#if Session.SPRING_SECURITY_CONTEXT??>
                 <#assign auth = Session.SPRING_SECURITY_CONTEXT.authentication>
+
                 <#if auth.authorities?seq_contains("ROLE_EMPLOYER")>
                     <a class="nav-link" href="/resumes/all">Резюме соискателей</a>
                 </#if>
+
                 <#if auth.authorities?seq_contains("ROLE_APPLICANT")>
                     <a class="nav-link" href="/resumes/all">Все резюме</a>
                 </#if>
+
                 <a class="nav-link" href="/profile">Профиль</a>
-                <a class="nav-link" href="/logout">Выйти</a>
+
+                <#if _csrf??>
+                    <form action="/logout" method="post" class="d-inline">
+                        <input type="hidden"
+                               name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!''}"/>
+                        <button type="submit" class="btn btn-link nav-link" style="display: inline; padding: 0.5rem; border: none; vertical-align: baseline;">Выйти</button>
+                    </form>
+                <#else>
+                    <a class="nav-link" href="/logout">Выйти</a>
+                </#if>
+
             <#else>
                 <a class="nav-link" href="/auth/login">Войти</a>
                 <a class="nav-link" href="/auth/register">Регистрация</a>
