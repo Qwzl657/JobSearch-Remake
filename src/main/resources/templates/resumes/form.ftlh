@@ -5,6 +5,11 @@
         <div class="card-body">
             <h3 class="mb-4">${resumeDto.id??then("Редактировать резюме", "Создать резюме")}</h3>
             <form action="${resumeDto.id??then("/resumes/" + resumeDto.id + "/edit", "/resumes/create")}" method="post">
+                <#if _csrf??>
+                    <input type="hidden"
+                           name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!''}"/>
+                </#if>
                 <div class="mb-3">
                     <label class="form-label">Название резюме</label>
                     <@spring.formInput "resumeDto.name" 'class="form-control"'/>

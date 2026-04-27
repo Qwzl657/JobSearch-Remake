@@ -5,6 +5,13 @@
         <div class="card-body">
             <h3 class="mb-4">Регистрация</h3>
             <form action="/auth/register" method="post">
+                <#-- Твой блок CSRF -->
+                <#if _csrf??>
+                    <input type="hidden"
+                           name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!''}"/>
+                </#if>
+
                 <div class="mb-3">
                     <label class="form-label">Имя</label>
                     <@spring.formInput "userDto.name" 'class="form-control"'/>

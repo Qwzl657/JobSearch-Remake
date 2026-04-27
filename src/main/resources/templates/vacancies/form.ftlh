@@ -5,6 +5,11 @@
         <div class="card-body">
             <h3 class="mb-4">${vacancyDto.id??then("Редактировать вакансию", "Создать вакансию")}</h3>
             <form action="${vacancyDto.id??then("/vacancies/" + vacancyDto.id + "/edit", "/vacancies/create")}" method="post">
+                <#if _csrf??>
+                    <input type="hidden"
+                           name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!''}"/>
+                </#if>
                 <div class="mb-3">
                     <label class="form-label">Название вакансии</label>
                     <@spring.formInput "vacancyDto.name" 'class="form-control"'/>
