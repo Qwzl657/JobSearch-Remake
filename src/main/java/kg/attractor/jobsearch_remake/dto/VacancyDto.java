@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -41,6 +42,6 @@ public class VacancyDto {
     @NotNull(message = "Author is required")
     private Integer authorId;
 
-    private LocalDate createdDate;
-    private LocalDate updateTime;
+    private LocalDateTime createdDate;
+    private LocalDateTime updateTime;
 }

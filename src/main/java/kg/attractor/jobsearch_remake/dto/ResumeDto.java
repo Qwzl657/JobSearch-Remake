@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -31,8 +32,8 @@ public class ResumeDto {
     private double salary;
 
     private boolean isActive;
-    private LocalDate createdDate;
-    private LocalDate updateTime;
+    private LocalDateTime createdDate;
+    private LocalDateTime updateTime;
     private List<WorkExperienceInfoDto> workExperienceInfos;
     private List<EducationInfoDto> educationInfos;
     private List<ContactInfoDto> contactInfos;

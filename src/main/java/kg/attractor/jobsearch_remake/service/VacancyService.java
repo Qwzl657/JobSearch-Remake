@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -87,8 +87,8 @@ public class VacancyService {
                 .expTo(dto.getExpTo())
                 .isActive(dto.isActive())
                 .authorId(dto.getAuthorId())
-                .createdDate(LocalDate.now())
-                .updateTime(LocalDate.now())
+                .createdDate(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
                 .build();
         vacancyRepository.save(v);
     }
@@ -104,7 +104,7 @@ public class VacancyService {
         v.setExpFrom(dto.getExpFrom());
         v.setExpTo(dto.getExpTo());
         v.setActive(dto.isActive());
-        v.setUpdateTime(LocalDate.now());
+        v.setUpdateTime(LocalDateTime.now());
         vacancyRepository.save(v);
     }
 

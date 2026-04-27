@@ -1,41 +1,19 @@
 databaseChangeLog:
   - changeSet:
-      id: create-missing-tables
+      id: add-parent-id-to-categories
       author: you
       changes:
-        - createTable:
+        - addColumn:
             tableName: categories
             columns:
-              - column:
-                  name: id
-                  type: INT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: name
-                  type: VARCHAR(100)
-                  constraints:
-                    nullable: false
               - column:
                   name: parent_id
                   type: INT
 
-        - createTable:
-            tableName: contact_types
-            columns:
-              - column:
-                  name: id
-                  type: INT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: type
-                  type: VARCHAR(50)
-                  constraints:
-                    nullable: false
-
+  - changeSet:
+      id: create-messages-table
+      author: you
+      changes:
         - createTable:
             tableName: messages
             columns:
@@ -62,3 +40,11 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
+  - changeSet:
+      id: fix-messages-content-type
+      author: you
+      changes:
+        - modifyDataType:
+            tableName: messages
+            columnName: content
+            newDataType: VARCHAR(1000)

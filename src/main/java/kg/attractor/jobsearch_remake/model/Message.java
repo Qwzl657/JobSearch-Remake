@@ -3,7 +3,7 @@ package kg.attractor.jobsearch_remake.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -24,5 +24,5 @@ public class Message {
     private String content;
 
     @Column(name = "timestamp")
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 }

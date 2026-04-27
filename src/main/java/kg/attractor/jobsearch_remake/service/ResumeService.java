@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -78,8 +78,8 @@ public class ResumeService {
                 .categoryId(dto.getCategoryId())
                 .salary(dto.getSalary())
                 .isActive(dto.isActive())
-                .createdDate(LocalDate.now())
-                .updateTime(LocalDate.now())
+                .createdDate(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
                 .build();
         Resume saved = resumeRepository.save(r);
         workExperienceInfoService.createForResume(saved.getId(), dto.getWorkExperienceInfos());
@@ -95,7 +95,7 @@ public class ResumeService {
         r.setCategoryId(dto.getCategoryId());
         r.setSalary(dto.getSalary());
         r.setActive(dto.isActive());
-        r.setUpdateTime(LocalDate.now());
+        r.setUpdateTime(LocalDateTime.now());
         resumeRepository.save(r);
         workExperienceInfoService.updateForResume(id, dto.getWorkExperienceInfos());
         educationInfoService.updateForResume(id, dto.getEducationInfos());

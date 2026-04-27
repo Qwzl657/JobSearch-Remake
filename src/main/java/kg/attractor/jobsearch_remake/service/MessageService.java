@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -36,7 +36,7 @@ public class MessageService {
         Message message = Message.builder()
                 .respondedApplicants(respondedApplicantId)
                 .content(content)
-                .timestamp(LocalDate.now())
+                .timestamp(LocalDateTime.now())
                 .build();
         messageRepository.save(message);
     }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -42,8 +43,8 @@ public class Vacancy {
     private Integer authorId;
 
     @Column(name = "created_date")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     @Column(name = "update_time")
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 }
