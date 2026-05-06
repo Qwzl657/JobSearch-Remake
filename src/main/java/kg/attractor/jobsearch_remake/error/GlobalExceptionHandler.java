@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(), ex.getMessage());
         model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         model.addAttribute("reason", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        model.addAttribute("details", request.getRequestURI()); // ✅ только URI
+        model.addAttribute("details", request.getRequestURI());
         return "/errors/error";
     }
 }
