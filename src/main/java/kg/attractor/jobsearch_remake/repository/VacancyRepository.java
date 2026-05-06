@@ -22,7 +22,6 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Integer> {
 
     Page<Vacancy> findByAuthorId(Integer authorId, Pageable pageable);
 
-    //  Сортировка по количеству откликов
     @Query("""
             SELECT v FROM Vacancy v
             LEFT JOIN RespondedApplicant r ON r.vacancyId = v.id

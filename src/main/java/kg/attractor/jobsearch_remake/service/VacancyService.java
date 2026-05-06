@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,61 +24,67 @@ public class VacancyService {
     private final VacancyRepository vacancyRepository;
 
     public List<VacancyDto> getAllDto() {
-        log.info("Fetching all vacancies");
+        log.info("Получение всех вакансий");
         return vacancyRepository.findAll().stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public Page<VacancyDto> getActivePaged(int page, int size, String sort) {
-        log.info("Fetching active vacancies page: {}", page);
-        Sort sortBy = sort.equals("responses")
-                ? Sort.by(Sort.Order.desc("updateTime"))
-                : Sort.by(Sort.Order.desc("updateTime"));
-        Pageable pageable = PageRequest.of(page, size, sortBy);
+        log.info("Получение активных вакансий, страница: {}, сортировка: {}", page, sort);
+
+        if ("responses".equals(sort)) {
+            Pageable pageable = PageRequest.of(page, size);
+            return vacancyRepository.findActiveOrderByResponseCount(pageable)
+                    .map(this::toDto);
+        }
+
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Order.desc("createdDate")));
         return vacancyRepository.findByIsActiveTrue(pageable).map(this::toDto);
     }
 
     public List<VacancyDto> getByCategory(Integer categoryId) {
-        log.info("Fetching vacancies by category id: {}", categoryId);
+        log.info("Получение вакансий по категории id: {}", categoryId);
         return vacancyRepository.findByCategoryId(categoryId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public List<VacancyDto> getActive() {
-        log.info("Fetching active vacancies");
+        log.info("Получение активных вакансий");
         return vacancyRepository.findByIsActiveTrue().stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public VacancyDto getById(Integer id) {
-        log.info("Fetching vacancy by id: {}", id);
+        log.info("Получение вакансии по id: {}", id);
         return vacancyRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> {
-                    log.error("Vacancy not found with id: {}", id);
-                    return new NoSuchElementException("Vacancy not found: " + id);
+                    log.error("Вакансия не найдена с id: {}", id);
+                    return new NoSuchElementException("Вакансия не найдена: " + id);
                 });
     }
 
     public List<VacancyDto> getByAuthor(Integer authorId) {
-        log.info("Fetching vacancies for author id: {}", authorId);
+        log.info("Получение вакансий автора id: {}", authorId);
         return vacancyRepository.findByAuthorId(authorId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
     public Page<VacancyDto> getByAuthorPaged(Integer authorId, int page, int size) {
-        log.info("Fetching vacancies for author id: {} page: {}", authorId, page);
+        log.info("Получение вакансий автора id: {}, страница: {}", authorId, page);
         Pageable pageable = PageRequest.of(page, size,
-                Sort.by(Sort.Order.desc("updateTime")));
+                Sort.by(Sort.Order.desc("createdDate")));
         return vacancyRepository.findByAuthorId(authorId, pageable).map(this::toDto);
     }
 
+    @Transactional
     public void create(VacancyDto dto) {
-        log.info("Creating vacancy: {}", dto.getName());
+        log.info("Создание вакансии: {}", dto.getName());
         Vacancy v = Vacancy.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
@@ -93,10 +100,11 @@ public class VacancyService {
         vacancyRepository.save(v);
     }
 
+    @Transactional
     public void update(Integer id, VacancyDto dto) {
-        log.info("Updating vacancy id: {}", id);
+        log.info("Обновление вакансии id: {}", id);
         Vacancy v = vacancyRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Vacancy not found: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Вакансия не найдена: " + id));
         v.setName(dto.getName());
         v.setDescription(dto.getDescription());
         v.setCategoryId(dto.getCategoryId());
@@ -108,8 +116,9 @@ public class VacancyService {
         vacancyRepository.save(v);
     }
 
+    @Transactional
     public void delete(Integer id) {
-        log.warn("Deleting vacancy id: {}", id);
+        log.warn("Удаление вакансии id: {}", id);
         vacancyRepository.deleteById(id);
     }
 
