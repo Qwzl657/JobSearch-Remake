@@ -10,17 +10,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VacancyRepository extends JpaRepository<Vacancy, Integer> {
-
+public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     List<Vacancy> findByIsActiveTrue();
-
     Page<Vacancy> findByIsActiveTrue(Pageable pageable);
-
     List<Vacancy> findByCategoryId(Integer categoryId);
-
-    List<Vacancy> findByAuthorId(Integer authorId);
-
-    Page<Vacancy> findByAuthorId(Integer authorId, Pageable pageable);
+    List<Vacancy> findByAuthorId(Long authorId);
+    Page<Vacancy> findByAuthorId(Long authorId, Pageable pageable);
 
     @Query("""
             SELECT v FROM Vacancy v
