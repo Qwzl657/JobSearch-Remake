@@ -10,26 +10,35 @@
                            name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!''}"/>
                 </#if>
+
                 <div class="mb-3">
                     <label class="form-label">Название резюме</label>
                     <@spring.formInput "resumeDto.name" 'class="form-control"'/>
                     <@spring.showErrors "<br>" "text-danger small"/>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">Категория ID</label>
                     <@spring.formInput "resumeDto.categoryId" 'class="form-control" type="number"'/>
                     <@spring.showErrors "<br>" "text-danger small"/>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">Ожидаемая зарплата</label>
                     <@spring.formInput "resumeDto.salary" 'class="form-control" type="number"'/>
                     <@spring.showErrors "<br>" "text-danger small"/>
                 </div>
+
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" name="isActive"
-                            ${(resumeDto.active)??then("checked", "")}>
+                    <input type="hidden" name="isActive" value="false"/>
+                    <input type="checkbox"
+                           class="form-check-input"
+                           name="isActive"
+                           value="true"
+                            ${(resumeDto.isActive())?then("checked", "")}>
                     <label class="form-check-label">Активно</label>
                 </div>
+
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a href="/profile" class="btn btn-outline-secondary">Отмена</a>
