@@ -51,9 +51,8 @@ public class ResumeMvcController {
             model.addAttribute("resumeDto", resumeDto);
             return "resumes/form";
         }
-
         UserDto user = userService.getByEmail(auth.getName());
-        resumeDto.setApplicantId(user.getId().intValue());
+        resumeDto.setApplicantId(user.getId());
         resumeService.create(resumeDto);
         return "redirect:/profile";
     }

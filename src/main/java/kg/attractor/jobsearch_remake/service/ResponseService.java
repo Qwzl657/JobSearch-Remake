@@ -24,28 +24,27 @@ public class ResponseService {
 
     public List<VacancyDto> getVacanciesByResume(Long resumeId) {
         log.info("Получение вакансий для резюме id: {}", resumeId);
-        return respondedApplicantRepository.findByResumeId(resumeId.intValue()).stream()
-                .map(r -> vacancyService.getById(r.getVacancyId()))
+        return respondedApplicantRepository.findByResumeId(resumeId).stream()
+                .map(r -> vacancyService.getById(r.getVacancyId().intValue()))
                 .toList();
     }
 
     public List<UserDto> getUsersByVacancy(Long vacancyId) {
         log.info("Получение соискателей для вакансии id: {}", vacancyId);
-        return respondedApplicantRepository.findByVacancyId(vacancyId.intValue()).stream()
+        return respondedApplicantRepository.findByVacancyId(vacancyId).stream()
                 .map(r -> {
-                    ResumeDto resume = resumeService.getById(r.getResumeId());
-                    return userService.findById(resume.getApplicantId());
+                    ResumeDto resume = resumeService.getById(r.getResumeId().intValue());
+                    return userService.findById(resume.getApplicantId().longValue());
                 })
                 .toList();
     }
-
 
     @Transactional
     public void respond(Long resumeId, Long vacancyId) {
         log.info("Отклик на вакансию id: {} с резюме id: {}", vacancyId, resumeId);
         RespondedApplicant response = RespondedApplicant.builder()
-                .resumeId(resumeId.intValue())
-                .vacancyId(vacancyId.intValue())
+                .resumeId(resumeId)
+                .vacancyId(vacancyId)
                 .confirmation(false)
                 .build();
         respondedApplicantRepository.save(response);
