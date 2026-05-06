@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EducationInfoRepository extends JpaRepository<EducationInfo, Integer> {
+public interface EducationInfoRepository extends JpaRepository<EducationInfo, Long> {
     List<EducationInfo> findByResumeId(Integer resumeId);
     void deleteByResumeId(Integer resumeId);
 }
