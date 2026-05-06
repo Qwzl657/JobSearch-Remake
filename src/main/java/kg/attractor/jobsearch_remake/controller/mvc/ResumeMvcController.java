@@ -25,17 +25,6 @@ public class ResumeMvcController {
     private final ResumeService resumeService;
     private final UserService userService;
 
-    @GetMapping
-    public String resumesList(Model model,
-                              @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "5") int size) {
-        Page<ResumeDto> resumePage = resumeService.getAllPaged(page, size);
-        model.addAttribute("resumes", resumePage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", resumePage.getTotalPages());
-        return "resumes/list";
-    }
-
     @GetMapping("/all")
     public String allResumes(Model model,
                              @RequestParam(defaultValue = "0") int page,
@@ -62,6 +51,7 @@ public class ResumeMvcController {
             model.addAttribute("resumeDto", resumeDto);
             return "resumes/form";
         }
+
         UserDto user = userService.getByEmail(auth.getName());
         resumeDto.setApplicantId(user.getId().intValue());
         resumeService.create(resumeDto);

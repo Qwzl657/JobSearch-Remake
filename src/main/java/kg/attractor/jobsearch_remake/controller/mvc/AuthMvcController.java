@@ -1,11 +1,11 @@
 package kg.attractor.jobsearch_remake.controller.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import kg.attractor.jobsearch_remake.dto.UserDto;
+import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -33,24 +34,24 @@ public class AuthMvcController {
 
     @GetMapping("/register")
     public String registerPage(Model model) {
-        model.addAttribute("userDto", new UserDto());
+
+        model.addAttribute("userDto", new UserCreateDto());
         return "auth/register";
     }
 
     @PostMapping("/register")
-    public String register(@Valid UserDto userDto,
+    public String register(@Valid UserCreateDto userDto,
                            BindingResult bindingResult,
                            Model model,
-                           HttpServletRequest request,
-                           HttpServletResponse response) {
+                           HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("userDto", userDto);
             return "auth/register";
         }
 
         userService.create(userDto);
+        log.info("Зарегистрирован новый пользователь: {}", userDto.getEmail());
 
-        // Автоматическая авторизация после регистрации
         var authorities = List.of(
                 new SimpleGrantedAuthority("ROLE_" + userDto.getAccountType())
         );
@@ -63,7 +64,6 @@ public class AuthMvcController {
                 SecurityContextHolder.getContext()
         );
 
-        // Редирект в зависимости от роли
         if (userDto.getAccountType().equals("EMPLOYER")) {
             return "redirect:/resumes/all";
         }
