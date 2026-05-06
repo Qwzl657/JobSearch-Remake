@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.service.impl;
 
+import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.repository.UserRepository;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -22,37 +24,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        log.info("Fetching all users");
+        log.info("Получение всех пользователей");
         return userRepository.findAll().stream()
                 .map(this::toDto)
                 .toList();
     }
 
     @Override
-    public UserDto findById(Integer id) {
-        log.info("Fetching user by id: {}", id);
+    public UserDto findById(Long id) {
+        log.info("Получение пользователя по id: {}", id);
         return userRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> {
-                    log.error("User not found with id: {}", id);
-                    return new NoSuchElementException("User not found: " + id);
+                    log.error("Пользователь не найден с id: {}", id);
+                    return new NoSuchElementException("Пользователь не найден: " + id);
                 });
     }
 
     @Override
     public UserDto getByEmail(String email) {
-        log.info("Fetching user by email: {}", email);
+        log.info("Получение пользователя по email: {}", email);
         return userRepository.findByEmail(email)
                 .map(this::toDto)
                 .orElseThrow(() -> {
-                    log.error("User not found with email: {}", email);
-                    return new NoSuchElementException("User not found: " + email);
+                    log.error("Пользователь не найден с email: {}", email);
+                    return new NoSuchElementException("Пользователь не найден: " + email);
                 });
     }
 
     @Override
     public List<UserDto> getEmployers() {
-        log.info("Fetching all employers");
+        log.info("Получение всех работодателей");
         return userRepository.findByAccountType("EMPLOYER").stream()
                 .map(this::toDto)
                 .toList();
@@ -60,15 +62,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getApplicants() {
-        log.info("Fetching all applicants");
+        log.info("Получение всех соискателей");
         return userRepository.findByAccountType("APPLICANT").stream()
                 .map(this::toDto)
                 .toList();
     }
 
+
     @Override
-    public void create(UserDto dto) {
-        log.info("Creating user: {}", dto.getEmail());
+    @Transactional
+    public void create(UserCreateDto dto) {
+        log.info("Создание пользователя: {}", dto.getEmail());
         User user = User.builder()
                 .name(dto.getName())
                 .surname(dto.getSurname())
@@ -76,7 +80,7 @@ public class UserServiceImpl implements UserService {
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .phoneNumber(dto.getPhoneNumber())
-                .avatar(dto.getAvatar() != null ? dto.getAvatar() : "default.png")
+                .avatar("default.png")
                 .accountType(dto.getAccountType())
                 .enabled(true)
                 .build();
@@ -84,29 +88,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(Integer id, UserDto dto) {
-        log.info("Updating user id: {}", id);
+    @Transactional
+    public void update(Long id, UserDto dto) {
+        log.info("Обновление пользователя id: {}", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Пользователь не найден: " + id));
+
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
         user.setAge(dto.getAge());
         user.setPhoneNumber(dto.getPhoneNumber());
-        if (dto.getAvatar() != null) {
+
+        if (dto.getAvatar() != null && !dto.getAvatar().isBlank()) {
             user.setAvatar(dto.getAvatar());
         }
+
         userRepository.save(user);
     }
 
     @Override
-    public void delete(Integer id) {
-        log.warn("Deleting user id: {}", id);
+    @Transactional
+    public void delete(Long id) {
+        log.warn("Удаление пользователя id: {}", id);
         userRepository.deleteById(id);
     }
 
     private UserDto toDto(User u) {
         return UserDto.builder()
-                .id(u.getId().longValue())
+                .id(u.getId())
                 .name(u.getName())
                 .surname(u.getSurname())
                 .age(u.getAge())
