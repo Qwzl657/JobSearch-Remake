@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,53 +26,60 @@ public class ResumeService {
     private final EducationInfoService educationInfoService;
     private final ContactInfoService contactInfoService;
 
+    @Transactional(readOnly = true)
     public List<ResumeDto> getAllDto() {
-        log.info("Fetching all resumes");
+        log.info("Получение всех резюме");
         return resumeRepository.findAll().stream()
                 .map(this::toDto)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public Page<ResumeDto> getAllPaged(int page, int size) {
-        log.info("Fetching resumes page: {}", page);
+        log.info("Получение резюме, страница: {}", page);
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.desc("updateTime")));
         return resumeRepository.findAll(pageable).map(this::toDto);
     }
 
+    @Transactional(readOnly = true)
     public List<ResumeDto> getByCategory(Integer categoryId) {
-        log.info("Fetching resumes by category id: {}", categoryId);
+        log.info("Получение резюме по категории id: {}", categoryId);
         return resumeRepository.findByCategoryId(categoryId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ResumeDto> getByApplicant(Integer applicantId) {
-        log.info("Fetching resumes for applicant id: {}", applicantId);
+        log.info("Получение резюме соискателя id: {}", applicantId);
         return resumeRepository.findByApplicantId(applicantId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public Page<ResumeDto> getByApplicantPaged(Integer applicantId, int page, int size) {
-        log.info("Fetching resumes for applicant id: {} page: {}", applicantId, page);
+        log.info("Получение резюме соискателя id: {}, страница: {}", applicantId, page);
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.desc("updateTime")));
         return resumeRepository.findByApplicantId(applicantId, pageable).map(this::toDto);
     }
 
+    @Transactional(readOnly = true)
     public ResumeDto getById(Integer id) {
-        log.info("Fetching resume by id: {}", id);
+        log.info("Получение резюме по id: {}", id);
         return resumeRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> {
-                    log.error("Resume not found with id: {}", id);
-                    return new NoSuchElementException("Resume not found: " + id);
+                    log.error("Резюме не найдено с id: {}", id);
+                    return new NoSuchElementException("Резюме не найдено: " + id);
                 });
     }
 
+    @Transactional
     public void create(ResumeDto dto) {
-        log.info("Creating resume: {}", dto.getName());
+        log.info("Создание резюме: {}", dto.getName());
         Resume r = Resume.builder()
                 .applicantId(dto.getApplicantId())
                 .name(dto.getName())
@@ -87,10 +95,11 @@ public class ResumeService {
         contactInfoService.createForResume(saved.getId(), dto.getContactInfos());
     }
 
+    @Transactional
     public void update(Integer id, ResumeDto dto) {
-        log.info("Updating resume id: {}", id);
+        log.info("Обновление резюме id: {}", id);
         Resume r = resumeRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Resume not found: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Резюме не найдено: " + id));
         r.setName(dto.getName());
         r.setCategoryId(dto.getCategoryId());
         r.setSalary(dto.getSalary());
@@ -102,8 +111,9 @@ public class ResumeService {
         contactInfoService.updateForResume(id, dto.getContactInfos());
     }
 
+    @Transactional
     public void delete(Integer id) {
-        log.warn("Deleting resume id: {}", id);
+        log.warn("Удаление резюме id: {}", id);
         workExperienceInfoService.deleteByResumeId(id);
         educationInfoService.deleteByResumeId(id);
         contactInfoService.deleteByResumeId(id);
