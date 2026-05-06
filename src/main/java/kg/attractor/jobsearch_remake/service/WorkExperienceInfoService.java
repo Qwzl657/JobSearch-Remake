@@ -32,7 +32,6 @@ public class WorkExperienceInfoService {
         dtos.forEach(dto -> workExperienceInfoRepository.save(toModel(resumeId, dto)));
     }
 
-
     public void updateForResume(Integer resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление опыта работы для резюме id: {}", resumeId);
@@ -47,7 +46,7 @@ public class WorkExperienceInfoService {
 
     private WorkExperienceInfoDto toDto(WorkExperienceInfo info) {
         return WorkExperienceInfoDto.builder()
-                .id(info.getId())
+                .id(info.getId().intValue()) // ✅ Long → Integer для DTO
                 .resumeId(info.getResumeId())
                 .years(info.getYears())
                 .companyName(info.getCompanyName())

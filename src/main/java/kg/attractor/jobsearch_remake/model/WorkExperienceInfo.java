@@ -13,7 +13,7 @@ public class WorkExperienceInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "resume_id")
     private Integer resumeId;
@@ -27,6 +27,6 @@ public class WorkExperienceInfo {
     @Column(name = "position")
     private String position;
 
-    @Column(name = "responsibilities")
+    @Column(name = "responsibilities", columnDefinition = "TEXT")
     private String responsibilities;
 }

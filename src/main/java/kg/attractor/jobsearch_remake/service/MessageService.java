@@ -31,7 +31,7 @@ public class MessageService {
                 });
     }
 
-    public void send(Integer respondedApplicantId, String content) {
+    public void send(Long respondedApplicantId, String content) {
         log.info("Sending message for responded applicant id: {}", respondedApplicantId);
         Message message = Message.builder()
                 .respondedApplicants(respondedApplicantId)

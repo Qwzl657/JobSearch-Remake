@@ -32,7 +32,6 @@ public class EducationInfoService {
         dtos.forEach(dto -> educationInfoRepository.save(toModel(resumeId, dto)));
     }
 
-
     public void updateForResume(Integer resumeId, List<EducationInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление образования для резюме id: {}", resumeId);
@@ -47,7 +46,7 @@ public class EducationInfoService {
 
     private EducationInfoDto toDto(EducationInfo info) {
         return EducationInfoDto.builder()
-                .id(info.getId())
+                .id(info.getId().intValue()) // ✅ Long → Integer
                 .resumeId(info.getResumeId())
                 .institution(info.getInstitution())
                 .program(info.getProgram())

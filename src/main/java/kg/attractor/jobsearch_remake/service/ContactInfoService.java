@@ -32,7 +32,6 @@ public class ContactInfoService {
         dtos.forEach(dto -> contactInfoRepository.save(toModel(resumeId, dto)));
     }
 
-
     public void updateForResume(Integer resumeId, List<ContactInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление контактов для резюме id: {}", resumeId);
@@ -47,7 +46,7 @@ public class ContactInfoService {
 
     private ContactInfoDto toDto(ContactInfo info) {
         return ContactInfoDto.builder()
-                .id(info.getId())
+                .id(info.getId().intValue()) // ✅ Long → Integer
                 .resumeId(info.getResumeId())
                 .typeId(info.getTypeId())
                 .value(info.getValue())

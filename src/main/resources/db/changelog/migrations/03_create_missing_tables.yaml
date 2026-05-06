@@ -1,38 +1,27 @@
 databaseChangeLog:
   - changeSet:
-      id: add-parent-id-to-categories
-      author: you
-      changes:
-        - addColumn:
-            tableName: categories
-            columns:
-              - column:
-                  name: parent_id
-                  type: INT
-
-  - changeSet:
-      id: create-messages-table
-      author: you
+      id: create-messages
+      author: jobsearch
       changes:
         - createTable:
             tableName: messages
             columns:
               - column:
                   name: id
-                  type: INT
+                  type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
               - column:
                   name: responded_applicants
-                  type: INT
+                  type: BIGINT
                   constraints:
                     nullable: false
                     foreignKeyName: fk_message_response
                     references: responded_applicants(id)
               - column:
                   name: content
-                  type: TEXT
+                  type: VARCHAR(1000)
                   constraints:
                     nullable: false
               - column:
@@ -40,11 +29,3 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
-  - changeSet:
-      id: fix-messages-content-type
-      author: you
-      changes:
-        - modifyDataType:
-            tableName: messages
-            columnName: content
-            newDataType: VARCHAR(1000)

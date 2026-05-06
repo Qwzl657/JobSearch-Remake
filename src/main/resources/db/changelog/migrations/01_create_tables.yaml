@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: create-tables
-      author: you
+      id: create-categories
+      author: jobsearch
       changes:
         - createTable:
             tableName: categories
@@ -15,7 +15,16 @@ databaseChangeLog:
               - column:
                   name: name
                   type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: INT
 
+  - changeSet:
+      id: create-users
+      author: jobsearch
+      changes:
         - createTable:
             tableName: users
             columns:
@@ -28,9 +37,13 @@ databaseChangeLog:
               - column:
                   name: name
                   type: VARCHAR(100)
+                  constraints:
+                    nullable: false
               - column:
                   name: surname
                   type: VARCHAR(100)
+                  constraints:
+                    nullable: false
               - column:
                   name: age
                   type: INT
@@ -39,19 +52,54 @@ databaseChangeLog:
                   type: VARCHAR(100)
                   constraints:
                     unique: true
+                    nullable: false
               - column:
                   name: password
-                  type: VARCHAR(100)
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: phone_number
                   type: VARCHAR(50)
               - column:
                   name: avatar
                   type: VARCHAR(255)
+                  defaultValue: default.png
               - column:
                   name: account_type
                   type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
 
+  - changeSet:
+      id: create-contact-types
+      author: jobsearch
+      changes:
+        - createTable:
+            tableName: contact_types
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-resumes
+      author: jobsearch
+      changes:
         - createTable:
             tableName: resumes
             columns:
@@ -71,6 +119,8 @@ databaseChangeLog:
               - column:
                   name: name
                   type: VARCHAR(100)
+                  constraints:
+                    nullable: false
               - column:
                   name: category_id
                   type: INT
@@ -83,6 +133,7 @@ databaseChangeLog:
               - column:
                   name: is_active
                   type: BOOLEAN
+                  defaultValueBoolean: true
               - column:
                   name: created_date
                   type: TIMESTAMP
@@ -90,6 +141,10 @@ databaseChangeLog:
                   name: update_time
                   type: TIMESTAMP
 
+  - changeSet:
+      id: create-work-experience-info
+      author: jobsearch
+      changes:
         - createTable:
             tableName: work_experience_info
             columns:
@@ -119,6 +174,10 @@ databaseChangeLog:
                   name: responsibilities
                   type: TEXT
 
+  - changeSet:
+      id: create-education-info
+      author: jobsearch
+      changes:
         - createTable:
             tableName: education_info
             columns:
@@ -151,19 +210,10 @@ databaseChangeLog:
                   name: degree
                   type: VARCHAR(50)
 
-        - createTable:
-            tableName: contact_types
-            columns:
-              - column:
-                  name: id
-                  type: INT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: type
-                  type: VARCHAR(50)
-
+  - changeSet:
+      id: create-contact-info
+      author: jobsearch
+      changes:
         - createTable:
             tableName: contact_info
             columns:
@@ -190,6 +240,10 @@ databaseChangeLog:
                   name: value
                   type: VARCHAR(255)
 
+  - changeSet:
+      id: create-vacancies
+      author: jobsearch
+      changes:
         - createTable:
             tableName: vacancies
             columns:
@@ -202,6 +256,8 @@ databaseChangeLog:
               - column:
                   name: name
                   type: VARCHAR(100)
+                  constraints:
+                    nullable: false
               - column:
                   name: description
                   type: TEXT
@@ -223,6 +279,7 @@ databaseChangeLog:
               - column:
                   name: is_active
                   type: BOOLEAN
+                  defaultValueBoolean: true
               - column:
                   name: author_id
                   type: BIGINT
@@ -237,6 +294,10 @@ databaseChangeLog:
                   name: update_time
                   type: TIMESTAMP
 
+  - changeSet:
+      id: create-responded-applicants
+      author: jobsearch
+      changes:
         - createTable:
             tableName: responded_applicants
             columns:
@@ -263,3 +324,4 @@ databaseChangeLog:
               - column:
                   name: confirmation
                   type: BOOLEAN
+                  defaultValueBoolean: false
