@@ -21,24 +21,24 @@ import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @Controller
-@RequestMapping("auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthMvcController {
 
     private final UserService userService;
 
-    @GetMapping("login")
-    public String login() {
+    @GetMapping("/login")
+    public String loginPage() {
         return "auth/login";
     }
 
-    @GetMapping("register")
-    public String register(Model model) {
+    @GetMapping("/register")
+    public String registerPage(Model model) {
         model.addAttribute("userCreateDto", new UserCreateDto());
         return "auth/register";
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public String register(@Valid UserCreateDto userCreateDto,
                            BindingResult bindingResult,
                            Model model) {
@@ -48,22 +48,22 @@ public class AuthMvcController {
         }
 
         userService.create(userCreateDto);
+        log.info("Зарегистрирован новый пользователь: {}", userCreateDto.getEmail());
 
         userService.autoLogin(userCreateDto.getEmail());
 
-        String accountType = userCreateDto.getAccountType();
-        if ("EMPLOYER".equals(accountType)) {
+        if ("EMPLOYER".equals(userCreateDto.getAccountType())) {
             return "redirect:/resumes/all";
         }
         return "redirect:/vacancies";
     }
 
-    @GetMapping("forgot-password")
+    @GetMapping("/forgot-password")
     public String showForgotPassword() {
         return "auth/forgot_password_form";
     }
 
-    @PostMapping("forgot-password")
+    @PostMapping("/forgot-password")
     public String processForgotPassword(HttpServletRequest request, Model model) {
         try {
             userService.makeResetPwdLink(request);
@@ -78,7 +78,7 @@ public class AuthMvcController {
         return "auth/forgot_password_form";
     }
 
-    @GetMapping("reset-password")
+    @GetMapping("/reset-password")
     public String showResetPassword(@RequestParam String token, Model model) {
         try {
             userService.getByResetPasswordToken(token);
@@ -89,7 +89,7 @@ public class AuthMvcController {
         return "auth/reset_password_form";
     }
 
-    @PostMapping("reset-password")
+    @PostMapping("/reset-password")
     public String processResetPassword(HttpServletRequest request, Model model) {
         String token = request.getParameter("token");
         String password = request.getParameter("password");
