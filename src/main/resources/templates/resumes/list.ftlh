@@ -1,53 +1,53 @@
-<#import "../layout/base.ftlh" as layout>
-<@layout.base>
+<#import "/spring.ftl" as spring>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><@spring.message 'resume.title'/></title>
+</head>
+<body>
 
-    <h4 class="mb-3">Резюме</h4>
+<h2><@spring.message 'resume.title'/></h2>
 
-    <!-- Список резюме -->
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <#if resumes?has_content>
-            <#list resumes as resume>
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">${resume.name}</h5>
-                            <p class="text-muted">Зарплата: ${resume.salary} сом</p>
-                            <small class="text-muted">Обновлено: ${resume.updateTime}</small>
-                        </div>
-                        <div class="card-footer d-flex gap-2">
-                            <a href="/resumes/${resume.id}" class="btn btn-sm btn-dark">Подробнее</a>
-                        </div>
-                    </div>
-                </div>
-            </#list>
-        <#else>
-            <p class="text-muted">Резюме пока нет</p>
-        </#if>
-    </div>
+<#-- Кнопка создать (только для соискателя) -->
+<#if springMacroRequestContext.getUserPrincipal()??>
+    <a href="/resumes/create"><@spring.message 'resume.create'/></a>
+</#if>
 
-    <!-- Пагинация -->
-    <#if totalPages gt 1>
-        <nav class="mt-4">
-            <ul class="pagination justify-content-center">
-                <#if currentPage gt 0>
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${currentPage - 1}&size=5">Назад</a>
-                    </li>
-                </#if>
+<#-- Список резюме -->
+<#if resumes?has_content>
+    <#list resumes as resume>
+        <div>
+            <h3>${resume.name}</h3>
+            <p><@spring.message 'resume.salary'/>: ${resume.salary!}</p>
+            <p>
+                <@spring.message 'resume.active'/>:
+                <#if resume.active>✓<#else>✗</#if>
+            </p>
+            <a href="/resumes/${resume.id}/edit"><@spring.message 'resume.edit'/></a>
+        </div>
+        <hr>
+    </#list>
+<#else>
+    <p><@spring.message 'resume.no.results'/></p>
+</#if>
 
-                <#list 0..(totalPages-1) as p>
-                    <li class="page-item ${(p == currentPage)?then("active", "")}">
-                        <a class="page-link" href="?page=${p}&size=5">${p + 1}</a>
-                    </li>
-                </#list>
-
-                <#if currentPage lt totalPages - 1>
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${currentPage + 1}&size=5">Вперёд</a>
-                    </li>
-                </#if>
-            </ul>
-        </nav>
+<#-- Пагинация -->
+<div>
+    <#if currentPage gt 0>
+        <a href="/resumes/all?page=${currentPage - 1}">
+            <@spring.message 'page.prev'/>
+        </a>
     </#if>
 
-</@layout.base>
+    <span>${currentPage + 1} / ${totalPages}</span>
+
+    <#if currentPage lt totalPages - 1>
+        <a href="/resumes/all?page=${currentPage + 1}">
+            <@spring.message 'page.next'/>
+        </a>
+    </#if>
+</div>
+
+</body>
+</html>

@@ -4,7 +4,6 @@ server:
 spring:
   application:
     name: jobsearch-remake
-
   servlet:
     multipart:
       max-file-size: 5MB
@@ -38,21 +37,22 @@ spring:
     init:
       mode: never
 
+
+  mail:
+    host: smtp.gmail.com
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PWD}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 logging:
   config: classpath:logback-spring.xml
   level:
     root: INFO
     kg.attractor: DEBUG
     org.springframework.security: DEBUG
-
-mail:
-  host: smtp.gmail.com
-  username: ${SMTP_USERNAME}
-  password: ${SMTP_PWD}
-  port: 587
-  properties:
-    mail:
-      smtp:
-        auth: true
-        starttls:
-          enable: true

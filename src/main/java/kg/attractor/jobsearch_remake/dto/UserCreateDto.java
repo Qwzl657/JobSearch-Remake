@@ -17,29 +17,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserCreateDto {
 
-    @NotBlank(message = "Имя не может быть пустым")
+    @NotBlank(message = "{validation.name.blank}")
     private String name;
 
-    @NotBlank(message = "Фамилия не может быть пустой")
+    @NotBlank(message = "{validation.surname.blank}")
     private String surname;
 
-    @Min(value = 14, message = "Возраст не менее 14 лет")
-    @Max(value = 100, message = "Возраст не более 100 лет")
+    @Min(value = 14, message = "{validation.age.min}")
+    @Max(value = 100, message = "{validation.age.max}")
     private Integer age;
 
-    @NotBlank(message = "Email не может быть пустым")
-    @Email(message = "Неверный формат email")
+    @NotBlank(message = "{validation.email.blank}")
+    @Email(message = "{validation.email.invalid}")
     private String email;
 
-    @NotBlank(message = "Телефон не может быть пустым")
-    @Pattern(regexp = "^\\+?[0-9]{7,15}$", message = "Неверный формат телефона")
+    @NotBlank(message = "{validation.phone.blank}")
+    @Pattern(regexp = "^\\+?[0-9]{7,15}$", message = "{validation.phone.invalid}")
     private String phoneNumber;
 
-    @NotBlank(message = "Тип аккаунта не может быть пустым")
-    @Pattern(regexp = "^(APPLICANT|EMPLOYER)$", message = "Тип аккаунта: APPLICANT или EMPLOYER")
+    @NotBlank(message = "{validation.accountType.blank}")
+    @Pattern(regexp = "^(APPLICANT|EMPLOYER)$", message = "{validation.accountType.invalid}")
     private String accountType;
 
-    @NotBlank(message = "Пароль не может быть пустым")
-    @Size(min = 8, message = "Пароль не менее 8 символов")
+    @NotBlank(message = "{validation.password.blank}")
+    @Size(min = 8, message = "{validation.password.size}")
     private String password;
 }

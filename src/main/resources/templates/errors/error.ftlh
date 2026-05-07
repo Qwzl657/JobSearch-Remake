@@ -1,20 +1,31 @@
-<#import "../layout/base.ftlh" as layout>
-<@layout.base>
-
-    <div class="text-center mt-5">
-        <h1 class="display-1 fw-bold text-danger">${status}</h1>
-        <h2 class="mb-4">${reason}</h2>
-        <#if details??>
-            <div class="card mx-auto" style="max-width: 600px;">
-                <div class="card-body text-start">
-                    <p><strong>URL:</strong> ${details.requestURL!""}</p>
-                    <p><strong>Host:</strong> ${details.serverName!""}</p>
-                    <p><strong>Port:</strong> ${details.serverPort!""}</p>
-                    <p><strong>Time:</strong> ${.now}</p>
-                </div>
-            </div>
+<#import "/spring.ftl" as spring>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <#if status?? && status == 404>
+            <@spring.message 'error.404.title'/>
+        <#else>
+            <@spring.message 'error.500.title'/>
         </#if>
-        <a href="/" class="btn btn-primary mt-3">На главную</a>
-    </div>
+    </title>
+</head>
+<body>
 
-</@layout.base>
+<h2>
+    <#if status?? && status == 404>
+        <@spring.message 'error.404.title'/>
+    <#else>
+        <@spring.message 'error.500.title'/>
+    </#if>
+</h2>
+
+<#if reason??>
+    <p>${reason}</p>
+</#if>
+
+<a href="/vacancies"><@spring.message 'error.back'/></a>
+
+</body>
+</html>

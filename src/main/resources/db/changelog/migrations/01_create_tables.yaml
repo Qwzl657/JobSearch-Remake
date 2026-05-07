@@ -172,7 +172,7 @@ databaseChangeLog:
                   type: VARCHAR(100)
               - column:
                   name: responsibilities
-                  type: TEXT
+                  type: VARCHAR(2000)
 
   - changeSet:
       id: create-education-info
@@ -260,7 +260,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: description
-                  type: TEXT
+                  type: VARCHAR(2000)
               - column:
                   name: category_id
                   type: INT
