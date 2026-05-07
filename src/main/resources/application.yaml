@@ -44,3 +44,15 @@ logging:
     root: INFO
     kg.attractor: DEBUG
     org.springframework.security: DEBUG
+
+mail:
+  host: smtp.gmail.com
+  username: ${SMTP_USERNAME}
+  password: ${SMTP_PWD}
+  port: 587
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
