@@ -46,7 +46,7 @@ public class EducationInfoService {
 
     private EducationInfoDto toDto(EducationInfo info) {
         return EducationInfoDto.builder()
-                .id(info.getId().intValue()) // ✅ Long → Integer
+                .id(info.getId().intValue())
                 .resumeId(info.getResumeId())
                 .institution(info.getInstitution())
                 .program(info.getProgram())

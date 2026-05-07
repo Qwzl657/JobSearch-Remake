@@ -46,7 +46,7 @@ public class ContactInfoService {
 
     private ContactInfoDto toDto(ContactInfo info) {
         return ContactInfoDto.builder()
-                .id(info.getId().intValue()) // ✅ Long → Integer
+                .id(info.getId().intValue())
                 .resumeId(info.getResumeId())
                 .typeId(info.getTypeId())
                 .value(info.getValue())

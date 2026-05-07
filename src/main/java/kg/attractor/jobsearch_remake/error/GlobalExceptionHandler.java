@@ -1,65 +1,60 @@
 package kg.attractor.jobsearch_remake.error;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kg.attractor.jobsearch_remake.exception.ResumeNotFoundException;
+import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
+import kg.attractor.jobsearch_remake.exception.VacancyNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.NoSuchElementException;
 
 @Slf4j
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public String notFound(HttpServletRequest request, Model model) {
-        log.error("Элемент не найден: {}", request.getRequestURI());
+    @ExceptionHandler({
+            UserNotFoundException.class,
+            VacancyNotFoundException.class,
+            ResumeNotFoundException.class
+    })
+    public String notFoundHandler(HttpServletRequest request,
+                                  RuntimeException e,
+                                  Model model) {
+        log.error("Not found: {}", request.getRequestURI());
         model.addAttribute("status", HttpStatus.NOT_FOUND.value());
-        model.addAttribute("reason", HttpStatus.NOT_FOUND.getReasonPhrase());
-        model.addAttribute("details", request.getRequestURI()); // ✅ только URI
-        return "/errors/error";
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String badRequest(HttpServletRequest request, Model model) {
-        log.error("Неверный запрос: {}", request.getRequestURI());
-        model.addAttribute("status", HttpStatus.BAD_REQUEST.value());
-        model.addAttribute("reason", HttpStatus.BAD_REQUEST.getReasonPhrase());
-        model.addAttribute("details", request.getRequestURI());
-        return "/errors/error";
+        model.addAttribute("reason", HttpStatus.NOT_FOUND.getReasonPhrase() + ": " + e.getMessage());
+        model.addAttribute("details", request);
+        return "errors/error";
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String validationError(HttpServletRequest request,
-                                  MethodArgumentNotValidException ex,
-                                  Model model) {
-        log.error("Ошибка валидации на: {}", request.getRequestURI());
-        String firstError = ex.getBindingResult()
+    public ResponseEntity<ErrorResponseBody> validationHandler(MethodArgumentNotValidException e) {
+        log.error("Validation error: {}", e.getMessage());
+        String firstError = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .findFirst()
                 .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
-                .orElse("Ошибка валидации");
-        model.addAttribute("status", HttpStatus.BAD_REQUEST.value());
-        model.addAttribute("reason", firstError);
-        model.addAttribute("details", request.getRequestURI());
-        return "/errors/error";
+                .orElse("Validation error");
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponseBody(HttpStatus.BAD_REQUEST.value(), firstError));
     }
 
     @ExceptionHandler(Exception.class)
-    public String serverError(HttpServletRequest request,
-                              Exception ex,
-                              Model model) {
-        log.error("Внутренняя ошибка сервера на: {}, причина: {}",
-                request.getRequestURI(), ex.getMessage());
+    public String serverErrorHandler(HttpServletRequest request,
+                                     Exception e,
+                                     Model model) {
+        log.error("Server error on: {}, reason: {}", request.getRequestURI(), e.getMessage());
         model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         model.addAttribute("reason", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        model.addAttribute("details", request.getRequestURI());
-        return "/errors/error";
+        model.addAttribute("details", request);
+        return "errors/error";
     }
 }
