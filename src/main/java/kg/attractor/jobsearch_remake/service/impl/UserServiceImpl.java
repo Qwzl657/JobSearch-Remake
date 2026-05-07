@@ -1,5 +1,7 @@
 package kg.attractor.jobsearch_remake.service.impl;
 
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
@@ -14,6 +16,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import kg.attractor.jobsearch_remake.common.UrlBuilder;
+import kg.attractor.jobsearch_remake.service.EmailService;
+
+import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -22,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    private final EmailService emailService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -113,6 +121,38 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void delete(Long id) {
         log.warn("Удаление пользователя id: {}", id);
         userRepository.deleteById(id);
+    }
+
+    private void updateResetPasswordToken(String token, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        user.setResetPasswordToken(token);
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public User getByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void makeResetPwdLink(HttpServletRequest request)
+            throws UserNotFoundException, MessagingException, UnsupportedEncodingException {
+        String email = request.getParameter("email");
+        String token = UUID.randomUUID().toString();
+        updateResetPasswordToken(token, email);
+
+        String resetLink = UrlBuilder.getSiteUrl(request)
+                + "/auth/reset-password?token=" + token;
+        emailService.send(email, resetLink);
     }
 
     private UserDto toDto(User u) {
