@@ -37,12 +37,6 @@ spring:
     init:
       mode: never
 
-logging:
-  config: classpath:logback-spring.xml
-  level:
-    root: INFO
-    kg.attractor: DEBUG
-    org.springframework.security: DEBUG
 
   mail:
     host: smtp.gmail.com
@@ -55,3 +49,10 @@ logging:
           auth: true
           starttls:
             enable: true
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: INFO
+    kg.attractor: DEBUG
+    org.springframework.security: DEBUG
