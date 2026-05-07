@@ -1,59 +1,50 @@
-<#import "../layout/base.ftlh" as layout>
 <#import "/spring.ftl" as spring>
-<@layout.base>
-    <div class="card mx-auto mt-4" style="max-width: 600px;">
-        <div class="card-body">
-            <h3 class="mb-4">Регистрация</h3>
-            <form action="/auth/register" method="post">
-                <#-- Твой блок CSRF -->
-                <#if _csrf??>
-                    <input type="hidden"
-                           name="${(_csrf.parameterName)!'csrf'}"
-                           value="${(_csrf.token)!''}"/>
-                </#if>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><@spring.message 'auth.register.title'/></title>
+</head>
+<body>
 
-                <div class="mb-3">
-                    <label class="form-label">Имя</label>
-                    <@spring.formInput "userDto.name" 'class="form-control"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Фамилия</label>
-                    <@spring.formInput "userDto.surname" 'class="form-control"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Возраст</label>
-                    <@spring.formInput "userDto.age" 'class="form-control" type="number"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <@spring.formInput "userDto.email" 'class="form-control" type="email"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Пароль</label>
-                    <@spring.formInput "userDto.password" 'class="form-control" type="password"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Телефон</label>
-                    <@spring.formInput "userDto.phoneNumber" 'class="form-control"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Тип аккаунта</label>
-                    <select class="form-select" name="accountType" id="accountType">
-                        <option value="APPLICANT">Соискатель</option>
-                        <option value="EMPLOYER">Работодатель</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
-                <p class="mt-3 text-center">
-                    Уже есть аккаунт? <a href="/auth/login">Войти</a>
-                </p>
-            </form>
-        </div>
-    </div>
-</@layout.base>
+<h2><@spring.message 'auth.register.title'/></h2>
+
+<form method="post" action="/auth/register">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+    <label><@spring.message 'auth.register.name'/>:</label><br>
+    <input type="text" name="name" value="${userCreateDto.name!}" required/><br>
+    <#if userCreateDto.name?? && userCreateDto.name == "">
+        <span style="color:red"><@spring.message 'validation.name.blank'/></span>
+    </#if>
+    <br>
+
+    <label><@spring.message 'auth.register.surname'/>:</label><br>
+    <input type="text" name="surname" value="${userCreateDto.surname!}" required/><br><br>
+
+    <label><@spring.message 'auth.register.age'/>:</label><br>
+    <input type="number" name="age" value="${userCreateDto.age!}" min="14" max="100"/><br><br>
+
+    <label><@spring.message 'auth.register.email'/>:</label><br>
+    <input type="email" name="email" value="${userCreateDto.email!}" required/><br><br>
+
+    <label><@spring.message 'auth.register.phone'/>:</label><br>
+    <input type="text" name="phoneNumber" value="${userCreateDto.phoneNumber!}" required/><br><br>
+
+    <label><@spring.message 'auth.register.type'/>:</label><br>
+    <select name="accountType">
+        <option value="APPLICANT"><@spring.message 'auth.register.type.applicant'/></option>
+        <option value="EMPLOYER"><@spring.message 'auth.register.type.employer'/></option>
+    </select><br><br>
+
+    <label><@spring.message 'auth.register.password'/>:</label><br>
+    <input type="password" name="password" required minlength="8"/><br><br>
+
+    <button type="submit"><@spring.message 'auth.register.submit'/></button>
+</form>
+
+<br>
+<a href="/auth/login"><@spring.message 'auth.register.have.account'/></a>
+
+</body>
+</html>
