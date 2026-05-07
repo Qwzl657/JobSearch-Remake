@@ -48,6 +48,9 @@ public class User implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
     @Override
     public String getUsername() {
         return email;
