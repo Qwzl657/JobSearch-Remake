@@ -1,6 +1,7 @@
 package kg.attractor.jobsearch_remake.service;
 
 import kg.attractor.jobsearch_remake.dto.VacancyDto;
+import kg.attractor.jobsearch_remake.exception.VacancyNotFoundException;
 import kg.attractor.jobsearch_remake.model.Vacancy;
 import kg.attractor.jobsearch_remake.repository.VacancyRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -69,7 +69,7 @@ public class VacancyService {
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("Вакансия не найдена с id: {}", id);
-                    return new NoSuchElementException("Вакансия не найдена: " + id);
+                    return new VacancyNotFoundException();
                 });
     }
 
@@ -112,7 +112,10 @@ public class VacancyService {
     public void update(Integer id, VacancyDto dto) {
         log.info("Обновление вакансии id: {}", id);
         Vacancy v = vacancyRepository.findById(id.longValue())
-                .orElseThrow(() -> new NoSuchElementException("Вакансия не найдена: " + id));
+                .orElseThrow(() -> {
+                    log.error("Вакансия не найдена с id: {}", id);
+                    return new VacancyNotFoundException();
+                });
         v.setName(dto.getName());
         v.setDescription(dto.getDescription());
         v.setCategoryId(dto.getCategoryId());

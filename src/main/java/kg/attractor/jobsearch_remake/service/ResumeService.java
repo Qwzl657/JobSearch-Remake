@@ -1,6 +1,7 @@
 package kg.attractor.jobsearch_remake.service;
 
 import kg.attractor.jobsearch_remake.dto.ResumeDto;
+import kg.attractor.jobsearch_remake.exception.ResumeNotFoundException;
 import kg.attractor.jobsearch_remake.model.Resume;
 import kg.attractor.jobsearch_remake.repository.ResumeRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -74,7 +74,7 @@ public class ResumeService {
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("Резюме не найдено с id: {}", id);
-                    return new NoSuchElementException("Резюме не найдено: " + id);
+                    return new ResumeNotFoundException();
                 });
     }
 
@@ -100,7 +100,10 @@ public class ResumeService {
     public void update(Integer id, ResumeDto dto) {
         log.info("Обновление резюме id: {}", id);
         Resume r = resumeRepository.findById(id.longValue())
-                .orElseThrow(() -> new NoSuchElementException("Резюме не найдено: " + id));
+                .orElseThrow(() -> {
+                    log.error("Резюме не найдено с id: {}", id);
+                    return new ResumeNotFoundException();
+                });
         r.setName(dto.getName());
         r.setCategoryId(dto.getCategoryId());
         r.setSalary(dto.getSalary());
