@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import kg.attractor.jobsearch_remake.common.UrlBuilder;
 import kg.attractor.jobsearch_remake.service.EmailService;
-
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
@@ -153,6 +156,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String resetLink = UrlBuilder.getSiteUrl(request)
                 + "/auth/reset-password?token=" + token;
         emailService.send(email, resetLink);
+    }
+
+    @Override
+    public void autoLogin(String email) {
+        log.info("Автоматический вход для: {}", email);
+        UserDetails userDetails = loadUserByUsername(email);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private UserDto toDto(User u) {
