@@ -12,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import kg.attractor.jobsearch_remake.exception.CategoryNotFoundException;
+import kg.attractor.jobsearch_remake.exception.ContactTypeNotFoundException;
+import kg.attractor.jobsearch_remake.exception.MessageNotFoundException;
 
 @Slf4j
 @ControllerAdvice
@@ -21,7 +24,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             UserNotFoundException.class,
             VacancyNotFoundException.class,
-            ResumeNotFoundException.class
+            ResumeNotFoundException.class,
+            CategoryNotFoundException.class,
+            MessageNotFoundException.class,
+            ContactTypeNotFoundException.class
     })
     public String notFoundHandler(HttpServletRequest request,
                                   RuntimeException e,
