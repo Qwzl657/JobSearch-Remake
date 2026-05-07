@@ -20,11 +20,10 @@ public interface UserService {
     void update(Long id, UserDto dto);
     void delete(Long id);
 
-
     void makeResetPwdLink(HttpServletRequest request)
             throws UserNotFoundException, MessagingException, UnsupportedEncodingException;
-
     User getByResetPasswordToken(String token);
-
     void updatePassword(User user, String newPassword);
+
+    void autoLogin(String email);
 }
