@@ -7,6 +7,7 @@ import kg.attractor.jobsearch_remake.service.ResumeService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import kg.attractor.jobsearch_remake.service.VacancyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/profile")
 @RequiredArgsConstructor
@@ -68,16 +71,18 @@ public class ProfileMvcController {
                               @RequestParam(required = false) MultipartFile avatar,
                               Authentication auth) throws IOException {
         UserDto user = userService.getByEmail(auth.getName());
+
         if (avatar != null && !avatar.isEmpty()) {
-            String filename = avatar.getOriginalFilename();
+            String filename = UUID.randomUUID() + "_" + avatar.getOriginalFilename();
             Path path = Paths.get("uploads/avatars/" + filename);
             Files.createDirectories(path.getParent());
             Files.write(path, avatar.getBytes());
             userDto.setAvatar(filename);
+            log.info("Аватар обновлён для пользователя: {}", auth.getName());
         } else {
             userDto.setAvatar(user.getAvatar());
         }
-        userService.update(user.getId().intValue(), userDto);
+        userService.update(user.getId(), userDto);
         return "redirect:/profile";
     }
 }

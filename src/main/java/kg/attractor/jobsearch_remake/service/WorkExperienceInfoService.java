@@ -6,18 +6,21 @@ import kg.attractor.jobsearch_remake.repository.WorkExperienceInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class WorkExperienceInfoService {
 
     private final WorkExperienceInfoRepository workExperienceInfoRepository;
 
+    @Transactional(readOnly = true)
     public List<WorkExperienceInfoDto> getByResumeId(Integer resumeId) {
-        log.info("Fetching work experience for resume id: {}", resumeId);
+        log.info("Получение опыта работы для резюме id: {}", resumeId);
         return workExperienceInfoRepository.findByResumeId(resumeId).stream()
                 .map(this::toDto)
                 .toList();
@@ -25,25 +28,25 @@ public class WorkExperienceInfoService {
 
     public void createForResume(Integer resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
-        log.info("Creating work experience for resume id: {}", resumeId);
+        log.info("Создание опыта работы для резюме id: {}", resumeId);
         dtos.forEach(dto -> workExperienceInfoRepository.save(toModel(resumeId, dto)));
     }
 
     public void updateForResume(Integer resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null) return;
-        log.info("Updating work experience for resume id: {}", resumeId);
+        log.info("Обновление опыта работы для резюме id: {}", resumeId);
         workExperienceInfoRepository.deleteByResumeId(resumeId);
         createForResume(resumeId, dtos);
     }
 
     public void deleteByResumeId(Integer resumeId) {
-        log.warn("Deleting work experience for resume id: {}", resumeId);
+        log.warn("Удаление опыта работы для резюме id: {}", resumeId);
         workExperienceInfoRepository.deleteByResumeId(resumeId);
     }
 
     private WorkExperienceInfoDto toDto(WorkExperienceInfo info) {
         return WorkExperienceInfoDto.builder()
-                .id(info.getId())
+                .id(info.getId().intValue()) // ✅ Long → Integer для DTO
                 .resumeId(info.getResumeId())
                 .years(info.getYears())
                 .companyName(info.getCompanyName())

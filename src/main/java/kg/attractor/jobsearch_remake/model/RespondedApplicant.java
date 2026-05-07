@@ -13,13 +13,13 @@ public class RespondedApplicant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "resume_id")
-    private Integer resumeId;
+    @Column(name = "resume_id", nullable = false)
+    private Long resumeId;
 
-    @Column(name = "vacancy_id")
-    private Integer vacancyId;
+    @Column(name = "vacancy_id", nullable = false)
+    private Long vacancyId;
 
     @Column(name = "confirmation")
     private boolean confirmation;

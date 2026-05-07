@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RespondedApplicantRepository extends JpaRepository<RespondedApplicant, Integer> {
-    List<RespondedApplicant> findByVacancyId(Integer vacancyId);
-    List<RespondedApplicant> findByResumeId(Integer resumeId);
+public interface RespondedApplicantRepository extends JpaRepository<RespondedApplicant, Long> {
+    List<RespondedApplicant> findByVacancyId(Long vacancyId);
+    List<RespondedApplicant> findByResumeId(Long resumeId);
 }

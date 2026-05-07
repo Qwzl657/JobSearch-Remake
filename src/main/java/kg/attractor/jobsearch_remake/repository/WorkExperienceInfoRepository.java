@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WorkExperienceInfoRepository extends JpaRepository<WorkExperienceInfo, Integer> {
+public interface WorkExperienceInfoRepository extends JpaRepository<WorkExperienceInfo, Long> {
     List<WorkExperienceInfo> findByResumeId(Integer resumeId);
     void deleteByResumeId(Integer resumeId);
 }

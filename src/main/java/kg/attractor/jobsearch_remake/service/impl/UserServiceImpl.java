@@ -1,58 +1,78 @@
 package kg.attractor.jobsearch_remake.service.impl;
 
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+import kg.attractor.jobsearch_remake.common.UrlBuilder;
+import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
+import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
 import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.repository.UserRepository;
+import kg.attractor.jobsearch_remake.service.EmailService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username)
+                .orElseThrow(UserNotFoundException::new);
+    }
 
     @Override
     public List<UserDto> getAll() {
-        log.info("Fetching all users");
+        log.info("Получение всех пользователей");
         return userRepository.findAll().stream()
                 .map(this::toDto)
                 .toList();
     }
 
     @Override
-    public UserDto findById(Integer id) {
-        log.info("Fetching user by id: {}", id);
+    public UserDto findById(Long id) {
+        log.info("Получение пользователя по id: {}", id);
         return userRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> {
-                    log.error("User not found with id: {}", id);
-                    return new NoSuchElementException("User not found: " + id);
+                    log.error("Пользователь не найден с id: {}", id);
+                    return new UserNotFoundException();
                 });
     }
 
     @Override
     public UserDto getByEmail(String email) {
-        log.info("Fetching user by email: {}", email);
+        log.info("Получение пользователя по email: {}", email);
         return userRepository.findByEmail(email)
                 .map(this::toDto)
                 .orElseThrow(() -> {
-                    log.error("User not found with email: {}", email);
-                    return new NoSuchElementException("User not found: " + email);
+                    log.error("Пользователь не найден с email: {}", email);
+                    return new UserNotFoundException();
                 });
     }
 
     @Override
     public List<UserDto> getEmployers() {
-        log.info("Fetching all employers");
+        log.info("Получение всех работодателей");
         return userRepository.findByAccountType("EMPLOYER").stream()
                 .map(this::toDto)
                 .toList();
@@ -60,15 +80,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getApplicants() {
-        log.info("Fetching all applicants");
+        log.info("Получение всех соискателей");
         return userRepository.findByAccountType("APPLICANT").stream()
                 .map(this::toDto)
                 .toList();
     }
 
     @Override
-    public void create(UserDto dto) {
-        log.info("Creating user: {}", dto.getEmail());
+    @Transactional
+    public void create(UserCreateDto dto) {
+        log.info("Создание пользователя: {}", dto.getEmail());
         User user = User.builder()
                 .name(dto.getName())
                 .surname(dto.getSurname())
@@ -76,7 +97,7 @@ public class UserServiceImpl implements UserService {
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .phoneNumber(dto.getPhoneNumber())
-                .avatar(dto.getAvatar() != null ? dto.getAvatar() : "default.png")
+                .avatar("default.png")
                 .accountType(dto.getAccountType())
                 .enabled(true)
                 .build();
@@ -84,29 +105,81 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(Integer id, UserDto dto) {
-        log.info("Updating user id: {}", id);
+    @Transactional
+    public void update(Long id, UserDto dto) {
+        log.info("Обновление пользователя id: {}", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found: " + id));
+                .orElseThrow(() -> {
+                    log.error("Пользователь не найден с id: {}", id);
+                    return new UserNotFoundException();
+                });
+
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
         user.setAge(dto.getAge());
         user.setPhoneNumber(dto.getPhoneNumber());
-        if (dto.getAvatar() != null) {
+
+        if (dto.getAvatar() != null && !dto.getAvatar().isBlank()) {
             user.setAvatar(dto.getAvatar());
         }
+
         userRepository.save(user);
     }
 
     @Override
-    public void delete(Integer id) {
-        log.warn("Deleting user id: {}", id);
+    @Transactional
+    public void delete(Long id) {
+        log.warn("Удаление пользователя id: {}", id);
         userRepository.deleteById(id);
+    }
+
+    private void updateResetPasswordToken(String token, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        user.setResetPasswordToken(token);
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public User getByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void makeResetPwdLink(HttpServletRequest request)
+            throws UserNotFoundException, MessagingException, UnsupportedEncodingException {
+        String email = request.getParameter("email");
+        String token = UUID.randomUUID().toString();
+        updateResetPasswordToken(token, email);
+
+        String resetLink = UrlBuilder.getSiteUrl(request)
+                + "/auth/reset-password?token=" + token;
+        emailService.send(email, resetLink);
+    }
+
+    @Override
+    public void autoLogin(String email) {
+        log.info("Автоматический вход для: {}", email);
+        UserDetails userDetails = loadUserByUsername(email);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private UserDto toDto(User u) {
         return UserDto.builder()
-                .id(u.getId().longValue())
+                .id(u.getId())
                 .name(u.getName())
                 .surname(u.getSurname())
                 .age(u.getAge())

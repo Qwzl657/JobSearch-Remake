@@ -15,14 +15,14 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "responded_applicants")
-    private Integer respondedApplicants;
+    @Column(name = "responded_applicants", nullable = false)
+    private Long respondedApplicants;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false, length = 1000)
     private String content;
 
-    @Column(name = "timestamp")
+    @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 }

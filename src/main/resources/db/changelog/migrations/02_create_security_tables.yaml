@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: create-authorities-and-roles
-      author: you
+      id: create-authorities
+      author: jobsearch
       changes:
         - createTable:
             tableName: authorities
@@ -18,6 +18,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
+  - changeSet:
+      id: create-roles
+      author: jobsearch
+      changes:
         - createTable:
             tableName: roles
             columns:
@@ -39,19 +43,3 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_role_authority
                     references: authorities(id)
-
-        - addColumn:
-            tableName: users
-            columns:
-              - column:
-                  name: enabled
-                  type: BOOLEAN
-                  defaultValueBoolean: true
-                  constraints:
-                    nullable: false
-              - column:
-                  name: role_id
-                  type: BIGINT
-                  constraints:
-                    foreignKeyName: fk_user_role
-                    references: roles(id)

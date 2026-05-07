@@ -3,7 +3,6 @@ package kg.attractor.jobsearch_remake.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,16 +15,16 @@ public class Resume {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "applicant_id")
-    private Integer applicantId;
+    @Column(name = "applicant_id", nullable = false)
+    private Long applicantId;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "category_id")
-    private int categoryId;
+    private Integer categoryId;
 
     @Column(name = "salary")
     private double salary;

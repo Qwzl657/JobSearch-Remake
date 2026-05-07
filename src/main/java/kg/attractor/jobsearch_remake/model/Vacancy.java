@@ -3,7 +3,6 @@ package kg.attractor.jobsearch_remake.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,12 +15,12 @@ public class Vacancy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "category_id")
@@ -39,8 +38,8 @@ public class Vacancy {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @Column(name = "author_id")
-    private Integer authorId;
+    @Column(name = "author_id", nullable = false)
+    private Long authorId;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;

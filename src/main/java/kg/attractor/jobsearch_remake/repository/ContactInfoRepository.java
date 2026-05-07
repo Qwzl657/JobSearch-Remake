@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ContactInfoRepository extends JpaRepository<ContactInfo, Integer> {
+public interface ContactInfoRepository extends JpaRepository<ContactInfo, Long> {
     List<ContactInfo> findByResumeId(Integer resumeId);
     void deleteByResumeId(Integer resumeId);
 }

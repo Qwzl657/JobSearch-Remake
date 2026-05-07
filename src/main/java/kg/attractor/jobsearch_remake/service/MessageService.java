@@ -1,14 +1,13 @@
 package kg.attractor.jobsearch_remake.service;
 
+import kg.attractor.jobsearch_remake.exception.MessageNotFoundException;
 import kg.attractor.jobsearch_remake.model.Message;
 import kg.attractor.jobsearch_remake.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -17,32 +16,17 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
 
-    public List<Message> getByRespondedApplicantId(Integer respondedApplicantId) {
-        log.info("Fetching messages for responded applicant id: {}", respondedApplicantId);
-        return messageRepository.findByRespondedApplicants(respondedApplicantId);
+    public List<Message> getAll() {
+        log.info("Получение всех сообщений");
+        return messageRepository.findAll();
     }
 
     public Message getById(Integer id) {
-        log.info("Fetching message by id: {}", id);
+        log.info("Получение сообщения по id: {}", id);
         return messageRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Message not found with id: {}", id);
-                    return new NoSuchElementException("Message not found: " + id);
+                    log.error("Сообщение не найдено с id: {}", id);
+                    return new MessageNotFoundException();
                 });
-    }
-
-    public void send(Integer respondedApplicantId, String content) {
-        log.info("Sending message for responded applicant id: {}", respondedApplicantId);
-        Message message = Message.builder()
-                .respondedApplicants(respondedApplicantId)
-                .content(content)
-                .timestamp(LocalDateTime.now())
-                .build();
-        messageRepository.save(message);
-    }
-
-    public void delete(Integer id) {
-        log.warn("Deleting message id: {}", id);
-        messageRepository.deleteById(id);
     }
 }
