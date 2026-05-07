@@ -2,25 +2,34 @@ package kg.attractor.jobsearch_remake.service.impl;
 
 import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
+import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
 import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.repository.UserRepository;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username)
+                .orElseThrow(UserNotFoundException::new);
+    }
 
     @Override
     public List<UserDto> getAll() {
@@ -35,10 +44,7 @@ public class UserServiceImpl implements UserService {
         log.info("Получение пользователя по id: {}", id);
         return userRepository.findById(id)
                 .map(this::toDto)
-                .orElseThrow(() -> {
-                    log.error("Пользователь не найден с id: {}", id);
-                    return new NoSuchElementException("Пользователь не найден: " + id);
-                });
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -46,10 +52,7 @@ public class UserServiceImpl implements UserService {
         log.info("Получение пользователя по email: {}", email);
         return userRepository.findByEmail(email)
                 .map(this::toDto)
-                .orElseThrow(() -> {
-                    log.error("Пользователь не найден с email: {}", email);
-                    return new NoSuchElementException("Пользователь не найден: " + email);
-                });
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -67,7 +70,6 @@ public class UserServiceImpl implements UserService {
                 .map(this::toDto)
                 .toList();
     }
-
 
     @Override
     @Transactional
@@ -92,7 +94,7 @@ public class UserServiceImpl implements UserService {
     public void update(Long id, UserDto dto) {
         log.info("Обновление пользователя id: {}", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Пользователь не найден: " + id));
+                .orElseThrow(UserNotFoundException::new);
 
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
