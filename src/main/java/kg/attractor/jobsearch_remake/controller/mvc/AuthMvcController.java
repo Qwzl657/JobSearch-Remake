@@ -46,8 +46,16 @@ public class AuthMvcController {
             model.addAttribute("userCreateDto", userCreateDto);
             return "auth/register";
         }
+
         userService.create(userCreateDto);
-        return "redirect:/auth/login";
+
+        userService.autoLogin(userCreateDto.getEmail());
+
+        String accountType = userCreateDto.getAccountType();
+        if ("EMPLOYER".equals(accountType)) {
+            return "redirect:/resumes/all";
+        }
+        return "redirect:/vacancies";
     }
 
     @GetMapping("forgot-password")
