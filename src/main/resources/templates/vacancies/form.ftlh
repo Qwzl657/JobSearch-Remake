@@ -1,66 +1,53 @@
-<#import "../layout/base.ftlh" as layout>
 <#import "/spring.ftl" as spring>
-<@layout.base>
-    <div class="card mx-auto mt-4" style="max-width: 600px;">
-        <div class="card-body">
-            <h3 class="mb-4">${vacancyDto.id??then("Редактировать вакансию", "Создать вакансию")}</h3>
-            <form action="${vacancyDto.id??then("/vacancies/" + vacancyDto.id + "/edit", "/vacancies/create")}" method="post">
-                <#if _csrf??>
-                    <input type="hidden"
-                           name="${(_csrf.parameterName)!'csrf'}"
-                           value="${(_csrf.token)!''}"/>
-                </#if>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <#if vacancyDto.id??>
+            <@spring.message 'vacancy.form.title.edit'/>
+        <#else>
+            <@spring.message 'vacancy.form.title.create'/>
+        </#if>
+    </title>
+</head>
+<body>
 
-                <div class="mb-3">
-                    <label class="form-label">Название вакансии</label>
-                    <@spring.formInput "vacancyDto.name" 'class="form-control"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
+<h2>
+    <#if vacancyDto.id??>
+        <@spring.message 'vacancy.form.title.edit'/>
+    <#else>
+        <@spring.message 'vacancy.form.title.create'/>
+    </#if>
+</h2>
 
-                <div class="mb-3">
-                    <label class="form-label">Описание</label>
-                    <@spring.formTextarea "vacancyDto.description" 'class="form-control" rows="4"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
+<form method="post"
+      action="<#if vacancyDto.id??>/vacancies/${vacancyDto.id}/edit<#else>/vacancies/create</#if>">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-                <div class="mb-3">
-                    <label class="form-label">Категория ID</label>
-                    <@spring.formInput "vacancyDto.categoryId" 'class="form-control" type="number"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
+    <label><@spring.message 'vacancy.name'/>:</label><br>
+    <input type="text" name="name" value="${vacancyDto.name!}" required/><br><br>
 
-                <div class="mb-3">
-                    <label class="form-label">Зарплата</label>
-                    <@spring.formInput "vacancyDto.salary" 'class="form-control" type="number"'/>
-                    <@spring.showErrors "<br>" "text-danger small"/>
-                </div>
+    <label><@spring.message 'vacancy.description'/>:</label><br>
+    <textarea name="description">${vacancyDto.description!}</textarea><br><br>
 
-                <div class="row">
-                    <div class="col mb-3">
-                        <label class="form-label">Опыт от (лет)</label>
-                        <@spring.formInput "vacancyDto.expFrom" 'class="form-control" type="number"'/>
-                    </div>
-                    <div class="col mb-3">
-                        <label class="form-label">Опыт до (лет)</label>
-                        <@spring.formInput "vacancyDto.expTo" 'class="form-control" type="number"'/>
-                    </div>
-                </div>
+    <label><@spring.message 'vacancy.salary'/>:</label><br>
+    <input type="number" name="salary" value="${vacancyDto.salary!}"/><br><br>
 
-                <div class="mb-3 form-check">
-                    <input type="hidden" name="isActive" value="false"/>
-                    <input type="checkbox"
-                           class="form-check-input"
-                           name="isActive"
-                           value="true"
-                            ${(vacancyDto.isActive())?then("checked", "")}>
-                    <label class="form-check-label">Активна</label>
-                </div>
+    <label><@spring.message 'vacancy.exp.from'/>:</label><br>
+    <input type="number" name="expFrom" value="${vacancyDto.expFrom!}"/><br><br>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a href="/profile" class="btn btn-outline-secondary">Отмена</a>
-                </div>
-            </form>
-        </div>
-    </div>
-</@layout.base>
+    <label><@spring.message 'vacancy.exp.to'/>:</label><br>
+    <input type="number" name="expTo" value="${vacancyDto.expTo!}"/><br><br>
+
+    <label>
+        <input type="checkbox" name="active"
+               <#if vacancyDto.active?? && vacancyDto.active>checked</#if>/>
+        <@spring.message 'vacancy.active'/>
+    </label><br><br>
+
+    <button type="submit"><@spring.message 'vacancy.form.submit'/></button>
+</form>
+
+</body>
+</html>
