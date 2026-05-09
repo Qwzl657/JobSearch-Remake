@@ -9,6 +9,7 @@ import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -26,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 public class AuthMvcController {
 
     private final UserService userService;
+    private final MessageSource messageSource;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -64,41 +67,52 @@ public class AuthMvcController {
     }
 
     @PostMapping("/forgot-password")
-    public String processForgotPassword(HttpServletRequest request, Model model) {
+    public String processForgotPassword(HttpServletRequest request,
+                                        Model model,
+                                        Locale locale) {
         try {
             userService.makeResetPwdLink(request);
-            model.addAttribute("message", "Ссылка для сброса пароля отправлена на вашу почту.");
+            model.addAttribute("message",
+                    messageSource.getMessage("auth.forgot.success", null, locale));
         } catch (UserNotFoundException e) {
-            model.addAttribute("error", "Пользователь с таким email не найден.");
+            model.addAttribute("error",
+                    messageSource.getMessage("auth.forgot.error.notfound", null, locale));
         } catch (UnsupportedEncodingException e) {
-            model.addAttribute("error", "Ошибка кодировки.");
+            model.addAttribute("error",
+                    messageSource.getMessage("auth.forgot.error.mail", null, locale));
         } catch (MessagingException e) {
-            model.addAttribute("error", "Ошибка при отправке письма.");
+            model.addAttribute("error",
+                    messageSource.getMessage("auth.forgot.error.mail", null, locale));
         }
         return "auth/forgot_password_form";
     }
 
     @GetMapping("/reset-password")
-    public String showResetPassword(@RequestParam String token, Model model) {
+    public String showResetPassword(@RequestParam String token, Model model, Locale locale) {
         try {
             userService.getByResetPasswordToken(token);
             model.addAttribute("token", token);
         } catch (UserNotFoundException e) {
-            model.addAttribute("error", "Неверный или устаревший токен.");
+            model.addAttribute("error",
+                    messageSource.getMessage("auth.reset.error", null, locale));
         }
         return "auth/reset_password_form";
     }
 
     @PostMapping("/reset-password")
-    public String processResetPassword(HttpServletRequest request, Model model) {
+    public String processResetPassword(HttpServletRequest request,
+                                       Model model,
+                                       Locale locale) {
         String token = request.getParameter("token");
         String password = request.getParameter("password");
         try {
             User user = userService.getByResetPasswordToken(token);
             userService.updatePassword(user, password);
-            model.addAttribute("message", "Пароль успешно изменён.");
+            model.addAttribute("message",
+                    messageSource.getMessage("auth.reset.success", null, locale));
         } catch (UserNotFoundException e) {
-            model.addAttribute("error", "Неверный токен.");
+            model.addAttribute("error",
+                    messageSource.getMessage("auth.reset.error", null, locale));
         }
         return "auth/reset_password_form";
     }
