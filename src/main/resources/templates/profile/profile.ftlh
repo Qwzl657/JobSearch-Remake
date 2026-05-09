@@ -1,85 +1,131 @@
 <#import "/spring.ftl" as spring>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title><@spring.message 'profile.title'/></title>
-</head>
-<body>
+<#import "/layout/base.ftlh" as layout>
 
-<h2><@spring.message 'profile.title'/></h2>
+<@layout.layout>
 
-<#if user??>
-    <p><@spring.message 'profile.name'/>: ${user.name}</p>
-    <p><@spring.message 'profile.surname'/>: ${user.surname}</p>
-    <p><@spring.message 'profile.age'/>: ${user.age!}</p>
-    <p><@spring.message 'profile.email'/>: ${user.email}</p>
-    <p><@spring.message 'profile.phone'/>: ${user.phoneNumber!}</p>
-    <p>
-        <@spring.message 'profile.avatar'/>:
-        <img src="/avatars/${user.avatar!}" width="100" alt="avatar"/>
-    </p>
-    <p>
-        <#if user.accountType == "APPLICANT">
-            <@spring.message 'profile.type.applicant'/>
-        <#else>
-            <@spring.message 'profile.type.employer'/>
-        </#if>
-    </p>
-    <a href="/profile/edit"><@spring.message 'profile.edit'/></a>
-</#if>
+    <div class="row g-4">
 
-<hr>
-
-<#-- Резюме для соискателя -->
-<#if user.accountType == "APPLICANT">
-    <h3><@spring.message 'resume.title'/></h3>
-    <a href="/resumes/create"><@spring.message 'resume.create'/></a>
-    <#if resumes?has_content>
-        <#list resumes as resume>
-            <div>
-                <p>${resume.name}</p>
-                <a href="/resumes/${resume.id}/edit"><@spring.message 'resume.edit'/></a>
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center p-4">
+                <div class="mb-3">
+                    <img src="/avatars/${user.avatar!}"
+                         class="rounded-circle border border-3 border-primary"
+                         style="width:110px;height:110px;object-fit:cover;"
+                         alt="avatar"
+                         onerror="this.src='https://ui-avatars.com/api/?name=${user.name}+${user.surname}&size=110'"/>
+                </div>
+                <h5 class="fw-bold mb-1">${user.name} ${user.surname}</h5>
+                <p class="text-muted small mb-1">${user.email}</p>
+                <#if user.phoneNumber?has_content>
+                    <p class="text-muted small mb-2">${user.phoneNumber}</p>
+                </#if>
+                <#if user.age??>
+                    <p class="text-muted small mb-2">
+                        ${user.age} <@spring.message 'profile.age.years'/>
+                    </p>
+                </#if>
+                <span class="badge <#if user.accountType == 'APPLICANT'>bg-primary<#else>bg-success</#if> mb-3">
+                    <#if user.accountType == "APPLICANT">
+                        <@spring.message 'profile.type.applicant'/>
+                    <#else>
+                        <@spring.message 'profile.type.employer'/>
+                    </#if>
+                </span>
+                <a href="/profile/edit" class="btn btn-outline-primary btn-sm">
+                    <@spring.message 'profile.edit'/>
+                </a>
             </div>
-        </#list>
-    <#else>
-        <p><@spring.message 'resume.no.results'/></p>
-    </#if>
+        </div>
 
-<#-- Пагинация -->
-    <#if currentPage gt 0>
-        <a href="/profile?page=${currentPage - 1}"><@spring.message 'page.prev'/></a>
-    </#if>
-    <span>${currentPage + 1} / ${totalPages}</span>
-    <#if currentPage lt totalPages - 1>
-        <a href="/profile?page=${currentPage + 1}"><@spring.message 'page.next'/></a>
-    </#if>
-</#if>
+        <div class="col-md-8">
+            <#if user.accountType == "APPLICANT">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><@spring.message 'resume.title'/></h5>
+                    <a href="/resumes/create" class="btn btn-primary btn-sm">
+                        <@spring.message 'resume.create'/>
+                    </a>
+                </div>
+                <#if resumes?has_content>
+                    <#list resumes as resume>
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-semibold mb-1">${resume.name}</h6>
+                                    <span class="text-success small">
+                                        <#if resume.salary??>${resume.salary} ₸<#else>—</#if>
+                                    </span>
+                                    <span class="badge ms-2 <#if resume.active>bg-success<#else>bg-secondary</#if>">
+                                        <#if resume.active>
+                                            <@spring.message 'resume.active'/>
+                                        <#else>
+                                            <@spring.message 'resume.inactive'/>
+                                        </#if>
+                                    </span>
+                                </div>
+                                <a href="/resumes/${resume.id}/edit" class="btn btn-outline-secondary btn-sm">
+                                    <@spring.message 'resume.edit'/>
+                                </a>
+                            </div>
+                        </div>
+                    </#list>
+                <#else>
+                    <p class="text-muted"><@spring.message 'resume.no.results'/></p>
+                </#if>
+            <#else>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><@spring.message 'vacancy.title'/></h5>
+                    <a href="/vacancies/create" class="btn btn-primary btn-sm">
+                        <@spring.message 'vacancy.create'/>
+                    </a>
+                </div>
+                <#if vacancies?has_content>
+                    <#list vacancies as vacancy>
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-semibold mb-1">${vacancy.name}</h6>
+                                    <span class="text-success small">
+                                        <#if vacancy.salary??>${vacancy.salary} ₸<#else>—</#if>
+                                    </span>
+                                    <#if vacancy.active>
+                                        <span class="badge bg-success ms-2">
+                                            <@spring.message 'vacancy.active'/>
+                                        </span>
+                                    </#if>
+                                </div>
+                                <a href="/vacancies/${vacancy.id}/edit" class="btn btn-outline-secondary btn-sm">
+                                    <@spring.message 'vacancy.edit'/>
+                                </a>
+                            </div>
+                        </div>
+                    </#list>
+                <#else>
+                    <p class="text-muted"><@spring.message 'vacancy.no.results'/></p>
+                </#if>
+            </#if>
 
-<#-- Вакансии для работодателя -->
-<#if user.accountType == "EMPLOYER">
-    <h3><@spring.message 'vacancy.title'/></h3>
-    <a href="/vacancies/create"><@spring.message 'vacancy.create'/></a>
-    <#if vacancies?has_content>
-        <#list vacancies as vacancy>
-            <div>
-                <p>${vacancy.name}</p>
-                <a href="/vacancies/${vacancy.id}/edit"><@spring.message 'vacancy.edit'/></a>
-            </div>
-        </#list>
-    <#else>
-        <p><@spring.message 'vacancy.no.results'/></p>
-    </#if>
+            <#if (totalPages > 1)>
+                <nav class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <#if (currentPage == 0)>disabled</#if>">
+                            <a class="page-link" href="/profile?page=${currentPage - 1}">
+                                <@spring.message 'page.prev'/>
+                            </a>
+                        </li>
+                        <#list 0..(totalPages-1) as p>
+                            <li class="page-item <#if (p == currentPage)>active</#if>">
+                                <a class="page-link" href="/profile?page=${p}">${p + 1}</a>
+                            </li>
+                        </#list>
+                        <li class="page-item <#if (currentPage >= totalPages - 1)>disabled</#if>">
+                            <a class="page-link" href="/profile?page=${currentPage + 1}">
+                                <@spring.message 'page.next'/>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </#if>
+        </div>
+    </div>
 
-<#-- Пагинация -->
-    <#if currentPage gt 0>
-        <a href="/profile?page=${currentPage - 1}"><@spring.message 'page.prev'/></a>
-    </#if>
-    <span>${currentPage + 1} / ${totalPages}</span>
-    <#if currentPage lt totalPages - 1>
-        <a href="/profile?page=${currentPage + 1}"><@spring.message 'page.next'/></a>
-    </#if>
-</#if>
-
-</body>
-</html>
+</@layout.layout>

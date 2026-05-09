@@ -1,67 +1,92 @@
 <#import "/spring.ftl" as spring>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title><@spring.message 'vacancy.title'/></title>
-</head>
-<body>
+<#import "/layout/base.ftlh" as layout>
 
-<h2><@spring.message 'vacancy.title'/></h2>
+<@layout.layout>
 
-<#-- Сортировка -->
-<form method="get" action="/vacancies">
-    <select name="sort" onchange="this.form.submit()">
-        <option value="date" <#if sort == "date">selected</#if>>
-            <@spring.message 'vacancy.sort.date'/>
-        </option>
-        <option value="responses" <#if sort == "responses">selected</#if>>
-            <@spring.message 'vacancy.sort.responses'/>
-        </option>
-    </select>
-</form>
-
-<#-- Кнопка создать (только для работодателя) -->
-<#if springMacroRequestContext.getUserPrincipal()??>
-    <a href="/vacancies/create"><@spring.message 'vacancy.create'/></a>
-</#if>
-
-<#-- Список вакансий -->
-<#if vacancies?has_content>
-    <#list vacancies as vacancy>
-        <div>
-            <h3>${vacancy.name}</h3>
-            <p>${vacancy.description!}</p>
-            <p><@spring.message 'vacancy.salary'/>: ${vacancy.salary!}</p>
-            <p>
-                <@spring.message 'vacancy.exp'/>:
-                ${vacancy.expFrom!} <@spring.message 'vacancy.exp.from'/>
-                — ${vacancy.expTo!} <@spring.message 'vacancy.exp.to'/>
-            </p>
-            <a href="/vacancies/${vacancy.id}/edit"><@spring.message 'vacancy.edit'/></a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0"><@spring.message 'vacancy.title'/></h3>
+        <div class="d-flex gap-2 align-items-center">
+            <form method="get" action="/vacancies" class="d-flex gap-2">
+                <select name="sort" class="form-select form-select-sm" style="width:auto;"
+                        onchange="this.form.submit()">
+                    <option value="date" <#if sort == "date">selected</#if>>
+                        <@spring.message 'vacancy.sort.date'/>
+                    </option>
+                    <option value="responses" <#if sort == "responses">selected</#if>>
+                        <@spring.message 'vacancy.sort.responses'/>
+                    </option>
+                </select>
+            </form>
+            <a href="/vacancies/create" class="btn btn-primary btn-sm">
+                <@spring.message 'vacancy.create'/>
+            </a>
         </div>
-        <hr>
-    </#list>
-<#else>
-    <p><@spring.message 'vacancy.no.results'/></p>
-</#if>
+    </div>
 
-<#-- Пагинация -->
-<div>
-    <#if currentPage gt 0>
-        <a href="/vacancies?page=${currentPage - 1}&sort=${sort}">
-            <@spring.message 'page.prev'/>
-        </a>
+    <#if vacancies?has_content>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <#list vacancies as vacancy>
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">${vacancy.name}</h5>
+                                <#if vacancy.active>
+                                    <span class="badge bg-success">
+                                        <@spring.message 'vacancy.active'/>
+                                    </span>
+                                </#if>
+                            </div>
+                            <p class="card-text text-muted small mb-3">${vacancy.description!}</p>
+                            <div class="d-flex gap-3">
+                                <span class="text-success small">
+                                    <#if vacancy.salary??>${vacancy.salary} ₸<#else>—</#if>
+                                </span>
+                                <span class="text-muted small">
+                                    <@spring.message 'vacancy.exp'/>:
+                                    ${vacancy.expFrom!0} — ${vacancy.expTo!0}
+                                    <@spring.message 'vacancy.exp.years'/>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent d-flex justify-content-end border-0">
+                            <a href="/vacancies/${vacancy.id}/edit" class="btn btn-outline-secondary btn-sm">
+                                <@spring.message 'vacancy.edit'/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </#list>
+        </div>
+    <#else>
+        <div class="text-center py-5">
+            <p class="text-muted"><@spring.message 'vacancy.no.results'/></p>
+            <a href="/vacancies/create" class="btn btn-primary mt-2">
+                <@spring.message 'vacancy.create'/>
+            </a>
+        </div>
     </#if>
 
-    <span>${currentPage + 1} / ${totalPages}</span>
-
-    <#if currentPage lt totalPages - 1>
-        <a href="/vacancies?page=${currentPage + 1}&sort=${sort}">
-            <@spring.message 'page.next'/>
-        </a>
+    <#if (totalPages > 1)>
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <#if (currentPage == 0)>disabled</#if>">
+                    <a class="page-link" href="/vacancies?page=${currentPage - 1}&sort=${sort}">
+                        <@spring.message 'page.prev'/>
+                    </a>
+                </li>
+                <#list 0..(totalPages-1) as p>
+                    <li class="page-item <#if (p == currentPage)>active</#if>">
+                        <a class="page-link" href="/vacancies?page=${p}&sort=${sort}">${p + 1}</a>
+                    </li>
+                </#list>
+                <li class="page-item <#if (currentPage >= totalPages - 1)>disabled</#if>">
+                    <a class="page-link" href="/vacancies?page=${currentPage + 1}&sort=${sort}">
+                        <@spring.message 'page.next'/>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </#if>
-</div>
 
-</body>
-</html>
+</@layout.layout>

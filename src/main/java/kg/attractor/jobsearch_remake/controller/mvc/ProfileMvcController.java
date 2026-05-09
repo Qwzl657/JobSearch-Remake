@@ -68,7 +68,7 @@ public class ProfileMvcController {
 
     @PostMapping("/edit")
     public String editProfile(@ModelAttribute UserDto userDto,
-                              @RequestParam(required = false) MultipartFile avatar,
+                              @RequestParam(name = "avatarFile", required = false) MultipartFile avatar,
                               Authentication auth) throws IOException {
         UserDto user = userService.getByEmail(auth.getName());
 

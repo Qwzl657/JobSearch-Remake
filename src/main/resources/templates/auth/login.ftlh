@@ -1,33 +1,66 @@
 <#import "/spring.ftl" as spring>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><@spring.message 'auth.login.title'/></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><@spring.message 'auth.login.title'/> — JobSearch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg-light">
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title text-center mb-4">
+                        <@spring.message 'auth.login.title'/>
+                    </h4>
 
-<h2><@spring.message 'auth.login.title'/></h2>
+                    <#if RequestParameters["error"]??>
+                        <div class="alert alert-danger">
+                            <@spring.message 'auth.login.error'/>
+                        </div>
+                    </#if>
 
-<#if param.error??>
-    <p style="color:red"><@spring.message 'auth.login.error'/></p>
-</#if>
+                    <form method="post" action="/auth/login">
+                        <#if _csrf??>
+                            <input type="hidden"
+                                   name="${(_csrf.parameterName)!'csrf-param-name'}"
+                                   value="${(_csrf.token)!'csrf-token'}"/>
+                        </#if>
+                        <div class="mb-3">
+                            <label class="form-label"><@spring.message 'auth.login.email'/></label>
+                            <input type="email" name="username" class="form-control" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><@spring.message 'auth.login.password'/></label>
+                            <input type="password" name="password" class="form-control" required/>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary">
+                                <@spring.message 'auth.login.submit'/>
+                            </button>
+                        </div>
+                    </form>
 
-<form method="post" action="/auth/login">
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-    <label><@spring.message 'auth.login.email'/>:</label><br>
-    <input type="email" name="username" required/><br><br>
-
-    <label><@spring.message 'auth.login.password'/>:</label><br>
-    <input type="password" name="password" required/><br><br>
-
-    <button type="submit"><@spring.message 'auth.login.submit'/></button>
-</form>
-
-<br>
-<a href="/auth/register"><@spring.message 'auth.login.register'/></a><br>
-<a href="/auth/forgot-password"><@spring.message 'auth.login.forgot'/></a>
-
+                    <div class="text-center small">
+                        <a href="/auth/register"><@spring.message 'auth.login.register'/></a>
+                        &nbsp;·&nbsp;
+                        <a href="/auth/forgot-password" class="text-muted">
+                            <@spring.message 'auth.login.forgot'/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

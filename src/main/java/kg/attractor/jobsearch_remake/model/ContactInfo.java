@@ -21,6 +21,6 @@ public class ContactInfo {
     @Column(name = "resume_id")
     private Integer resumeId;
 
-    @Column(name = "value")
+    @Column(name = "contact_value")
     private String value;
 }

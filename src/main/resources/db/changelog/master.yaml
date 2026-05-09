@@ -14,3 +14,5 @@ databaseChangeLog:
   - include:
       file: db/changelog/migrations/05_add_reset_password_token.yaml
       relativeToChangelogFile: false
+  - include:
+      file: db/changelog/migrations/06_rename_contact_value.yaml

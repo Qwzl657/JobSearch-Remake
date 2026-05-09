@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: rename-contact-info-value-column
+      author: jobsearch
+      changes:
+        - renameColumn:
+            tableName: contact_info
+            oldColumnName: value
+            newColumnName: contact_value
+            columnDataType: VARCHAR(255)

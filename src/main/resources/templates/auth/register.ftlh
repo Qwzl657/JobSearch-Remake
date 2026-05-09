@@ -1,50 +1,101 @@
 <#import "/spring.ftl" as spring>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><@spring.message 'auth.register.title'/></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><@spring.message 'auth.register.title'/> — JobSearch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg-light">
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title text-center mb-4">
+                        <@spring.message 'auth.register.title'/>
+                    </h4>
 
-<h2><@spring.message 'auth.register.title'/></h2>
+                    <form method="post" action="/auth/register">
+                        <#if _csrf??>
+                            <input type="hidden"
+                                   name="${(_csrf.parameterName)!'csrf-param-name'}"
+                                   value="${(_csrf.token)!'csrf-token'}"/>
+                        </#if>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label"><@spring.message 'auth.register.name'/></label>
+                                <input type="text" name="name" value="${userCreateDto.name!}"
+                                       class="form-control" required/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><@spring.message 'auth.register.surname'/></label>
+                                <input type="text" name="surname" value="${userCreateDto.surname!}"
+                                       class="form-control" required/>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-5">
+                                <label class="form-label"><@spring.message 'auth.register.age'/></label>
+                                <input type="number" name="age" value="${userCreateDto.age!}"
+                                       class="form-control" min="14" max="100"/>
+                            </div>
+                            <div class="col-md-7">
+                                <label class="form-label"><@spring.message 'auth.register.phone'/></label>
+                                <input type="text" name="phoneNumber" value="${userCreateDto.phoneNumber!}"
+                                       class="form-control" required/>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><@spring.message 'auth.register.email'/></label>
+                            <input type="email" name="email" value="${userCreateDto.email!}"
+                                   class="form-control" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><@spring.message 'auth.register.type'/></label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="accountType"
+                                           value="APPLICANT" id="applicant" checked/>
+                                    <label class="form-check-label" for="applicant">
+                                        <@spring.message 'auth.register.type.applicant'/>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="accountType"
+                                           value="EMPLOYER" id="employer"/>
+                                    <label class="form-check-label" for="employer">
+                                        <@spring.message 'auth.register.type.employer'/>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label"><@spring.message 'auth.register.password'/></label>
+                            <input type="password" name="password" class="form-control"
+                                   required minlength="8"/>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary">
+                                <@spring.message 'auth.register.submit'/>
+                            </button>
+                        </div>
+                    </form>
 
-<form method="post" action="/auth/register">
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-    <label><@spring.message 'auth.register.name'/>:</label><br>
-    <input type="text" name="name" value="${userCreateDto.name!}" required/><br>
-    <#if userCreateDto.name?? && userCreateDto.name == "">
-        <span style="color:red"><@spring.message 'validation.name.blank'/></span>
-    </#if>
-    <br>
-
-    <label><@spring.message 'auth.register.surname'/>:</label><br>
-    <input type="text" name="surname" value="${userCreateDto.surname!}" required/><br><br>
-
-    <label><@spring.message 'auth.register.age'/>:</label><br>
-    <input type="number" name="age" value="${userCreateDto.age!}" min="14" max="100"/><br><br>
-
-    <label><@spring.message 'auth.register.email'/>:</label><br>
-    <input type="email" name="email" value="${userCreateDto.email!}" required/><br><br>
-
-    <label><@spring.message 'auth.register.phone'/>:</label><br>
-    <input type="text" name="phoneNumber" value="${userCreateDto.phoneNumber!}" required/><br><br>
-
-    <label><@spring.message 'auth.register.type'/>:</label><br>
-    <select name="accountType">
-        <option value="APPLICANT"><@spring.message 'auth.register.type.applicant'/></option>
-        <option value="EMPLOYER"><@spring.message 'auth.register.type.employer'/></option>
-    </select><br><br>
-
-    <label><@spring.message 'auth.register.password'/>:</label><br>
-    <input type="password" name="password" required minlength="8"/><br><br>
-
-    <button type="submit"><@spring.message 'auth.register.submit'/></button>
-</form>
-
-<br>
-<a href="/auth/login"><@spring.message 'auth.register.have.account'/></a>
-
+                    <div class="text-center small">
+                        <a href="/auth/login"><@spring.message 'auth.register.have.account'/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
