@@ -49,6 +49,10 @@ public class ResumeMvcController {
                          Authentication auth) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream()
+                    .map(e -> e.getDefaultMessage())
+                    .toList());
             return "resumes/form";
         }
         UserDto user = userService.getByEmail(auth.getName());
@@ -70,6 +74,10 @@ public class ResumeMvcController {
                        Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream()
+                    .map(e -> e.getDefaultMessage())
+                    .toList());
             return "resumes/form";
         }
         resumeService.update(id, resumeDto);

@@ -51,6 +51,10 @@ public class VacancyMvcController {
                          Authentication auth) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("vacancyDto", vacancyDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream()
+                    .map(e -> e.getDefaultMessage())
+                    .toList());
             return "vacancies/form";
         }
         UserDto user = userService.getByEmail(auth.getName());
@@ -72,6 +76,10 @@ public class VacancyMvcController {
                        Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("vacancyDto", vacancyDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream()
+                    .map(e -> e.getDefaultMessage())
+                    .toList());
             return "vacancies/form";
         }
         vacancyService.update(id, vacancyDto);

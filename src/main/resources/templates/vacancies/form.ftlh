@@ -23,6 +23,13 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
+                    <#if errors??>
+                        <div class="alert alert-danger">
+                            <#list errors as error>
+                                <div>${error}</div>
+                            </#list>
+                        </div>
+                    </#if>
                     <form method="post"
                           action="<#if vacancyDto.id??>/vacancies/${vacancyDto.id}/edit<#else>/vacancies/create</#if>">
                         <#if _csrf??>
@@ -72,7 +79,7 @@
                         <div class="mb-4">
                             <div class="form-check">
                                 <input type="checkbox" name="active" class="form-check-input" id="activeCheck"
-                                       <#if vacancyDto.active?? && vacancyDto.active>checked</#if>/>
+                                       <#if vacancyDto.active>checked</#if>/>
                                 <label class="form-check-label" for="activeCheck">
                                     <@spring.message 'vacancy.active'/>
                                 </label>
