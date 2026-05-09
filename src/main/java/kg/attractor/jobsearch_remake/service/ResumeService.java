@@ -131,7 +131,7 @@ public class ResumeService {
                 .name(r.getName())
                 .categoryId(r.getCategoryId())
                 .salary(r.getSalary())
-                .isActive(r.isActive())
+                .active(r.isActive())
                 .createdDate(r.getCreatedDate())
                 .updateTime(r.getUpdateTime())
                 .workExperienceInfos(workExperienceInfoService.getByResumeId(r.getId().intValue()))

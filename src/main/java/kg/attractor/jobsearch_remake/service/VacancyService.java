@@ -43,7 +43,7 @@ public class VacancyService {
 
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.desc("createdDate")));
-        return vacancyRepository.findByIsActiveTrue(pageable).map(this::toDto);
+        return vacancyRepository.findByActiveTrue(pageable).map(this::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -57,7 +57,7 @@ public class VacancyService {
     @Transactional(readOnly = true)
     public List<VacancyDto> getActive() {
         log.info("Получение активных вакансий");
-        return vacancyRepository.findByIsActiveTrue().stream()
+        return vacancyRepository.findByActiveTrue().stream()
                 .map(this::toDto)
                 .toList();
     }
