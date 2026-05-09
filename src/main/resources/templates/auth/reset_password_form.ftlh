@@ -23,7 +23,7 @@
                         <@spring.message 'auth.reset.title'/>
                     </h4>
 
-                    <#if success??>
+                    <#if message??>
                         <div class="alert alert-success">
                             <@spring.message 'auth.reset.success'/>
                         </div>
