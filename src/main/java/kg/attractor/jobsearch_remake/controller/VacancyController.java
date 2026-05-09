@@ -88,7 +88,10 @@ public class VacancyController {
             return ResponseEntity.badRequest().build();
         }
 
-        responseService.respond(resumes.get(0).getId().longValue(), id);
+        boolean responded = responseService.respond(resumes.get(0).getId().longValue(), id);
+        if (!responded) {
+            return ResponseEntity.status(409).build();
+        }
         return ResponseEntity.ok().build();
     }
 }

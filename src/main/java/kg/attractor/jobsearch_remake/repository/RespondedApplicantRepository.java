@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface RespondedApplicantRepository extends JpaRepository<RespondedApplicant, Long> {
-    List<RespondedApplicant> findByVacancyId(Long vacancyId);
     List<RespondedApplicant> findByResumeId(Long resumeId);
+    List<RespondedApplicant> findByVacancyId(Long vacancyId);
+    boolean existsByResumeIdAndVacancyId(Long resumeId, Long vacancyId);
 }
