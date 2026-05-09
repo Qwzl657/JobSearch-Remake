@@ -51,6 +51,8 @@ public class VacancyMvcController {
                          Authentication auth) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("vacancyDto", vacancyDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream().map(e -> e.getDefaultMessage()).toList());
             return "vacancies/form";
         }
         UserDto user = userService.getByEmail(auth.getName());
@@ -60,8 +62,13 @@ public class VacancyMvcController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editPage(@PathVariable Integer id, Model model) {
-        model.addAttribute("vacancyDto", vacancyService.getById(id));
+    public String editPage(@PathVariable Integer id, Model model, Authentication auth) {
+        VacancyDto vacancy = vacancyService.getById(id);
+        UserDto user = userService.getByEmail(auth.getName());
+        if (!vacancy.getAuthorId().equals(user.getId().intValue())) {
+            return "redirect:/vacancies";
+        }
+        model.addAttribute("vacancyDto", vacancy);
         return "vacancies/form";
     }
 
@@ -69,9 +76,17 @@ public class VacancyMvcController {
     public String edit(@PathVariable Integer id,
                        @Valid VacancyDto vacancyDto,
                        BindingResult bindingResult,
-                       Model model) {
+                       Model model,
+                       Authentication auth) {
+        VacancyDto existing = vacancyService.getById(id);
+        UserDto user = userService.getByEmail(auth.getName());
+        if (!existing.getAuthorId().equals(user.getId().intValue())) {
+            return "redirect:/vacancies";
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("vacancyDto", vacancyDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream().map(e -> e.getDefaultMessage()).toList());
             return "vacancies/form";
         }
         vacancyService.update(id, vacancyDto);

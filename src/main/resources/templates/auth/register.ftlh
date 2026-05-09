@@ -32,31 +32,31 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label"><@spring.message 'auth.register.name'/></label>
-                                <input type="text" name="name" value="${userCreateDto.name!}"
-                                       class="form-control" required/>
+                                <@spring.formInput "userCreateDto.name" 'class="form-control"'/>
+                                <@spring.showErrors "<br>" "text-danger small"/>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label"><@spring.message 'auth.register.surname'/></label>
-                                <input type="text" name="surname" value="${userCreateDto.surname!}"
-                                       class="form-control" required/>
+                                <@spring.formInput "userCreateDto.surname" 'class="form-control"'/>
+                                <@spring.showErrors "<br>" "text-danger small"/>
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-5">
                                 <label class="form-label"><@spring.message 'auth.register.age'/></label>
-                                <input type="number" name="age" value="${userCreateDto.age!}"
-                                       class="form-control" min="14" max="100"/>
+                                <@spring.formInput "userCreateDto.age" 'class="form-control" type="number" min="14" max="100"'/>
+                                <@spring.showErrors "<br>" "text-danger small"/>
                             </div>
                             <div class="col-md-7">
                                 <label class="form-label"><@spring.message 'auth.register.phone'/></label>
-                                <input type="text" name="phoneNumber" value="${userCreateDto.phoneNumber!}"
-                                       class="form-control" required/>
+                                <@spring.formInput "userCreateDto.phoneNumber" 'class="form-control"'/>
+                                <@spring.showErrors "<br>" "text-danger small"/>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label"><@spring.message 'auth.register.email'/></label>
-                            <input type="email" name="email" value="${userCreateDto.email!}"
-                                   class="form-control" required/>
+                            <@spring.formInput "userCreateDto.email" 'class="form-control" type="email"'/>
+                            <@spring.showErrors "<br>" "text-danger small"/>
                         </div>
                         <div class="mb-3">
                             <label class="form-label"><@spring.message 'auth.register.type'/></label>
@@ -79,8 +79,8 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label"><@spring.message 'auth.register.password'/></label>
-                            <input type="password" name="password" class="form-control"
-                                   required minlength="8"/>
+                            <@spring.formPasswordInput "userCreateDto.password" 'class="form-control"'/>
+                            <@spring.showErrors "<br>" "text-danger small"/>
                         </div>
                         <div class="d-grid mb-3">
                             <button type="submit" class="btn btn-primary">

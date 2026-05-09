@@ -34,19 +34,24 @@ public class ResponseService {
         return respondedApplicantRepository.findByVacancyId(vacancyId).stream()
                 .map(r -> {
                     ResumeDto resume = resumeService.getById(r.getResumeId().intValue());
-                    return userService.findById(resume.getApplicantId().longValue());
+                    return userService.findById(resume.getApplicantId());
                 })
                 .toList();
     }
 
     @Transactional
-    public void respond(Long resumeId, Long vacancyId) {
-        log.info("Отклик на вакансию id: {} с резюме id: {}", vacancyId, resumeId);
+    public boolean respond(Long resumeId, Long vacancyId) {
+        if (respondedApplicantRepository.existsByResumeIdAndVacancyId(resumeId, vacancyId)) {
+            log.warn("Повторный отклик: резюме {} на вакансию {}", resumeId, vacancyId);
+            return false;
+        }
         RespondedApplicant response = RespondedApplicant.builder()
                 .resumeId(resumeId)
                 .vacancyId(vacancyId)
                 .confirmation(false)
                 .build();
         respondedApplicantRepository.save(response);
+        log.info("Отклик создан: резюме {} на вакансию {}", resumeId, vacancyId);
+        return true;
     }
 }

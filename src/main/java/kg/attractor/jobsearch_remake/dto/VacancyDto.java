@@ -2,14 +2,12 @@ package kg.attractor.jobsearch_remake.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,27 +17,25 @@ import java.time.LocalDateTime;
 public class VacancyDto {
     private Integer id;
 
-    @NotBlank(message = "Vacancy name cannot be blank")
+    @NotBlank(message = "{validation.vacancy.name.blank}")
     private String name;
 
-    @NotBlank(message = "Description cannot be blank")
+    @NotBlank(message = "{validation.vacancy.description.blank}")
     private String description;
 
-    @NotNull(message = "Category is required")
     private Integer categoryId;
 
-    @Positive(message = "Salary must be positive")
+    @Positive(message = "{validation.vacancy.salary.positive}")
     private double salary;
 
-    @Min(value = 0, message = "Experience from cannot be negative")
+    @Min(value = 0, message = "{validation.vacancy.expFrom.min}")
     private Integer expFrom;
 
-    @Min(value = 0, message = "Experience to cannot be negative")
+    @Min(value = 0, message = "{validation.vacancy.expTo.min}")
     private Integer expTo;
 
-    private boolean isActive;
+    private boolean active;
 
-    @NotNull(message = "Author is required")
     private Integer authorId;
 
     private LocalDateTime createdDate;

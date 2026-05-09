@@ -49,6 +49,8 @@ public class ResumeMvcController {
                          Authentication auth) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream().map(e -> e.getDefaultMessage()).toList());
             return "resumes/form";
         }
         UserDto user = userService.getByEmail(auth.getName());
@@ -58,8 +60,13 @@ public class ResumeMvcController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editPage(@PathVariable Integer id, Model model) {
-        model.addAttribute("resumeDto", resumeService.getById(id));
+    public String editPage(@PathVariable Integer id, Model model, Authentication auth) {
+        ResumeDto resume = resumeService.getById(id);
+        UserDto user = userService.getByEmail(auth.getName());
+        if (!resume.getApplicantId().equals(user.getId())) {
+            return "redirect:/resumes/all";
+        }
+        model.addAttribute("resumeDto", resume);
         return "resumes/form";
     }
 
@@ -67,9 +74,17 @@ public class ResumeMvcController {
     public String edit(@PathVariable Integer id,
                        @Valid ResumeDto resumeDto,
                        BindingResult bindingResult,
-                       Model model) {
+                       Model model,
+                       Authentication auth) {
+        ResumeDto existing = resumeService.getById(id);
+        UserDto user = userService.getByEmail(auth.getName());
+        if (!existing.getApplicantId().equals(user.getId())) {
+            return "redirect:/resumes/all";
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
+            model.addAttribute("errors", bindingResult.getFieldErrors()
+                    .stream().map(e -> e.getDefaultMessage()).toList());
             return "resumes/form";
         }
         resumeService.update(id, resumeDto);

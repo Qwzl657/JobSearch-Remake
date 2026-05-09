@@ -23,6 +23,13 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
+                    <#if errors??>
+                        <div class="alert alert-danger">
+                            <#list errors as error>
+                                <div>${error}</div>
+                            </#list>
+                        </div>
+                    </#if>
                     <form method="post"
                           action="<#if resumeDto.id??>/resumes/${resumeDto.id}/edit<#else>/resumes/create</#if>">
                         <#if _csrf??>
@@ -46,7 +53,7 @@
                         <div class="mb-4">
                             <div class="form-check">
                                 <input type="checkbox" name="active" class="form-check-input" id="activeCheck"
-                                       <#if resumeDto.active?? && resumeDto.active>checked</#if>/>
+                                       <#if resumeDto.active>checked</#if>/>
                                 <label class="form-check-label" for="activeCheck">
                                     <@spring.message 'resume.active'/>
                                 </label>

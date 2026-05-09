@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
-    List<Vacancy> findByIsActiveTrue();
-    Page<Vacancy> findByIsActiveTrue(Pageable pageable);
+    List<Vacancy> findByActiveTrue();
+    Page<Vacancy> findByActiveTrue(Pageable pageable);
     List<Vacancy> findByCategoryId(Integer categoryId);
     List<Vacancy> findByAuthorId(Long authorId);
     Page<Vacancy> findByAuthorId(Long authorId, Pageable pageable);
@@ -20,7 +20,7 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     @Query("""
             SELECT v FROM Vacancy v
             LEFT JOIN RespondedApplicant r ON r.vacancyId = v.id
-            WHERE v.isActive = true
+            WHERE v.active = true
             GROUP BY v.id
             ORDER BY COUNT(r.id) DESC
             """)
