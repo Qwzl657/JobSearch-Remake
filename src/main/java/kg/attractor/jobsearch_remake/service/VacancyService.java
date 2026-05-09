@@ -100,7 +100,7 @@ public class VacancyService {
                 .salary(dto.getSalary())
                 .expFrom(dto.getExpFrom())
                 .expTo(dto.getExpTo())
-                .isActive(dto.isActive())
+                .active(dto.isActive())
                 .authorId(dto.getAuthorId().longValue())
                 .createdDate(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
@@ -121,6 +121,7 @@ public class VacancyService {
         v.setCategoryId(dto.getCategoryId());
         v.setSalary(dto.getSalary());
         v.setExpFrom(dto.getExpFrom());
+        v.setActive(dto.isActive());
         v.setExpTo(dto.getExpTo());
         v.setActive(dto.isActive());
         v.setUpdateTime(LocalDateTime.now());
@@ -142,7 +143,7 @@ public class VacancyService {
                 .salary(v.getSalary())
                 .expFrom(v.getExpFrom())
                 .expTo(v.getExpTo())
-                .isActive(v.isActive())
+                .active(v.isActive())
                 .authorId(v.getAuthorId().intValue())
                 .createdDate(v.getCreatedDate())
                 .updateTime(v.getUpdateTime())

@@ -36,7 +36,7 @@ public class Vacancy {
     private Integer expTo;
 
     @Column(name = "is_active")
-    private boolean isActive;
+    private boolean active;
 
     @Column(name = "author_id", nullable = false)
     private Long authorId;
