@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kg.attractor.jobsearch_remake.dto.ResumeDto;
+import kg.attractor.jobsearch_remake.service.ResumeService;
+import kg.attractor.jobsearch_remake.service.ResponseService;
+import java.util.List;
+
 @Controller
 @RequestMapping("/vacancies")
 @RequiredArgsConstructor
@@ -24,6 +29,8 @@ public class VacancyMvcController {
 
     private final VacancyService vacancyService;
     private final UserService userService;
+    private final ResumeService resumeService;
+    private final ResponseService responseService;
 
     @GetMapping
     public String vacanciesList(Model model,
@@ -101,5 +108,38 @@ public class VacancyMvcController {
         }
         vacancyService.delete(id);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/{id}/respond")
+    public String respondPage(@PathVariable Integer id,
+                              Model model,
+                              Authentication auth) {
+        UserDto user = userService.getByEmail(auth.getName());
+        List<ResumeDto> resumes = resumeService.getByApplicant(user.getId().intValue());
+        model.addAttribute("vacancy", vacancyService.getById(id));
+        model.addAttribute("resumes", resumes);
+        return "vacancies/respond";
+    }
+
+    @PostMapping("/{id}/respond")
+    public String respond(@PathVariable Integer id,
+                          @RequestParam Long resumeId) {
+        responseService.respond(resumeId, id.longValue());
+        return "redirect:/vacancies";
+    }
+
+    @GetMapping("/{id}/responses")
+    public String responses(@PathVariable Integer id,
+                            Model model,
+                            Authentication auth) {
+        UserDto user = userService.getByEmail(auth.getName());
+        VacancyDto vacancy = vacancyService.getById(id);
+        if (!vacancy.getAuthorId().equals(user.getId().intValue())) {
+            return "redirect:/vacancies";
+        }
+        List<UserDto> applicants = responseService.getUsersByVacancy(id.longValue());
+        model.addAttribute("vacancy", vacancy);
+        model.addAttribute("applicants", applicants);
+        return "vacancies/responses";
     }
 }

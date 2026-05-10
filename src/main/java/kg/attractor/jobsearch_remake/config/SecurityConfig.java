@@ -79,6 +79,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/vacancies/*/edit").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.POST, "/vacancies/*/edit").hasRole("EMPLOYER")
 
+                        .requestMatchers(HttpMethod.GET, "/vacancies/*/respond").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/vacancies/*/respond").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.GET, "/vacancies/*/responses").hasRole("EMPLOYER")
+
                         .requestMatchers("/profile/**").authenticated()
                         .anyRequest().authenticated()
                 );
