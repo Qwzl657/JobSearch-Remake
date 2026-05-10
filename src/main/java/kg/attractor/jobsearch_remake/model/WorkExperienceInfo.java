@@ -16,7 +16,7 @@ public class WorkExperienceInfo {
     private Long id;
 
     @Column(name = "resume_id")
-    private Integer resumeId;
+    private Long resumeId;
 
     @Column(name = "years")
     private Integer years;

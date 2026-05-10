@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface WorkExperienceInfoRepository extends JpaRepository<WorkExperienceInfo, Long> {
-    List<WorkExperienceInfo> findByResumeId(Integer resumeId);
-    void deleteByResumeId(Integer resumeId);
+    List<WorkExperienceInfo> findByResumeId(Long resumeId);
+    void deleteByResumeId(Long resumeId);
 }
