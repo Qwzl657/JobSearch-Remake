@@ -19,35 +19,35 @@ public class WorkExperienceInfoService {
     private final WorkExperienceInfoRepository workExperienceInfoRepository;
 
     @Transactional(readOnly = true)
-    public List<WorkExperienceInfoDto> getByResumeId(Integer resumeId) {
+    public List<WorkExperienceInfoDto> getByResumeId(Long resumeId) {
         log.info("Получение опыта работы для резюме id: {}", resumeId);
         return workExperienceInfoRepository.findByResumeId(resumeId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
-    public void createForResume(Integer resumeId, List<WorkExperienceInfoDto> dtos) {
+    public void createForResume(Long resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
         log.info("Создание опыта работы для резюме id: {}", resumeId);
         dtos.forEach(dto -> workExperienceInfoRepository.save(toModel(resumeId, dto)));
     }
 
-    public void updateForResume(Integer resumeId, List<WorkExperienceInfoDto> dtos) {
+    public void updateForResume(Long resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление опыта работы для резюме id: {}", resumeId);
         workExperienceInfoRepository.deleteByResumeId(resumeId);
         createForResume(resumeId, dtos);
     }
 
-    public void deleteByResumeId(Integer resumeId) {
+    public void deleteByResumeId(Long resumeId) {
         log.warn("Удаление опыта работы для резюме id: {}", resumeId);
         workExperienceInfoRepository.deleteByResumeId(resumeId);
     }
 
     private WorkExperienceInfoDto toDto(WorkExperienceInfo info) {
         return WorkExperienceInfoDto.builder()
-                .id(info.getId().intValue()) // ✅ Long → Integer для DTO
-                .resumeId(info.getResumeId())
+                .id(info.getId().intValue())
+                .resumeId(info.getResumeId().intValue())
                 .years(info.getYears())
                 .companyName(info.getCompanyName())
                 .position(info.getPosition())
@@ -55,7 +55,7 @@ public class WorkExperienceInfoService {
                 .build();
     }
 
-    private WorkExperienceInfo toModel(Integer resumeId, WorkExperienceInfoDto dto) {
+    private WorkExperienceInfo toModel(Long resumeId, WorkExperienceInfoDto dto) {
         return WorkExperienceInfo.builder()
                 .resumeId(resumeId)
                 .years(dto.getYears())
