@@ -56,9 +56,18 @@
                             </div>
                         </div>
                         <div class="card-footer bg-transparent d-flex justify-content-end border-0">
-                            <a href="/vacancies/${vacancy.id}/edit" class="btn btn-outline-secondary btn-sm">
-                                <@spring.message 'vacancy.edit'/>
-                            </a>
+                            <div class="d-flex gap-2">
+                                <a href="/vacancies/${vacancy.id}/edit" class="btn btn-outline-secondary btn-sm">
+                                    <@spring.message 'vacancy.edit'/>
+                                </a>
+                                <form method="post" action="/vacancies/${vacancy.id}/delete">
+                                    <#if _csrf??><input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/></#if>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                            onclick="return confirm('Удалить вакансию?')">
+                                        <@spring.message 'vacancy.delete'/>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

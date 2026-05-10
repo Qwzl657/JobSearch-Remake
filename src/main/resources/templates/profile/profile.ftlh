@@ -62,9 +62,18 @@
                                         </#if>
                                     </span>
                                 </div>
-                                <a href="/resumes/${resume.id}/edit" class="btn btn-outline-secondary btn-sm">
-                                    <@spring.message 'resume.edit'/>
-                                </a>
+                                <div class="d-flex gap-2">
+                                    <a href="/resumes/${resume.id}/edit" class="btn btn-outline-secondary btn-sm">
+                                        <@spring.message 'resume.edit'/>
+                                    </a>
+                                    <form method="post" action="/resumes/${resume.id}/delete">
+                                        <#if _csrf??><input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/></#if>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('Удалить резюме?')">
+                                            <@spring.message 'resume.delete'/>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </#list>
