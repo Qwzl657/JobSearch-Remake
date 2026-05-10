@@ -75,8 +75,7 @@
                                                    value="${(_csrf.token)!''}"/>
                                         </#if>
                                         <button type="submit"
-                                                class="btn btn-outline-danger btn-sm"
-                                                onclick="return confirm('${r"Удалить резюме?"}')">
+                                                class="btn btn-outline-danger btn-sm">
                                             <@spring.message 'resume.delete'/>
                                         </button>
                                     </form>
@@ -122,8 +121,7 @@
                                                    value="${(_csrf.token)!''}"/>
                                         </#if>
                                         <button type="submit"
-                                                class="btn btn-outline-danger btn-sm"
-                                                onclick="return confirm('${r"Удалить вакансию?"}')">
+                                                class="btn btn-outline-danger btn-sm">
                                             <@spring.message 'vacancy.delete'/>
                                         </button>
                                     </form>
