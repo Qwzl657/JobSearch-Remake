@@ -12,7 +12,7 @@
                          class="rounded-circle border border-3 border-primary"
                          style="width:110px;height:110px;object-fit:cover;"
                          alt="avatar"
-                         onerror="this.src='https://ui-avatars.com/api/?name=${user.name}+${user.surname}&size=110'"/>
+                         onerror="this.src='https://ui-avatars.com/api/?name=${user.name?url}+${user.surname?url}&size=110'"/>
                 </div>
                 <h5 class="fw-bold mb-1">${user.name} ${user.surname}</h5>
                 <p class="text-muted small mb-1">${user.email}</p>
@@ -63,13 +63,20 @@
                                     </span>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="/resumes/${resume.id}/edit" class="btn btn-outline-secondary btn-sm">
+                                    <a href="/resumes/${resume.id}/edit"
+                                       class="btn btn-outline-secondary btn-sm">
                                         <@spring.message 'resume.edit'/>
                                     </a>
-                                    <form method="post" action="/resumes/${resume.id}/delete">
-                                        <#if _csrf??><input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/></#if>
-                                        <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                onclick="return confirm('Удалить резюме?')">
+                                    <form method="post"
+                                          action="/resumes/${resume.id}/delete">
+                                        <#if _csrf??>
+                                            <input type="hidden"
+                                                   name="${(_csrf.parameterName)!'_csrf'}"
+                                                   value="${(_csrf.token)!''}"/>
+                                        </#if>
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('${r"Удалить резюме?"}')">
                                             <@spring.message 'resume.delete'/>
                                         </button>
                                     </form>
@@ -102,9 +109,25 @@
                                         </span>
                                     </#if>
                                 </div>
-                                <a href="/vacancies/${vacancy.id}/edit" class="btn btn-outline-secondary btn-sm">
-                                    <@spring.message 'vacancy.edit'/>
-                                </a>
+                                <div class="d-flex gap-2">
+                                    <a href="/vacancies/${vacancy.id}/edit"
+                                       class="btn btn-outline-secondary btn-sm">
+                                        <@spring.message 'vacancy.edit'/>
+                                    </a>
+                                    <form method="post"
+                                          action="/vacancies/${vacancy.id}/delete">
+                                        <#if _csrf??>
+                                            <input type="hidden"
+                                                   name="${(_csrf.parameterName)!'_csrf'}"
+                                                   value="${(_csrf.token)!''}"/>
+                                        </#if>
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('${r"Удалить вакансию?"}')">
+                                            <@spring.message 'vacancy.delete'/>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </#list>
@@ -117,17 +140,20 @@
                 <nav class="mt-3">
                     <ul class="pagination justify-content-center">
                         <li class="page-item <#if (currentPage == 0)>disabled</#if>">
-                            <a class="page-link" href="/profile?page=${currentPage - 1}">
+                            <a class="page-link"
+                               href="/profile?page=${currentPage - 1}">
                                 <@spring.message 'page.prev'/>
                             </a>
                         </li>
                         <#list 0..(totalPages-1) as p>
                             <li class="page-item <#if (p == currentPage)>active</#if>">
-                                <a class="page-link" href="/profile?page=${p}">${p + 1}</a>
+                                <a class="page-link"
+                                   href="/profile?page=${p}">${p + 1}</a>
                             </li>
                         </#list>
                         <li class="page-item <#if (currentPage >= totalPages - 1)>disabled</#if>">
-                            <a class="page-link" href="/profile?page=${currentPage + 1}">
+                            <a class="page-link"
+                               href="/profile?page=${currentPage + 1}">
                                 <@spring.message 'page.next'/>
                             </a>
                         </li>
