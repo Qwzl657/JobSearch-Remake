@@ -56,18 +56,16 @@
                             </div>
                         </div>
                         <div class="card-footer bg-transparent d-flex justify-content-end border-0">
-                            <div class="d-flex gap-2">
-                                <a href="/vacancies/${vacancy.id}/edit" class="btn btn-outline-secondary btn-sm">
-                                    <@spring.message 'vacancy.edit'/>
-                                </a>
-                                <form method="post" action="/vacancies/${vacancy.id}/delete">
-                                    <#if _csrf??><input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/></#if>
-                                    <button type="submit" class="btn btn-outline-danger btn-sm"
-                                            onclick="return confirm('Удалить вакансию?')">
-                                        <@spring.message 'vacancy.delete'/>
-                                    </button>
-                                </form>
-                            </div>
+                            <#if SPRING_SECURITY_CONTEXT??>
+                                <#list SPRING_SECURITY_CONTEXT.authentication.principal.authorities as auth>
+                                    <#if auth.authority == "ROLE_EMPLOYER">
+                                        <a href="/vacancies/${vacancy.id}/edit"
+                                           class="btn btn-outline-secondary btn-sm">
+                                            <@spring.message 'vacancy.edit'/>
+                                        </a>
+                                    </#if>
+                                </#list>
+                            </#if>
                         </div>
                     </div>
                 </div>
@@ -92,17 +90,20 @@
         <nav class="mt-5">
             <ul class="pagination justify-content-center">
                 <li class="page-item <#if (currentPage == 0)>disabled</#if>">
-                    <a class="page-link" href="/vacancies?page=${currentPage - 1}&sort=${sort}">
+                    <a class="page-link"
+                       href="/vacancies?page=${currentPage - 1}&sort=${sort}">
                         <@spring.message 'page.prev'/>
                     </a>
                 </li>
                 <#list 0..(totalPages-1) as p>
                     <li class="page-item <#if (p == currentPage)>active</#if>">
-                        <a class="page-link" href="/vacancies?page=${p}&sort=${sort}">${p + 1}</a>
+                        <a class="page-link"
+                           href="/vacancies?page=${p}&sort=${sort}">${p + 1}</a>
                     </li>
                 </#list>
                 <li class="page-item <#if (currentPage >= totalPages - 1)>disabled</#if>">
-                    <a class="page-link" href="/vacancies?page=${currentPage + 1}&sort=${sort}">
+                    <a class="page-link"
+                       href="/vacancies?page=${currentPage + 1}&sort=${sort}">
                         <@spring.message 'page.next'/>
                     </a>
                 </li>
