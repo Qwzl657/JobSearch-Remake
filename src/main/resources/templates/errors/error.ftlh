@@ -24,7 +24,6 @@
                 <#else>
                     <h4><@spring.message 'error.500.title'/></h4>
                 </#if>
-                <#if reason??><p class="text-muted">${reason}</p></#if>
                 <a href="/vacancies" class="btn btn-primary mt-3">
                     <@spring.message 'error.back'/>
                 </a>
