@@ -19,27 +19,27 @@ public class EducationInfoService {
     private final EducationInfoRepository educationInfoRepository;
 
     @Transactional(readOnly = true)
-    public List<EducationInfoDto> getByResumeId(Integer resumeId) {
+    public List<EducationInfoDto> getByResumeId(Long resumeId) {
         log.info("Получение образования для резюме id: {}", resumeId);
         return educationInfoRepository.findByResumeId(resumeId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
-    public void createForResume(Integer resumeId, List<EducationInfoDto> dtos) {
+    public void createForResume(Long resumeId, List<EducationInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
         log.info("Создание образования для резюме id: {}", resumeId);
         dtos.forEach(dto -> educationInfoRepository.save(toModel(resumeId, dto)));
     }
 
-    public void updateForResume(Integer resumeId, List<EducationInfoDto> dtos) {
+    public void updateForResume(Long resumeId, List<EducationInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление образования для резюме id: {}", resumeId);
         educationInfoRepository.deleteByResumeId(resumeId);
         createForResume(resumeId, dtos);
     }
 
-    public void deleteByResumeId(Integer resumeId) {
+    public void deleteByResumeId(Long resumeId) {
         log.warn("Удаление образования для резюме id: {}", resumeId);
         educationInfoRepository.deleteByResumeId(resumeId);
     }
@@ -47,7 +47,7 @@ public class EducationInfoService {
     private EducationInfoDto toDto(EducationInfo info) {
         return EducationInfoDto.builder()
                 .id(info.getId().intValue())
-                .resumeId(info.getResumeId())
+                .resumeId(info.getResumeId().intValue())
                 .institution(info.getInstitution())
                 .program(info.getProgram())
                 .startDate(info.getStartDate())
@@ -56,7 +56,7 @@ public class EducationInfoService {
                 .build();
     }
 
-    private EducationInfo toModel(Integer resumeId, EducationInfoDto dto) {
+    private EducationInfo toModel(Long resumeId, EducationInfoDto dto) {
         return EducationInfo.builder()
                 .resumeId(resumeId)
                 .institution(dto.getInstitution())
