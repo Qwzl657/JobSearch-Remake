@@ -29,17 +29,32 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/vacancies"><@spring.message 'nav.vacancies'/></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/resumes/all"><@spring.message 'nav.resumes'/></a>
-                    </li>
+                    <#assign known = SPRING_SECURITY_CONTEXT??>
+                    <#if known>
+                        <#assign principal = SPRING_SECURITY_CONTEXT.authentication.principal>
+                        <#list principal.authorities as auth>
+                            <#if auth.authority == "ROLE_EMPLOYER">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/resumes/all">
+                                        <@spring.message 'nav.resumes'/>
+                                    </a>
+                                </li>
+                            </#if>
+                            <#if auth.authority == "ROLE_APPLICANT">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/employers">
+                                        <@spring.message 'nav.employers'/>
+                                    </a>
+                                </li>
+                            </#if>
+                        </#list>
+                    </#if>
                 </ul>
 
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <#assign known = SPRING_SECURITY_CONTEXT??>
                     <#if known>
-                        <#assign user = SPRING_SECURITY_CONTEXT.authentication.principal>
                         <li class="nav-item">
-                            <span class="text-white-50 small me-2">${user.getUsername()}</span>
+                            <span class="text-white-50 small me-2">${principal.getUsername()}</span>
                         </li>
                     </#if>
 
@@ -94,7 +109,7 @@
     </div>
 
     <footer class="text-center mt-5 py-3 border-top text-muted small">
-        <div class="container">© 2024 JobSearch</div>
+        <div class="container">© 2026 JobSearch</div>
     </footer>
 
     </body>
