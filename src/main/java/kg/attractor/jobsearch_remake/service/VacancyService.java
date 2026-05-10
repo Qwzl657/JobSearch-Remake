@@ -123,7 +123,6 @@ public class VacancyService {
         v.setExpFrom(dto.getExpFrom());
         v.setActive(dto.isActive());
         v.setExpTo(dto.getExpTo());
-        v.setActive(dto.isActive());
         v.setUpdateTime(LocalDateTime.now());
         vacancyRepository.save(v);
     }
