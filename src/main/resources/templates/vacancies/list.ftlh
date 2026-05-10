@@ -17,9 +17,15 @@
                     </option>
                 </select>
             </form>
-            <a href="/vacancies/create" class="btn btn-primary btn-sm">
-                <@spring.message 'vacancy.create'/>
-            </a>
+            <#if SPRING_SECURITY_CONTEXT??>
+                <#list SPRING_SECURITY_CONTEXT.authentication.principal.authorities as auth>
+                    <#if auth.authority == "ROLE_EMPLOYER">
+                        <a href="/vacancies/create" class="btn btn-primary btn-sm">
+                            <@spring.message 'vacancy.create'/>
+                        </a>
+                    </#if>
+                </#list>
+            </#if>
         </div>
     </div>
 
@@ -61,9 +67,15 @@
     <#else>
         <div class="text-center py-5">
             <p class="text-muted"><@spring.message 'vacancy.no.results'/></p>
-            <a href="/vacancies/create" class="btn btn-primary mt-2">
-                <@spring.message 'vacancy.create'/>
-            </a>
+            <#if SPRING_SECURITY_CONTEXT??>
+                <#list SPRING_SECURITY_CONTEXT.authentication.principal.authorities as auth>
+                    <#if auth.authority == "ROLE_EMPLOYER">
+                        <a href="/vacancies/create" class="btn btn-primary mt-2">
+                            <@spring.message 'vacancy.create'/>
+                        </a>
+                    </#if>
+                </#list>
+            </#if>
         </div>
     </#if>
 
