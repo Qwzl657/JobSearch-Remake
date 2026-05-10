@@ -81,7 +81,8 @@ public class ProfileMvcController {
 
         if (avatar != null && !avatar.isEmpty()) {
             String filename = UUID.randomUUID() + "_" + avatar.getOriginalFilename();
-            Path path = Paths.get("uploads/avatars/" + filename);
+            String uploadDir = System.getProperty("user.dir") + "/uploads/avatars/";
+            Path path = Paths.get(uploadDir + filename);
             Files.createDirectories(path.getParent());
             Files.write(path, avatar.getBytes());
             userDto.setAvatar(filename);
