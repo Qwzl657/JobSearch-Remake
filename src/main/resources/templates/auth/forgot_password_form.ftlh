@@ -23,11 +23,20 @@
                         <@spring.message 'auth.forgot.title'/>
                     </h4>
 
-                    <#if message??>
-                        <div class="alert alert-success">${message}</div>
+                    <#if messageSent??>
+                        <div class="alert alert-success">
+                            <@spring.message 'auth.forgot.success'/>
+                        </div>
                     </#if>
-                    <#if error??>
-                        <div class="alert alert-danger">${error}</div>
+                    <#if errorNotFound??>
+                        <div class="alert alert-danger">
+                            <@spring.message 'auth.forgot.error.notfound'/>
+                        </div>
+                    </#if>
+                    <#if errorMail??>
+                        <div class="alert alert-danger">
+                            <@spring.message 'auth.forgot.error.mail'/>
+                        </div>
                     </#if>
 
                     <form method="post" action="/auth/forgot-password">
@@ -37,8 +46,11 @@
                                    value="${(_csrf.token)!'csrf-token'}"/>
                         </#if>
                         <div class="mb-3">
-                            <label class="form-label"><@spring.message 'auth.forgot.email'/></label>
-                            <input type="email" name="email" class="form-control" required/>
+                            <label class="form-label">
+                                <@spring.message 'auth.forgot.email'/>
+                            </label>
+                            <input type="email" name="email"
+                                   class="form-control" required/>
                         </div>
                         <div class="d-grid mb-3">
                             <button type="submit" class="btn btn-primary">
@@ -48,7 +60,9 @@
                     </form>
 
                     <div class="text-center">
-                        <a href="/auth/login"><@spring.message 'auth.forgot.back'/></a>
+                        <a href="/auth/login">
+                            <@spring.message 'auth.forgot.back'/>
+                        </a>
                     </div>
                 </div>
             </div>
