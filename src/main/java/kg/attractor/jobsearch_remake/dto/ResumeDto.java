@@ -25,7 +25,7 @@ public class ResumeDto {
     private Integer categoryId;
 
     @Positive(message = "{validation.resume.salary.positive}")
-    private double salary;
+    private Double salary;
 
     private boolean active;
 
