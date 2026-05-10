@@ -36,6 +36,11 @@
                         <div class="alert alert-danger">
                             <@spring.message 'auth.reset.error'/>
                         </div>
+                        <div class="text-center mt-3">
+                            <a href="/auth/forgot-password" class="btn btn-outline-secondary btn-sm">
+                                <@spring.message 'auth.forgot.title'/>
+                            </a>
+                        </div>
                     <#else>
                         <form method="post" action="/auth/reset-password">
                             <#if _csrf??>
@@ -45,8 +50,12 @@
                             </#if>
                             <input type="hidden" name="token" value="${token!}"/>
                             <div class="mb-3">
-                                <label class="form-label"><@spring.message 'auth.reset.password'/></label>
-                                <input type="password" name="password" class="form-control"
+                                <label class="form-label">
+                                    <@spring.message 'auth.reset.password'/>
+                                </label>
+                                <input type="password" name="password"
+                                       class="form-control"
+                                       placeholder="<@spring.message 'auth.reset.password.placeholder'/>"
                                        required minlength="8"/>
                             </div>
                             <div class="d-grid">
@@ -56,6 +65,12 @@
                             </div>
                         </form>
                     </#if>
+
+                    <div class="text-center mt-3">
+                        <a href="/auth/login" class="text-muted small">
+                            <@spring.message 'auth.forgot.back'/>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
