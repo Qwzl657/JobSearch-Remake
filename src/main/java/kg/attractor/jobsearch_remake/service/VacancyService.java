@@ -97,7 +97,7 @@ public class VacancyService {
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .categoryId(dto.getCategoryId())
-                .salary(dto.getSalary())
+                .salary(dto.getSalary() != null ? dto.getSalary() : 0.0)
                 .expFrom(dto.getExpFrom())
                 .expTo(dto.getExpTo())
                 .active(dto.isActive())
@@ -119,7 +119,7 @@ public class VacancyService {
         v.setName(dto.getName());
         v.setDescription(dto.getDescription());
         v.setCategoryId(dto.getCategoryId());
-        v.setSalary(dto.getSalary());
+        v.setSalary(dto.getSalary() != null ? dto.getSalary() : 0.0);
         v.setExpFrom(dto.getExpFrom());
         v.setActive(dto.isActive());
         v.setExpTo(dto.getExpTo());

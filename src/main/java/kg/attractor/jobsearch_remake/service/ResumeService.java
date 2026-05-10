@@ -85,7 +85,7 @@ public class ResumeService {
                 .applicantId(dto.getApplicantId())
                 .name(dto.getName())
                 .categoryId(dto.getCategoryId())
-                .salary(dto.getSalary())
+                .salary(dto.getSalary() != null ? dto.getSalary() : 0.0)
                 .isActive(dto.isActive())
                 .createdDate(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
@@ -106,7 +106,7 @@ public class ResumeService {
                 });
         r.setName(dto.getName());
         r.setCategoryId(dto.getCategoryId());
-        r.setSalary(dto.getSalary());
+        r.setSalary(dto.getSalary() != null ? dto.getSalary() : 0.0);
         r.setActive(dto.isActive());
         r.setUpdateTime(LocalDateTime.now());
         resumeRepository.save(r);
