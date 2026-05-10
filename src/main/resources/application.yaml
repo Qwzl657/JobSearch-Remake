@@ -37,6 +37,9 @@ spring:
     init:
       mode: never
 
+    freemarker:
+      expose-session-attributes: true
+
 
   mail:
     host: smtp.gmail.com
