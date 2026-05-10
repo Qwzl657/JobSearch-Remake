@@ -17,12 +17,14 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     List<Vacancy> findByAuthorId(Long authorId);
     Page<Vacancy> findByAuthorId(Long authorId, Pageable pageable);
 
-    @Query("""
-            SELECT v FROM Vacancy v
-            LEFT JOIN RespondedApplicant r ON r.vacancyId = v.id
-            WHERE v.active = true
-            GROUP BY v.id
-            ORDER BY COUNT(r.id) DESC
-            """)
+    @Query(value = """
+    SELECT v.* FROM vacancies v
+    LEFT JOIN responded_applicants r ON r.vacancy_id = v.id
+    WHERE v.is_active = true
+    GROUP BY v.id
+    ORDER BY COUNT(r.id) DESC
+    """,
+            countQuery = "SELECT COUNT(DISTINCT v.id) FROM vacancies v WHERE v.is_active = true",
+            nativeQuery = true)
     Page<Vacancy> findActiveOrderByResponseCount(Pageable pageable);
 }
