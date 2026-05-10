@@ -85,15 +85,15 @@ public class ResumeService {
                 .applicantId(dto.getApplicantId())
                 .name(dto.getName())
                 .categoryId(dto.getCategoryId())
-                .salary(dto.getSalary())
+                .salary(dto.getSalary() != null ? dto.getSalary() : 0.0)
                 .isActive(dto.isActive())
                 .createdDate(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
                 .build();
         Resume saved = resumeRepository.save(r);
-        workExperienceInfoService.createForResume(saved.getId().intValue(), dto.getWorkExperienceInfos());
-        educationInfoService.createForResume(saved.getId().intValue(), dto.getEducationInfos());
-        contactInfoService.createForResume(saved.getId().intValue(), dto.getContactInfos());
+        workExperienceInfoService.createForResume(saved.getId(), dto.getWorkExperienceInfos());
+        educationInfoService.createForResume(saved.getId(), dto.getEducationInfos());
+        contactInfoService.createForResume(saved.getId(), dto.getContactInfos());
     }
 
     @Transactional
@@ -106,21 +106,20 @@ public class ResumeService {
                 });
         r.setName(dto.getName());
         r.setCategoryId(dto.getCategoryId());
-        r.setSalary(dto.getSalary());
+        r.setSalary(dto.getSalary() != null ? dto.getSalary() : 0.0);
         r.setActive(dto.isActive());
         r.setUpdateTime(LocalDateTime.now());
         resumeRepository.save(r);
-        workExperienceInfoService.updateForResume(id, dto.getWorkExperienceInfos());
-        educationInfoService.updateForResume(id, dto.getEducationInfos());
-        contactInfoService.updateForResume(id, dto.getContactInfos());
+        workExperienceInfoService.updateForResume(id.longValue(), dto.getWorkExperienceInfos());
+        educationInfoService.updateForResume(id.longValue(), dto.getEducationInfos());
+        contactInfoService.updateForResume(id.longValue(), dto.getContactInfos());
     }
 
     @Transactional
     public void delete(Integer id) {
-        log.warn("Удаление резюме id: {}", id);
-        workExperienceInfoService.deleteByResumeId(id);
-        educationInfoService.deleteByResumeId(id);
-        contactInfoService.deleteByResumeId(id);
+        workExperienceInfoService.deleteByResumeId(id.longValue());
+        educationInfoService.deleteByResumeId(id.longValue());
+        contactInfoService.deleteByResumeId(id.longValue());
         resumeRepository.deleteById(id.longValue());
     }
 
@@ -134,9 +133,9 @@ public class ResumeService {
                 .active(r.isActive())
                 .createdDate(r.getCreatedDate())
                 .updateTime(r.getUpdateTime())
-                .workExperienceInfos(workExperienceInfoService.getByResumeId(r.getId().intValue()))
-                .educationInfos(educationInfoService.getByResumeId(r.getId().intValue()))
-                .contactInfos(contactInfoService.getByResumeId(r.getId().intValue()))
+                .workExperienceInfos(workExperienceInfoService.getByResumeId(r.getId()))
+                .educationInfos(educationInfoService.getByResumeId(r.getId()))
+                .contactInfos(contactInfoService.getByResumeId(r.getId()))
                 .build();
     }
 }

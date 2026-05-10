@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface EducationInfoRepository extends JpaRepository<EducationInfo, Long> {
-    List<EducationInfo> findByResumeId(Integer resumeId);
-    void deleteByResumeId(Integer resumeId);
+    List<EducationInfo> findByResumeId(Long resumeId);
+    void deleteByResumeId(Long resumeId);
 }

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,8 +17,13 @@ import java.time.LocalDateTime;
 public class EducationInfoDto {
     private Integer id;
     private Integer resumeId;
+
+    @NotBlank(message = "{validation.education.institution.blank}")
     private String institution;
+
+    @NotBlank(message = "{validation.education.program.blank}")
     private String program;
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String degree;

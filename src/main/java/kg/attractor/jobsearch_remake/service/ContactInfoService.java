@@ -19,27 +19,27 @@ public class ContactInfoService {
     private final ContactInfoRepository contactInfoRepository;
 
     @Transactional(readOnly = true)
-    public List<ContactInfoDto> getByResumeId(Integer resumeId) {
+    public List<ContactInfoDto> getByResumeId(Long resumeId) {
         log.info("Получение контактов для резюме id: {}", resumeId);
         return contactInfoRepository.findByResumeId(resumeId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
-    public void createForResume(Integer resumeId, List<ContactInfoDto> dtos) {
+    public void createForResume(Long resumeId, List<ContactInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
         log.info("Создание контактов для резюме id: {}", resumeId);
         dtos.forEach(dto -> contactInfoRepository.save(toModel(resumeId, dto)));
     }
 
-    public void updateForResume(Integer resumeId, List<ContactInfoDto> dtos) {
+    public void updateForResume(Long resumeId, List<ContactInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление контактов для резюме id: {}", resumeId);
         contactInfoRepository.deleteByResumeId(resumeId);
         createForResume(resumeId, dtos);
     }
 
-    public void deleteByResumeId(Integer resumeId) {
+    public void deleteByResumeId(Long resumeId) {
         log.warn("Удаление контактов для резюме id: {}", resumeId);
         contactInfoRepository.deleteByResumeId(resumeId);
     }
@@ -47,13 +47,13 @@ public class ContactInfoService {
     private ContactInfoDto toDto(ContactInfo info) {
         return ContactInfoDto.builder()
                 .id(info.getId().intValue())
-                .resumeId(info.getResumeId())
+                .resumeId(info.getResumeId().intValue())
                 .typeId(info.getTypeId())
                 .value(info.getValue())
                 .build();
     }
 
-    private ContactInfo toModel(Integer resumeId, ContactInfoDto dto) {
+    private ContactInfo toModel(Long resumeId, ContactInfoDto dto) {
         return ContactInfo.builder()
                 .resumeId(resumeId)
                 .typeId(dto.getTypeId())

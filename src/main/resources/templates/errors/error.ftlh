@@ -1,10 +1,10 @@
 <#import "/spring.ftl" as spring>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${.locale}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Error — JobSearch</title>
+    <title><@spring.message 'error.404.title'/> — JobSearch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -24,7 +24,6 @@
                 <#else>
                     <h4><@spring.message 'error.500.title'/></h4>
                 </#if>
-                <#if reason??><p class="text-muted">${reason}</p></#if>
                 <a href="/vacancies" class="btn btn-primary mt-3">
                     <@spring.message 'error.back'/>
                 </a>

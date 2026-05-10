@@ -26,7 +26,7 @@ public class VacancyDto {
     private Integer categoryId;
 
     @Positive(message = "{validation.vacancy.salary.positive}")
-    private double salary;
+    private Double salary;
 
     @Min(value = 0, message = "{validation.vacancy.expFrom.min}")
     private Integer expFrom;

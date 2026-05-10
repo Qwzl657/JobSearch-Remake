@@ -1,10 +1,3 @@
--- Полномочия и роли
-INSERT INTO authorities (authority) VALUES ('FULL'), ('READ_ONLY');
-
-INSERT INTO roles (role, authority_id) VALUES
-                                           ('EMPLOYER', (SELECT id FROM authorities WHERE authority = 'FULL')),
-                                           ('APPLICANT', (SELECT id FROM authorities WHERE authority = 'FULL'));
-
 -- Типы контактов
 INSERT INTO contact_types (type) VALUES
                                      ('Telegram'),

@@ -19,7 +19,7 @@ public class ContactInfo {
     private Integer typeId;
 
     @Column(name = "resume_id")
-    private Integer resumeId;
+    private Long resumeId;
 
     @Column(name = "contact_value")
     private String value;

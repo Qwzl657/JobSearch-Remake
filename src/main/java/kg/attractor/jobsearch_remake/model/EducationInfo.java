@@ -19,7 +19,7 @@ public class EducationInfo {
     private Integer id;
 
     @Column(name = "resume_id")
-    private Integer resumeId;
+    private Long resumeId;
 
     @Column(name = "institution")
     private String institution;

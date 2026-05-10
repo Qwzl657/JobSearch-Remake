@@ -92,4 +92,14 @@ public class VacancyMvcController {
         vacancyService.update(id, vacancyDto);
         return "redirect:/profile";
     }
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Integer id, Authentication auth) {
+        VacancyDto existing = vacancyService.getById(id);
+        UserDto user = userService.getByEmail(auth.getName());
+        if (!existing.getAuthorId().equals(user.getId().intValue())) {
+            return "redirect:/vacancies";
+        }
+        vacancyService.delete(id);
+        return "redirect:/profile";
+    }
 }

@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ContactInfoRepository extends JpaRepository<ContactInfo, Long> {
-    List<ContactInfo> findByResumeId(Integer resumeId);
-    void deleteByResumeId(Integer resumeId);
+    List<ContactInfo> findByResumeId(Long resumeId);
+    void deleteByResumeId(Long resumeId);
 }

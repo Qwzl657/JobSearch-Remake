@@ -5,9 +5,15 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0"><@spring.message 'resume.title'/></h3>
-        <a href="/resumes/create" class="btn btn-primary btn-sm">
-            <@spring.message 'resume.create'/>
-        </a>
+        <#if SPRING_SECURITY_CONTEXT??>
+            <#list SPRING_SECURITY_CONTEXT.authentication.principal.authorities as auth>
+                <#if auth.authority == "ROLE_APPLICANT">
+                    <a href="/resumes/create" class="btn btn-primary btn-sm">
+                        <@spring.message 'resume.create'/>
+                    </a>
+                </#if>
+            </#list>
+        </#if>
     </div>
 
     <#if resumes?has_content>
@@ -31,9 +37,16 @@
                             </span>
                         </div>
                         <div class="card-footer bg-transparent d-flex justify-content-end border-0">
-                            <a href="/resumes/${resume.id}/edit" class="btn btn-outline-secondary btn-sm">
-                                <@spring.message 'resume.edit'/>
-                            </a>
+                            <#if SPRING_SECURITY_CONTEXT??>
+                                <#list SPRING_SECURITY_CONTEXT.authentication.principal.authorities as auth>
+                                    <#if auth.authority == "ROLE_APPLICANT">
+                                        <a href="/resumes/${resume.id}/edit"
+                                           class="btn btn-outline-secondary btn-sm">
+                                            <@spring.message 'resume.edit'/>
+                                        </a>
+                                    </#if>
+                                </#list>
+                            </#if>
                         </div>
                     </div>
                 </div>
@@ -42,9 +55,15 @@
     <#else>
         <div class="text-center py-5">
             <p class="text-muted"><@spring.message 'resume.no.results'/></p>
-            <a href="/resumes/create" class="btn btn-primary mt-2">
-                <@spring.message 'resume.create'/>
-            </a>
+            <#if SPRING_SECURITY_CONTEXT??>
+                <#list SPRING_SECURITY_CONTEXT.authentication.principal.authorities as auth>
+                    <#if auth.authority == "ROLE_APPLICANT">
+                        <a href="/resumes/create" class="btn btn-primary mt-2">
+                            <@spring.message 'resume.create'/>
+                        </a>
+                    </#if>
+                </#list>
+            </#if>
         </div>
     </#if>
 

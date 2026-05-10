@@ -90,4 +90,14 @@ public class ResumeMvcController {
         resumeService.update(id, resumeDto);
         return "redirect:/profile";
     }
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Integer id, Authentication auth) {
+        ResumeDto existing = resumeService.getById(id);
+        UserDto user = userService.getByEmail(auth.getName());
+        if (!existing.getApplicantId().equals(user.getId())) {
+            return "redirect:/resumes/all";
+        }
+        resumeService.delete(id);
+        return "redirect:/profile";
+    }
 }
