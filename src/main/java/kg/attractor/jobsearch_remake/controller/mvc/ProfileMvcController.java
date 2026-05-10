@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.controller.mvc;
 
+import jakarta.validation.Valid;
 import kg.attractor.jobsearch_remake.dto.ResumeDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.dto.VacancyDto;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,9 +69,14 @@ public class ProfileMvcController {
     }
 
     @PostMapping("/edit")
-    public String editProfile(@ModelAttribute UserDto userDto,
+    public String editProfile(@Valid @ModelAttribute UserDto userDto,
+                              BindingResult bindingResult,
                               @RequestParam(name = "avatarFile", required = false) MultipartFile avatar,
                               Authentication auth) throws IOException {
+
+        if (bindingResult.hasErrors()) {
+            return "profile/edit";
+        }
         UserDto user = userService.getByEmail(auth.getName());
 
         if (avatar != null && !avatar.isEmpty()) {
