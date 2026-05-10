@@ -1,6 +1,6 @@
 package kg.attractor.jobsearch_remake.config;
 
-import kg.attractor.jobsearch_remake.service.impl.UserServiceImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserServiceImpl userService;
+    private final UserDetailsService userService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
