@@ -67,15 +67,13 @@
                                        class="btn btn-outline-secondary btn-sm">
                                         <@spring.message 'resume.edit'/>
                                     </a>
-                                    <form method="post"
-                                          action="/resumes/${resume.id}/delete">
+                                    <form method="post" action="/resumes/${resume.id}/delete">
                                         <#if _csrf??>
                                             <input type="hidden"
                                                    name="${(_csrf.parameterName)!'_csrf'}"
                                                    value="${(_csrf.token)!''}"/>
                                         </#if>
-                                        <button type="submit"
-                                                class="btn btn-outline-danger btn-sm">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
                                             <@spring.message 'resume.delete'/>
                                         </button>
                                     </form>
@@ -113,15 +111,13 @@
                                        class="btn btn-outline-secondary btn-sm">
                                         <@spring.message 'vacancy.edit'/>
                                     </a>
-                                    <form method="post"
-                                          action="/vacancies/${vacancy.id}/delete">
+                                    <form method="post" action="/vacancies/${vacancy.id}/delete">
                                         <#if _csrf??>
                                             <input type="hidden"
                                                    name="${(_csrf.parameterName)!'_csrf'}"
                                                    value="${(_csrf.token)!''}"/>
                                         </#if>
-                                        <button type="submit"
-                                                class="btn btn-outline-danger btn-sm">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
                                             <@spring.message 'vacancy.delete'/>
                                         </button>
                                     </form>
@@ -139,19 +135,19 @@
                     <ul class="pagination justify-content-center">
                         <li class="page-item <#if (currentPage == 0)>disabled</#if>">
                             <a class="page-link"
-                               href="/profile?page=${currentPage - 1}">
+                               href="/profile?page=${currentPage - 1}&size=${param.size!5}">
                                 <@spring.message 'page.prev'/>
                             </a>
                         </li>
                         <#list 0..(totalPages-1) as p>
                             <li class="page-item <#if (p == currentPage)>active</#if>">
                                 <a class="page-link"
-                                   href="/profile?page=${p}">${p + 1}</a>
+                                   href="/profile?page=${p}&size=${param.size!5}">${p + 1}</a>
                             </li>
                         </#list>
                         <li class="page-item <#if (currentPage >= totalPages - 1)>disabled</#if>">
                             <a class="page-link"
-                               href="/profile?page=${currentPage + 1}">
+                               href="/profile?page=${currentPage + 1}&size=${param.size!5}">
                                 <@spring.message 'page.next'/>
                             </a>
                         </li>
