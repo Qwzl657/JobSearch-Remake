@@ -7,6 +7,7 @@ import kg.attractor.jobsearch_remake.service.ResumeService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 @Controller
 @RequestMapping("/resumes")
@@ -25,7 +25,6 @@ public class ResumeMvcController {
 
     private final ResumeService resumeService;
     private final UserService userService;
-
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('EMPLOYER')")
@@ -38,7 +37,6 @@ public class ResumeMvcController {
         model.addAttribute("totalPages", resumePage.getTotalPages());
         return "resumes/list";
     }
-
 
     @GetMapping("/create")
     public String createPage(Model model) {

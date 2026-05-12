@@ -112,7 +112,9 @@ public class VacancyMvcController {
     }
 
     @GetMapping("/{id}/respond")
-    public String respondPage(@PathVariable Long id, Model model, Authentication auth) {
+    public String respondPage(@PathVariable Long id,
+                              Model model,
+                              Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
         List<ResumeDto> resumes = resumeService.getByApplicant(user.getId());
         model.addAttribute("vacancy", vacancyService.getById(id));
@@ -128,7 +130,9 @@ public class VacancyMvcController {
     }
 
     @GetMapping("/{id}/responses")
-    public String responses(@PathVariable Long id, Model model, Authentication auth) {
+    public String responses(@PathVariable Long id,
+                            Model model,
+                            Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
         VacancyDto vacancy = vacancyService.getById(id);
         if (!vacancy.getAuthorId().equals(user.getId())) {
