@@ -21,7 +21,7 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
-    public Message getById(Integer id) {
+    public Message getById(Long id) {
         log.info("Получение сообщения по id: {}", id);
         return messageRepository.findById(id)
                 .orElseThrow(() -> {
