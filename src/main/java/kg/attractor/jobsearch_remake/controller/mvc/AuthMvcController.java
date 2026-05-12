@@ -71,10 +71,9 @@ public class AuthMvcController {
 
     @GetMapping("/reset-password")
     public String showResetPassword(@RequestParam String token, Model model) {
-        try {
-            userService.getByResetPasswordToken(token); // проверяем что токен валиден
+        if (userService.isResetTokenValid(token)) {
             model.addAttribute("token", token);
-        } catch (UserNotFoundException e) {
+        } else {
             model.addAttribute("error", true);
         }
         return "auth/reset_password_form";

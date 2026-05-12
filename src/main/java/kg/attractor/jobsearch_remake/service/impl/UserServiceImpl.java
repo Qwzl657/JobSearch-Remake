@@ -145,16 +145,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getByResetPasswordToken(String token) {
-        return userRepository.findByResetPasswordToken(token)
-                .orElseThrow(UserNotFoundException::new);
-    }
-
-    @Override
-    public void updatePassword(User user, String newPassword) {
-        user.setPassword(passwordEncoder.encode(newPassword));
-        user.setResetPasswordToken(null);
-        userRepository.saveAndFlush(user);
+    public boolean isResetTokenValid(String token) {
+        return userRepository.findByResetPasswordToken(token).isPresent();
     }
 
     @Override
@@ -198,9 +190,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public void resetPassword(String token, String newPassword) {
         User user = userRepository.findByResetPasswordToken(token)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.error("Токен сброса не найден: {}", token);
+                    return new UserNotFoundException();
+                });
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetPasswordToken(null);
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
+        log.info("Пароль успешно сброшен по токену");
     }
 }
