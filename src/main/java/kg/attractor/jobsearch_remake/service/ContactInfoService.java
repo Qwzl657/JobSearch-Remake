@@ -13,7 +13,6 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ContactInfoService {
 
     private final ContactInfoRepository contactInfoRepository;
@@ -26,12 +25,14 @@ public class ContactInfoService {
                 .toList();
     }
 
+    @Transactional
     public void createForResume(Long resumeId, List<ContactInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
         log.info("Создание контактов для резюме id: {}", resumeId);
         dtos.forEach(dto -> contactInfoRepository.save(toModel(resumeId, dto)));
     }
 
+    @Transactional
     public void updateForResume(Long resumeId, List<ContactInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление контактов для резюме id: {}", resumeId);
@@ -39,6 +40,7 @@ public class ContactInfoService {
         createForResume(resumeId, dtos);
     }
 
+    @Transactional
     public void deleteByResumeId(Long resumeId) {
         log.warn("Удаление контактов для резюме id: {}", resumeId);
         contactInfoRepository.deleteByResumeId(resumeId);
@@ -46,8 +48,8 @@ public class ContactInfoService {
 
     private ContactInfoDto toDto(ContactInfo info) {
         return ContactInfoDto.builder()
-                .id(info.getId().intValue())
-                .resumeId(info.getResumeId().intValue())
+                .id(info.getId())
+                .resumeId(info.getResumeId())
                 .typeId(info.getTypeId())
                 .value(info.getValue())
                 .build();

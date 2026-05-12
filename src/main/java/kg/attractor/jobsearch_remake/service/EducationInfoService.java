@@ -13,7 +13,6 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class EducationInfoService {
 
     private final EducationInfoRepository educationInfoRepository;
@@ -26,12 +25,14 @@ public class EducationInfoService {
                 .toList();
     }
 
+    @Transactional
     public void createForResume(Long resumeId, List<EducationInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
         log.info("Создание образования для резюме id: {}", resumeId);
         dtos.forEach(dto -> educationInfoRepository.save(toModel(resumeId, dto)));
     }
 
+    @Transactional
     public void updateForResume(Long resumeId, List<EducationInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление образования для резюме id: {}", resumeId);
@@ -39,6 +40,7 @@ public class EducationInfoService {
         createForResume(resumeId, dtos);
     }
 
+    @Transactional
     public void deleteByResumeId(Long resumeId) {
         log.warn("Удаление образования для резюме id: {}", resumeId);
         educationInfoRepository.deleteByResumeId(resumeId);
@@ -46,8 +48,8 @@ public class EducationInfoService {
 
     private EducationInfoDto toDto(EducationInfo info) {
         return EducationInfoDto.builder()
-                .id(info.getId().intValue())
-                .resumeId(info.getResumeId().intValue())
+                .id(info.getId())
+                .resumeId(info.getResumeId())
                 .institution(info.getInstitution())
                 .program(info.getProgram())
                 .startDate(info.getStartDate())

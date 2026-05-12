@@ -13,7 +13,6 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class WorkExperienceInfoService {
 
     private final WorkExperienceInfoRepository workExperienceInfoRepository;
@@ -26,12 +25,14 @@ public class WorkExperienceInfoService {
                 .toList();
     }
 
+    @Transactional
     public void createForResume(Long resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null || dtos.isEmpty()) return;
         log.info("Создание опыта работы для резюме id: {}", resumeId);
         dtos.forEach(dto -> workExperienceInfoRepository.save(toModel(resumeId, dto)));
     }
 
+    @Transactional
     public void updateForResume(Long resumeId, List<WorkExperienceInfoDto> dtos) {
         if (dtos == null) return;
         log.info("Обновление опыта работы для резюме id: {}", resumeId);
@@ -39,6 +40,7 @@ public class WorkExperienceInfoService {
         createForResume(resumeId, dtos);
     }
 
+    @Transactional
     public void deleteByResumeId(Long resumeId) {
         log.warn("Удаление опыта работы для резюме id: {}", resumeId);
         workExperienceInfoRepository.deleteByResumeId(resumeId);
@@ -46,8 +48,8 @@ public class WorkExperienceInfoService {
 
     private WorkExperienceInfoDto toDto(WorkExperienceInfo info) {
         return WorkExperienceInfoDto.builder()
-                .id(info.getId().intValue())
-                .resumeId(info.getResumeId().intValue())
+                .id(info.getId())
+                .resumeId(info.getResumeId())
                 .years(info.getYears())
                 .companyName(info.getCompanyName())
                 .position(info.getPosition())
