@@ -194,4 +194,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .accountType(u.getAccountType())
                 .build();
     }
+    @Override
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findByResetPasswordToken(token)
+                .orElseThrow(UserNotFoundException::new);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        userRepository.save(user);
+    }
 }

@@ -5,17 +5,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
-import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 
@@ -76,7 +72,7 @@ public class AuthMvcController {
     @GetMapping("/reset-password")
     public String showResetPassword(@RequestParam String token, Model model) {
         try {
-            userService.getByResetPasswordToken(token);
+            userService.getByResetPasswordToken(token); // проверяем что токен валиден
             model.addAttribute("token", token);
         } catch (UserNotFoundException e) {
             model.addAttribute("error", true);
@@ -89,8 +85,7 @@ public class AuthMvcController {
         String token = request.getParameter("token");
         String password = request.getParameter("password");
         try {
-            User user = userService.getByResetPasswordToken(token);
-            userService.updatePassword(user, password);
+            userService.resetPassword(token, password);
             model.addAttribute("message", true);
         } catch (UserNotFoundException e) {
             model.addAttribute("error", true);

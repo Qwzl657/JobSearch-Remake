@@ -24,6 +24,6 @@ public interface UserService {
             throws UserNotFoundException, MessagingException, UnsupportedEncodingException;
     User getByResetPasswordToken(String token);
     void updatePassword(User user, String newPassword);
-
     void autoLogin(String email);
+    void resetPassword(String token, String newPassword);
 }
