@@ -60,7 +60,7 @@ public class ResumeMvcController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editPage(@PathVariable Integer id, Model model, Authentication auth) {
+    public String editPage(@PathVariable Long id, Model model, Authentication auth) {
         ResumeDto resume = resumeService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
         if (!resume.getApplicantId().equals(user.getId())) {
@@ -71,7 +71,7 @@ public class ResumeMvcController {
     }
 
     @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Integer id,
+    public String edit(@PathVariable Long id,
                        @Valid ResumeDto resumeDto,
                        BindingResult bindingResult,
                        Model model,
@@ -90,8 +90,9 @@ public class ResumeMvcController {
         resumeService.update(id, resumeDto);
         return "redirect:/profile";
     }
+
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Integer id, Authentication auth) {
+    public String delete(@PathVariable Long id, Authentication auth) {
         ResumeDto existing = resumeService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
         if (!existing.getApplicantId().equals(user.getId())) {

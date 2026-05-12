@@ -25,7 +25,7 @@ public class ResponseService {
     public List<VacancyDto> getVacanciesByResume(Long resumeId) {
         log.info("Получение вакансий для резюме id: {}", resumeId);
         return respondedApplicantRepository.findByResumeId(resumeId).stream()
-                .map(r -> vacancyService.getById(r.getVacancyId().intValue()))
+                .map(r -> vacancyService.getById(r.getVacancyId()))
                 .toList();
     }
 
@@ -33,7 +33,7 @@ public class ResponseService {
         log.info("Получение соискателей для вакансии id: {}", vacancyId);
         return respondedApplicantRepository.findByVacancyId(vacancyId).stream()
                 .map(r -> {
-                    ResumeDto resume = resumeService.getById(r.getResumeId().intValue());
+                    ResumeDto resume = resumeService.getById(r.getResumeId());
                     return userService.findById(resume.getApplicantId());
                 })
                 .toList();
