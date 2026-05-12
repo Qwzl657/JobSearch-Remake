@@ -23,11 +23,12 @@ public class Vacancy {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "category_id")
-    private Integer categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "salary")
-    private double salary;
+    private Double salary;
 
     @Column(name = "exp_from")
     private Integer expFrom;
@@ -38,8 +39,9 @@ public class Vacancy {
     @Column(name = "is_active")
     private boolean active;
 
-    @Column(name = "author_id", nullable = false)
-    private Long authorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;

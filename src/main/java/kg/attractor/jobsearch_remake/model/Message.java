@@ -17,8 +17,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "responded_applicants", nullable = false)
-    private Long respondedApplicants;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "responded_applicants", nullable = false)
+    private RespondedApplicant respondedApplicant;
 
     @Column(name = "content", nullable = false, length = 1000)
     private String content;
