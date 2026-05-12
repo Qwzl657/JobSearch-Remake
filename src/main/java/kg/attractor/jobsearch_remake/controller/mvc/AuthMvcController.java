@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -47,12 +46,9 @@ public class AuthMvcController {
             model.addAttribute("userCreateDto", userCreateDto);
             return "auth/register";
         }
-
         userService.create(userCreateDto);
         log.info("Зарегистрирован новый пользователь: {}", userCreateDto.getEmail());
-
         userService.autoLogin(userCreateDto.getEmail());
-
         if ("EMPLOYER".equals(userCreateDto.getAccountType())) {
             return "redirect:/resumes/all";
         }
@@ -65,9 +61,7 @@ public class AuthMvcController {
     }
 
     @PostMapping("/forgot-password")
-    public String processForgotPassword(HttpServletRequest request,
-                                        Model model,
-                                        Locale locale) {
+    public String processForgotPassword(HttpServletRequest request, Model model) {
         try {
             userService.makeResetPwdLink(request);
             model.addAttribute("messageSent", true);
@@ -80,9 +74,7 @@ public class AuthMvcController {
     }
 
     @GetMapping("/reset-password")
-    public String showResetPassword(@RequestParam String token,
-                                    Model model,
-                                    Locale locale) {
+    public String showResetPassword(@RequestParam String token, Model model) {
         try {
             userService.getByResetPasswordToken(token);
             model.addAttribute("token", token);
@@ -93,9 +85,7 @@ public class AuthMvcController {
     }
 
     @PostMapping("/reset-password")
-    public String processResetPassword(HttpServletRequest request,
-                                       Model model,
-                                       Locale locale) {
+    public String processResetPassword(HttpServletRequest request, Model model) {
         String token = request.getParameter("token");
         String password = request.getParameter("password");
         try {
