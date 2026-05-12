@@ -34,13 +34,11 @@ public class VacancyService {
     @Transactional(readOnly = true)
     public Page<VacancyDto> getActivePaged(int page, int size, String sort) {
         log.info("Получение активных вакансий, страница: {}, сортировка: {}", page, sort);
-
         if ("responses".equals(sort)) {
             Pageable pageable = PageRequest.of(page, size);
             return vacancyRepository.findActiveOrderByResponseCount(pageable)
                     .map(this::toDto);
         }
-
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.desc("createdDate")));
         return vacancyRepository.findByActiveTrue(pageable).map(this::toDto);
@@ -63,9 +61,9 @@ public class VacancyService {
     }
 
     @Transactional(readOnly = true)
-    public VacancyDto getById(Integer id) {
+    public VacancyDto getById(Long id) {
         log.info("Получение вакансии по id: {}", id);
-        return vacancyRepository.findById(id.longValue())
+        return vacancyRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("Вакансия не найдена с id: {}", id);
@@ -74,19 +72,19 @@ public class VacancyService {
     }
 
     @Transactional(readOnly = true)
-    public List<VacancyDto> getByAuthor(Integer authorId) {
+    public List<VacancyDto> getByAuthor(Long authorId) {
         log.info("Получение вакансий автора id: {}", authorId);
-        return vacancyRepository.findByAuthorId(authorId.longValue()).stream()
+        return vacancyRepository.findByAuthorId(authorId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public Page<VacancyDto> getByAuthorPaged(Integer authorId, int page, int size) {
+    public Page<VacancyDto> getByAuthorPaged(Long authorId, int page, int size) {
         log.info("Получение вакансий автора id: {}, страница: {}", authorId, page);
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.desc("createdDate")));
-        return vacancyRepository.findByAuthorId(authorId.longValue(), pageable)
+        return vacancyRepository.findByAuthorId(authorId, pageable)
                 .map(this::toDto);
     }
 
@@ -101,7 +99,7 @@ public class VacancyService {
                 .expFrom(dto.getExpFrom())
                 .expTo(dto.getExpTo())
                 .active(dto.isActive())
-                .authorId(dto.getAuthorId().longValue())
+                .authorId(dto.getAuthorId())
                 .createdDate(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
                 .build();
@@ -109,9 +107,9 @@ public class VacancyService {
     }
 
     @Transactional
-    public void update(Integer id, VacancyDto dto) {
+    public void update(Long id, VacancyDto dto) {
         log.info("Обновление вакансии id: {}", id);
-        Vacancy v = vacancyRepository.findById(id.longValue())
+        Vacancy v = vacancyRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Вакансия не найдена с id: {}", id);
                     return new VacancyNotFoundException();
@@ -121,21 +119,21 @@ public class VacancyService {
         v.setCategoryId(dto.getCategoryId());
         v.setSalary(dto.getSalary() != null ? dto.getSalary() : 0.0);
         v.setExpFrom(dto.getExpFrom());
-        v.setActive(dto.isActive());
         v.setExpTo(dto.getExpTo());
+        v.setActive(dto.isActive());
         v.setUpdateTime(LocalDateTime.now());
         vacancyRepository.save(v);
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void delete(Long id) {
         log.warn("Удаление вакансии id: {}", id);
-        vacancyRepository.deleteById(id.longValue());
+        vacancyRepository.deleteById(id);
     }
 
     private VacancyDto toDto(Vacancy v) {
         return VacancyDto.builder()
-                .id(v.getId().intValue())
+                .id(v.getId())
                 .name(v.getName())
                 .description(v.getDescription())
                 .categoryId(v.getCategoryId())
@@ -143,7 +141,7 @@ public class VacancyService {
                 .expFrom(v.getExpFrom())
                 .expTo(v.getExpTo())
                 .active(v.isActive())
-                .authorId(v.getAuthorId().intValue())
+                .authorId(v.getAuthorId())
                 .createdDate(v.getCreatedDate())
                 .updateTime(v.getUpdateTime())
                 .build();

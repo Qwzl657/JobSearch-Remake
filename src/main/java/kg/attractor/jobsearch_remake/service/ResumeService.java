@@ -51,26 +51,26 @@ public class ResumeService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResumeDto> getByApplicant(Integer applicantId) {
+    public List<ResumeDto> getByApplicant(Long applicantId) {
         log.info("Получение резюме соискателя id: {}", applicantId);
-        return resumeRepository.findByApplicantId(applicantId.longValue()).stream()
+        return resumeRepository.findByApplicantId(applicantId).stream()
                 .map(this::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public Page<ResumeDto> getByApplicantPaged(Integer applicantId, int page, int size) {
+    public Page<ResumeDto> getByApplicantPaged(Long applicantId, int page, int size) {
         log.info("Получение резюме соискателя id: {}, страница: {}", applicantId, page);
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.desc("updateTime")));
-        return resumeRepository.findByApplicantId(applicantId.longValue(), pageable)
+        return resumeRepository.findByApplicantId(applicantId, pageable)
                 .map(this::toDto);
     }
 
     @Transactional(readOnly = true)
-    public ResumeDto getById(Integer id) {
+    public ResumeDto getById(Long id) {
         log.info("Получение резюме по id: {}", id);
-        return resumeRepository.findById(id.longValue())
+        return resumeRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> {
                     log.error("Резюме не найдено с id: {}", id);
@@ -97,9 +97,9 @@ public class ResumeService {
     }
 
     @Transactional
-    public void update(Integer id, ResumeDto dto) {
+    public void update(Long id, ResumeDto dto) {
         log.info("Обновление резюме id: {}", id);
-        Resume r = resumeRepository.findById(id.longValue())
+        Resume r = resumeRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Резюме не найдено с id: {}", id);
                     return new ResumeNotFoundException();
@@ -110,22 +110,22 @@ public class ResumeService {
         r.setActive(dto.isActive());
         r.setUpdateTime(LocalDateTime.now());
         resumeRepository.save(r);
-        workExperienceInfoService.updateForResume(id.longValue(), dto.getWorkExperienceInfos());
-        educationInfoService.updateForResume(id.longValue(), dto.getEducationInfos());
-        contactInfoService.updateForResume(id.longValue(), dto.getContactInfos());
+        workExperienceInfoService.updateForResume(id, dto.getWorkExperienceInfos());
+        educationInfoService.updateForResume(id, dto.getEducationInfos());
+        contactInfoService.updateForResume(id, dto.getContactInfos());
     }
 
     @Transactional
-    public void delete(Integer id) {
-        workExperienceInfoService.deleteByResumeId(id.longValue());
-        educationInfoService.deleteByResumeId(id.longValue());
-        contactInfoService.deleteByResumeId(id.longValue());
-        resumeRepository.deleteById(id.longValue());
+    public void delete(Long id) {
+        workExperienceInfoService.deleteByResumeId(id);
+        educationInfoService.deleteByResumeId(id);
+        contactInfoService.deleteByResumeId(id);
+        resumeRepository.deleteById(id);
     }
 
     private ResumeDto toDto(Resume r) {
         return ResumeDto.builder()
-                .id(r.getId().intValue())
+                .id(r.getId())
                 .applicantId(r.getApplicantId())
                 .name(r.getName())
                 .categoryId(r.getCategoryId())
