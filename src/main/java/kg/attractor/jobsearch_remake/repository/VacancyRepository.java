@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.repository;
 
+import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.model.Vacancy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +14,9 @@ import java.util.List;
 public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     List<Vacancy> findByActiveTrue();
     Page<Vacancy> findByActiveTrue(Pageable pageable);
-    List<Vacancy> findByCategoryId(Integer categoryId);
-    List<Vacancy> findByAuthorId(Long authorId);
-    Page<Vacancy> findByAuthorId(Long authorId, Pageable pageable);
+    List<Vacancy> findByCategory_Id(Integer categoryId);
+    List<Vacancy> findByAuthor(User author);
+    Page<Vacancy> findByAuthor(User author, Pageable pageable);
 
     @Query(value = """
     SELECT v.* FROM vacancies v
