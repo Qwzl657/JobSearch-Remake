@@ -13,8 +13,8 @@ import jakarta.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkExperienceInfoDto {
-    private Integer id;
-    private Integer resumeId;
+    private Long id;
+    private Long resumeId;
 
     @Min(value = 0, message = "{validation.workexp.years.min}")
     private Integer years;

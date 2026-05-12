@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResumeDto {
-    private Integer id;
+    private Long id;
 
     private Long applicantId;
 
