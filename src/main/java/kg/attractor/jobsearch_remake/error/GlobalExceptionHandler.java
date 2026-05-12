@@ -1,24 +1,19 @@
 package kg.attractor.jobsearch_remake.error;
 
 import jakarta.servlet.http.HttpServletRequest;
-import kg.attractor.jobsearch_remake.exception.CategoryNotFoundException;
-import kg.attractor.jobsearch_remake.exception.ContactTypeNotFoundException;
-import kg.attractor.jobsearch_remake.exception.MessageNotFoundException;
-import kg.attractor.jobsearch_remake.exception.ResumeNotFoundException;
-import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
-import kg.attractor.jobsearch_remake.exception.VacancyNotFoundException;
-import lombok.RequiredArgsConstructor;
+import kg.attractor.jobsearch_remake.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Slf4j
-@ControllerAdvice
-@RequiredArgsConstructor
+@ControllerAdvice(basePackages = "kg.attractor.jobsearch_remake.controller.mvc")
 public class GlobalExceptionHandler {
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             UserNotFoundException.class,
             VacancyNotFoundException.class,
@@ -36,6 +31,7 @@ public class GlobalExceptionHandler {
         return "errors/error";
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public String serverErrorHandler(HttpServletRequest request,
                                      Exception e,

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
@@ -15,8 +14,8 @@ import jakarta.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EducationInfoDto {
-    private Integer id;
-    private Integer resumeId;
+    private Long id;
+    private Long resumeId;
 
     @NotBlank(message = "{validation.education.institution.blank}")
     private String institution;

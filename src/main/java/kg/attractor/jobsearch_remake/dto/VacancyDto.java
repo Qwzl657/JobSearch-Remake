@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VacancyDto {
-    private Integer id;
+    private Long id;
 
     @NotBlank(message = "{validation.vacancy.name.blank}")
     private String name;
@@ -36,7 +36,7 @@ public class VacancyDto {
 
     private boolean active;
 
-    private Integer authorId;
+    private Long authorId;
 
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;

@@ -1,8 +1,11 @@
 package kg.attractor.jobsearch_remake.controller.mvc;
 
 import jakarta.validation.Valid;
+import kg.attractor.jobsearch_remake.dto.ResumeDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.dto.VacancyDto;
+import kg.attractor.jobsearch_remake.service.ResumeService;
+import kg.attractor.jobsearch_remake.service.ResponseService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import kg.attractor.jobsearch_remake.service.VacancyService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import kg.attractor.jobsearch_remake.dto.ResumeDto;
-import kg.attractor.jobsearch_remake.service.ResumeService;
-import kg.attractor.jobsearch_remake.service.ResponseService;
 import java.util.List;
 
 @Controller
@@ -63,16 +63,16 @@ public class VacancyMvcController {
             return "vacancies/form";
         }
         UserDto user = userService.getByEmail(auth.getName());
-        vacancyDto.setAuthorId(user.getId().intValue());
+        vacancyDto.setAuthorId(user.getId());
         vacancyService.create(vacancyDto);
         return "redirect:/profile";
     }
 
     @GetMapping("/{id}/edit")
-    public String editPage(@PathVariable Integer id, Model model, Authentication auth) {
+    public String editPage(@PathVariable Long id, Model model, Authentication auth) {
         VacancyDto vacancy = vacancyService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
-        if (!vacancy.getAuthorId().equals(user.getId().intValue())) {
+        if (!vacancy.getAuthorId().equals(user.getId())) {
             return "redirect:/vacancies";
         }
         model.addAttribute("vacancyDto", vacancy);
@@ -80,14 +80,14 @@ public class VacancyMvcController {
     }
 
     @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Integer id,
+    public String edit(@PathVariable Long id,
                        @Valid VacancyDto vacancyDto,
                        BindingResult bindingResult,
                        Model model,
                        Authentication auth) {
         VacancyDto existing = vacancyService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
-        if (!existing.getAuthorId().equals(user.getId().intValue())) {
+        if (!existing.getAuthorId().equals(user.getId())) {
             return "redirect:/vacancies";
         }
         if (bindingResult.hasErrors()) {
@@ -99,11 +99,12 @@ public class VacancyMvcController {
         vacancyService.update(id, vacancyDto);
         return "redirect:/profile";
     }
+
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Integer id, Authentication auth) {
+    public String delete(@PathVariable Long id, Authentication auth) {
         VacancyDto existing = vacancyService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
-        if (!existing.getAuthorId().equals(user.getId().intValue())) {
+        if (!existing.getAuthorId().equals(user.getId())) {
             return "redirect:/vacancies";
         }
         vacancyService.delete(id);
@@ -111,33 +112,33 @@ public class VacancyMvcController {
     }
 
     @GetMapping("/{id}/respond")
-    public String respondPage(@PathVariable Integer id,
+    public String respondPage(@PathVariable Long id,
                               Model model,
                               Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
-        List<ResumeDto> resumes = resumeService.getByApplicant(user.getId().intValue());
+        List<ResumeDto> resumes = resumeService.getByApplicant(user.getId());
         model.addAttribute("vacancy", vacancyService.getById(id));
         model.addAttribute("resumes", resumes);
         return "vacancies/respond";
     }
 
     @PostMapping("/{id}/respond")
-    public String respond(@PathVariable Integer id,
+    public String respond(@PathVariable Long id,
                           @RequestParam Long resumeId) {
-        responseService.respond(resumeId, id.longValue());
+        responseService.respond(resumeId, id);
         return "redirect:/vacancies";
     }
 
     @GetMapping("/{id}/responses")
-    public String responses(@PathVariable Integer id,
+    public String responses(@PathVariable Long id,
                             Model model,
                             Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
         VacancyDto vacancy = vacancyService.getById(id);
-        if (!vacancy.getAuthorId().equals(user.getId().intValue())) {
+        if (!vacancy.getAuthorId().equals(user.getId())) {
             return "redirect:/vacancies";
         }
-        List<UserDto> applicants = responseService.getUsersByVacancy(id.longValue());
+        List<UserDto> applicants = responseService.getUsersByVacancy(id);
         model.addAttribute("vacancy", vacancy);
         model.addAttribute("applicants", applicants);
         return "vacancies/responses";

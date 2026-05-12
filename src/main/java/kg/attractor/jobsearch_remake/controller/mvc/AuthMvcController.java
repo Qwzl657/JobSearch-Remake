@@ -5,20 +5,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
-import kg.attractor.jobsearch_remake.model.User;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -47,12 +42,9 @@ public class AuthMvcController {
             model.addAttribute("userCreateDto", userCreateDto);
             return "auth/register";
         }
-
         userService.create(userCreateDto);
         log.info("Зарегистрирован новый пользователь: {}", userCreateDto.getEmail());
-
         userService.autoLogin(userCreateDto.getEmail());
-
         if ("EMPLOYER".equals(userCreateDto.getAccountType())) {
             return "redirect:/resumes/all";
         }
@@ -65,9 +57,7 @@ public class AuthMvcController {
     }
 
     @PostMapping("/forgot-password")
-    public String processForgotPassword(HttpServletRequest request,
-                                        Model model,
-                                        Locale locale) {
+    public String processForgotPassword(HttpServletRequest request, Model model) {
         try {
             userService.makeResetPwdLink(request);
             model.addAttribute("messageSent", true);
@@ -80,27 +70,21 @@ public class AuthMvcController {
     }
 
     @GetMapping("/reset-password")
-    public String showResetPassword(@RequestParam String token,
-                                    Model model,
-                                    Locale locale) {
-        try {
-            userService.getByResetPasswordToken(token);
+    public String showResetPassword(@RequestParam String token, Model model) {
+        if (userService.isResetTokenValid(token)) {
             model.addAttribute("token", token);
-        } catch (UserNotFoundException e) {
+        } else {
             model.addAttribute("error", true);
         }
         return "auth/reset_password_form";
     }
 
     @PostMapping("/reset-password")
-    public String processResetPassword(HttpServletRequest request,
-                                       Model model,
-                                       Locale locale) {
+    public String processResetPassword(HttpServletRequest request, Model model) {
         String token = request.getParameter("token");
         String password = request.getParameter("password");
         try {
-            User user = userService.getByResetPasswordToken(token);
-            userService.updatePassword(user, password);
+            userService.resetPassword(token, password);
             model.addAttribute("message", true);
         } catch (UserNotFoundException e) {
             model.addAttribute("error", true);

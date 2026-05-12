@@ -7,6 +7,7 @@ import kg.attractor.jobsearch_remake.service.ResumeService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,7 @@ public class ResumeMvcController {
     private final UserService userService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('EMPLOYER')")
     public String allResumes(Model model,
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "5") int size) {
@@ -60,7 +62,7 @@ public class ResumeMvcController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editPage(@PathVariable Integer id, Model model, Authentication auth) {
+    public String editPage(@PathVariable Long id, Model model, Authentication auth) {
         ResumeDto resume = resumeService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
         if (!resume.getApplicantId().equals(user.getId())) {
@@ -71,7 +73,7 @@ public class ResumeMvcController {
     }
 
     @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Integer id,
+    public String edit(@PathVariable Long id,
                        @Valid ResumeDto resumeDto,
                        BindingResult bindingResult,
                        Model model,
@@ -90,8 +92,9 @@ public class ResumeMvcController {
         resumeService.update(id, resumeDto);
         return "redirect:/profile";
     }
+
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Integer id, Authentication auth) {
+    public String delete(@PathVariable Long id, Authentication auth) {
         ResumeDto existing = resumeService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
         if (!existing.getApplicantId().equals(user.getId())) {

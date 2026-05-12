@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContactInfoDto {
-    private Integer id;
-    private Integer resumeId;
+    private Long id;
+    private Long resumeId;
     private Integer typeId;
     private String value;
 }

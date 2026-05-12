@@ -46,14 +46,12 @@ public class ProfileMvcController {
         model.addAttribute("user", user);
 
         if (user.getAccountType().equals("APPLICANT")) {
-            Page<ResumeDto> resumePage = resumeService.getByApplicantPaged(
-                    user.getId().intValue(), page, size);
+            Page<ResumeDto> resumePage = resumeService.getByApplicantPaged(user.getId(), page, size);
             model.addAttribute("resumes", resumePage.getContent());
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", resumePage.getTotalPages());
         } else {
-            Page<VacancyDto> vacancyPage = vacancyService.getByAuthorPaged(
-                    user.getId().intValue(), page, size);
+            Page<VacancyDto> vacancyPage = vacancyService.getByAuthorPaged(user.getId(), page, size);
             model.addAttribute("vacancies", vacancyPage.getContent());
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", vacancyPage.getTotalPages());
@@ -73,7 +71,6 @@ public class ProfileMvcController {
                               BindingResult bindingResult,
                               @RequestParam(name = "avatarFile", required = false) MultipartFile avatar,
                               Authentication auth) throws IOException {
-
         if (bindingResult.hasErrors()) {
             return "profile/edit";
         }
