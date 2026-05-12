@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.config;
 
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+@EnableMethodSecurity
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -65,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/vacancies/**").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.DELETE, "/api/vacancies/**").hasRole("EMPLOYER")
 
-                        .requestMatchers(HttpMethod.GET, "/resumes/all").hasAnyRole("APPLICANT", "EMPLOYER")
+                        .requestMatchers(HttpMethod.GET, "/resumes/all").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/resumes/create").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.POST, "/resumes/create").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.GET, "/resumes/*/edit").hasRole("APPLICANT")
