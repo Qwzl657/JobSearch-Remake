@@ -2,7 +2,6 @@
 
 window.addEventListener('load', function () {
 
-
     document.getElementById('add-work-btn').addEventListener('click', function () {
         addWorkBlock();
     });
@@ -45,7 +44,6 @@ function addWorkBlock() {
         '<button type="button" class="btn btn-outline-danger btn-sm remove-btn">Удалить</button>' +
         '</div>' +
         '</div>';
-
 
     block.querySelector('.remove-btn').addEventListener('click', function () {
         block.remove();
@@ -127,11 +125,12 @@ async function saveResume() {
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
     const resumeId = document.querySelector('meta[name="_resume_id"]').getAttribute('content');
+    const method = resumeId ? 'PUT' : 'POST';
     const url = resumeId ? '/api/resumes/' + resumeId : '/api/resumes';
 
     try {
         const response = await fetch(url, {
-            method: 'POST',
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 [csrfHeader]: csrfToken
