@@ -1,7 +1,7 @@
 package kg.attractor.jobsearch_remake.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ResumeDto {
     private Long id;
-
     private Long applicantId;
 
     @NotBlank(message = "{validation.resume.name.blank}")
@@ -24,7 +23,7 @@ public class ResumeDto {
 
     private Integer categoryId;
 
-    @Positive(message = "{validation.resume.salary.positive}")
+    @PositiveOrZero(message = "{validation.resume.salary.positive}")
     private Double salary;
 
     private boolean active;

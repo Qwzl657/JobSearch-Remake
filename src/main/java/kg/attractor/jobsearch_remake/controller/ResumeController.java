@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/resumes")
 @RequiredArgsConstructor
-public class ResumeController {
+public class  ResumeController {
 
     private final ResumeService resumeService;
 
@@ -23,12 +23,12 @@ public class ResumeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResumeDto> getResumeById(@PathVariable Integer id) {
+    public ResponseEntity<ResumeDto> getResumeById(@PathVariable Long id) {
         return ResponseEntity.ok(resumeService.getById(id));
     }
 
     @GetMapping("/applicant/{applicantId}")
-    public ResponseEntity<List<ResumeDto>> getByApplicant(@PathVariable Integer applicantId) {
+    public ResponseEntity<List<ResumeDto>> getByApplicant(@PathVariable Long applicantId) {
         return ResponseEntity.ok(resumeService.getByApplicant(applicantId));
     }
 
@@ -44,7 +44,7 @@ public class ResumeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResumeDto> updateResume(@PathVariable Integer id,
+    public ResponseEntity<ResumeDto> updateResume(@PathVariable Long id,
                                                   @Valid @RequestBody ResumeDto resumeDto) {
         resumeService.update(id, resumeDto);
         resumeDto.setId(id);
@@ -52,7 +52,7 @@ public class ResumeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteResume(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteResume(@PathVariable Long id) {
         resumeService.delete(id);
         return ResponseEntity.noContent().build();
     }

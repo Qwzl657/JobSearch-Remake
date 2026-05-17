@@ -33,12 +33,12 @@ public class VacancyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VacancyDto> getVacancyById(@PathVariable Integer id) {
+    public ResponseEntity<VacancyDto> getVacancyById(@PathVariable Long id) {
         return ResponseEntity.ok(vacancyService.getById(id));
     }
 
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<List<VacancyDto>> getByAuthor(@PathVariable Integer authorId) {
+    public ResponseEntity<List<VacancyDto>> getByAuthor(@PathVariable Long authorId) {
         return ResponseEntity.ok(vacancyService.getByAuthor(authorId));
     }
 
@@ -64,7 +64,7 @@ public class VacancyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VacancyDto> updateVacancy(@PathVariable Integer id,
+    public ResponseEntity<VacancyDto> updateVacancy(@PathVariable Long id,
                                                     @Valid @RequestBody VacancyDto vacancyDto) {
         vacancyService.update(id, vacancyDto);
         vacancyDto.setId(id);
@@ -72,7 +72,7 @@ public class VacancyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVacancy(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteVacancy(@PathVariable Long id) {
         vacancyService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -81,7 +81,7 @@ public class VacancyController {
     public ResponseEntity<Void> respondToVacancy(@PathVariable Long id,
                                                  Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
-        List<ResumeDto> resumes = resumeService.getByApplicant(user.getId().intValue());
+        List<ResumeDto> resumes = resumeService.getByApplicant(user.getId().longValue());
 
         if (resumes.isEmpty()) {
             log.warn("У пользователя {} нет резюме для отклика", auth.getName());
