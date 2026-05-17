@@ -3,6 +3,10 @@
 
 <@layout.layout>
 
+    <meta name="_csrf" content="${(_csrf.token)!''}"/>
+    <meta name="_csrf_header" content="${(_csrf.headerName)!'X-CSRF-TOKEN'}"/>
+    <meta name="_resume_id" content="${resumeDto.id!}"/>
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
@@ -13,14 +17,6 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-
-                    <#if errors??>
-                        <div class="alert alert-danger">
-                            <#list errors as error>
-                                <div>${error}</div>
-                            </#list>
-                        </div>
-                    </#if>
 
                     <div id="form-error" class="alert alert-danger d-none"></div>
 
@@ -80,11 +76,6 @@
         </div>
     </div>
 
-    <meta name="_csrf" content="${(_csrf.token)!''}"/>
-    <meta name="_csrf_header" content="${(_csrf.headerName)!'X-CSRF-TOKEN'}"/>
-
-    <meta name="_resume_id" content="${resumeDto.id!}"/>
-
-    <script src="/static/js/resume-form.js"></script>
+    <script src="/js/resume-form.js"></script>
 
 </@layout.layout>
