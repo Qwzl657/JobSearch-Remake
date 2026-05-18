@@ -7,6 +7,21 @@
     <meta name="_csrf_header" content="${(_csrf.headerName)!'X-CSRF-TOKEN'}"/>
     <meta name="_resume_id" content="${resumeDto.id!}"/>
 
+    <div id="i18n-data"
+         data-work-company="<@spring.message 'resume.work.company'/>"
+         data-work-position="<@spring.message 'resume.work.position'/>"
+         data-work-years="<@spring.message 'resume.work.years'/>"
+         data-work-responsibilities="<@spring.message 'resume.work.responsibilities'/>"
+         data-work-remove="<@spring.message 'resume.work.remove'/>"
+         data-edu-institution="<@spring.message 'resume.edu.institution'/>"
+         data-edu-program="<@spring.message 'resume.edu.program'/>"
+         data-edu-degree="<@spring.message 'resume.edu.degree'/>"
+         data-edu-remove="<@spring.message 'resume.edu.remove'/>"
+         data-error-save="<@spring.message 'resume.form.error.save'/>"
+         data-error-connection="<@spring.message 'resume.form.error.connection'/>"
+         style="display:none;">
+    </div>
+
     <script id="existing-work-data" type="application/json">
         [<#if resumeDto.workExperienceInfos?has_content>
         <#list resumeDto.workExperienceInfos as w>
@@ -37,8 +52,11 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0 fw-bold">
-                        <#if resumeDto.id??><@spring.message 'resume.form.title.edit'/>
-                        <#else><@spring.message 'resume.form.title.create'/></#if>
+                        <#if resumeDto.id??>
+                            <@spring.message 'resume.form.title.edit'/>
+                        <#else>
+                            <@spring.message 'resume.form.title.create'/>
+                        </#if>
                     </h5>
                 </div>
                 <div class="card-body p-4">
@@ -46,18 +64,25 @@
                     <div id="form-error" class="alert alert-danger d-none"></div>
 
                     <div class="mb-3">
-                        <label class="form-label"><@spring.message 'resume.name'/></label>
+                        <label class="form-label">
+                            <@spring.message 'resume.name'/>
+                        </label>
                         <input type="text" id="name" value="${resumeDto.name!}"
                                class="form-control" required/>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label"><@spring.message 'resume.salary'/></label>
+                        <label class="form-label">
+                            <@spring.message 'resume.salary'/>
+                        </label>
                         <div class="input-group" style="max-width:200px;">
-                            <input type="number" id="salary" value="${resumeDto.salary!}"
+                            <input type="number" id="salary"
+                                   value="${resumeDto.salary!}"
                                    class="form-control" min="0"/>
                             <span class="input-group-text">₸</span>
                         </div>
                     </div>
+
                     <div class="mb-4">
                         <div class="form-check">
                             <input type="checkbox" id="active" class="form-check-input"
@@ -70,8 +95,11 @@
 
                     <hr/>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold mb-0"><@spring.message 'resume.work.title'/></h6>
-                        <button type="button" id="add-work-btn" class="btn btn-outline-primary btn-sm">
+                        <h6 class="fw-bold mb-0">
+                            <@spring.message 'resume.work.title'/>
+                        </h6>
+                        <button type="button" id="add-work-btn"
+                                class="btn btn-outline-primary btn-sm">
                             + <@spring.message 'resume.work.add'/>
                         </button>
                     </div>
@@ -79,8 +107,11 @@
 
                     <hr/>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold mb-0"><@spring.message 'resume.edu.title'/></h6>
-                        <button type="button" id="add-edu-btn" class="btn btn-outline-primary btn-sm">
+                        <h6 class="fw-bold mb-0">
+                            <@spring.message 'resume.edu.title'/>
+                        </h6>
+                        <button type="button" id="add-edu-btn"
+                                class="btn btn-outline-primary btn-sm">
                             + <@spring.message 'resume.edu.add'/>
                         </button>
                     </div>
