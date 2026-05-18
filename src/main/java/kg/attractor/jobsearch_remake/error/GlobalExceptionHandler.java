@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     public String notFoundHandler(HttpServletRequest request,
                                   RuntimeException e,
                                   Model model) {
-        log.error("Not found: {}", request.getRequestURI());
+        log.error("Not found: {} — {}", request.getRequestURI(), e.getMessage());
         model.addAttribute("status", HttpStatus.NOT_FOUND.value());
         model.addAttribute("reason", e.getMessage());
         return "errors/error";
@@ -36,7 +36,10 @@ public class GlobalExceptionHandler {
     public String serverErrorHandler(HttpServletRequest request,
                                      Exception e,
                                      Model model) {
-        log.error("Server error on: {}, reason: {}", request.getRequestURI(), e.getMessage());
+        log.error("Server error on: {} — причина: {} — тип: {}",
+                request.getRequestURI(),
+                e.getMessage(),
+                e.getClass().getName());
         model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         model.addAttribute("reason", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         return "errors/error";
