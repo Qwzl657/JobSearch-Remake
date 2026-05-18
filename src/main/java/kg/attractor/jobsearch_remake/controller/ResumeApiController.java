@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.controller;
 
+import jakarta.validation.Valid;
 import kg.attractor.jobsearch_remake.dto.ResumeDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.service.ResumeService;
@@ -24,7 +25,7 @@ public class ResumeApiController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ResumeDto resumeDto,
+    public ResponseEntity<?> create(@Valid @RequestBody ResumeDto resumeDto,
                                     Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
         resumeDto.setApplicantId(user.getId());
@@ -34,7 +35,7 @@ public class ResumeApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,
-                                    @RequestBody ResumeDto resumeDto,
+                                    @Valid @RequestBody ResumeDto resumeDto,
                                     Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
         ResumeDto existing = resumeService.getById(id);

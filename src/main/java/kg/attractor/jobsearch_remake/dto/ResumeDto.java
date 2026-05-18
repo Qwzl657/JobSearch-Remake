@@ -1,5 +1,6 @@
 package kg.attractor.jobsearch_remake.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,14 @@ public class ResumeDto {
 
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
+
+
+    @Valid
     private List<WorkExperienceInfoDto> workExperienceInfos;
+
+    @Valid
     private List<EducationInfoDto> educationInfos;
+
+    @Valid
     private List<ContactInfoDto> contactInfos;
 }
