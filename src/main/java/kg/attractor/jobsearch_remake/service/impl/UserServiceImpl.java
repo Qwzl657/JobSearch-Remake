@@ -2,6 +2,7 @@ package kg.attractor.jobsearch_remake.service.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kg.attractor.jobsearch_remake.common.UrlBuilder;
 import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
@@ -20,13 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
