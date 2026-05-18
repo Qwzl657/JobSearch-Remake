@@ -3,10 +3,11 @@ package kg.attractor.jobsearch_remake.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "work_experience_info")
 public class WorkExperienceInfo {
@@ -28,6 +29,6 @@ public class WorkExperienceInfo {
     @Column(name = "position")
     private String position;
 
-    @Column(name = "responsibilities", columnDefinition = "TEXT")
+    @Column(name = "responsibilities", length = 2000)
     private String responsibilities;
 }
