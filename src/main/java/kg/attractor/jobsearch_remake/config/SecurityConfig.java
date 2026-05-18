@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/avatars/**").permitAll()
+                        .requestMatchers("/js/**").permitAll()
+                        .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -69,24 +71,17 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/resumes/all").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/resumes/create").hasRole("APPLICANT")
-                        .requestMatchers(HttpMethod.POST, "/resumes/create").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.GET, "/resumes/*/edit").hasRole("APPLICANT")
-                        .requestMatchers(HttpMethod.POST, "/resumes/*/edit").hasRole("APPLICANT")
-
                         .requestMatchers(HttpMethod.POST, "/resumes/*/delete").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.POST, "/vacancies/*/delete").hasRole("EMPLOYER")
-
                         .requestMatchers(HttpMethod.POST, "/vacancies/create").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/vacancies/create").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/vacancies/*/edit").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.POST, "/vacancies/*/edit").hasRole("EMPLOYER")
-
                         .requestMatchers(HttpMethod.GET, "/vacancies/*/respond").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.POST, "/vacancies/*/respond").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.GET, "/vacancies/*/responses").hasRole("EMPLOYER")
-
                         .requestMatchers(HttpMethod.GET, "/employers").hasRole("APPLICANT")
-
                         .requestMatchers("/profile/**").authenticated()
                         .anyRequest().authenticated()
                 );
