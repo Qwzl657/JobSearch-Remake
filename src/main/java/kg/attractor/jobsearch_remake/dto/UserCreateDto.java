@@ -18,9 +18,11 @@ import lombok.NoArgsConstructor;
 public class UserCreateDto {
 
     @NotBlank(message = "{validation.name.blank}")
+    @Pattern(regexp = "^[^\\d]+$", message = "{validation.name.no.digits}")
     private String name;
 
     @NotBlank(message = "{validation.surname.blank}")
+    @Pattern(regexp = "^[^\\d]+$", message = "{validation.surname.no.digits}")
     private String surname;
 
     @Min(value = 14, message = "{validation.age.min}")

@@ -1,6 +1,7 @@
 package kg.attractor.jobsearch_remake.dto;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -25,13 +26,12 @@ public class ResumeDto {
     private Integer categoryId;
 
     @PositiveOrZero(message = "{validation.resume.salary.positive}")
+    @DecimalMax(value = "9999999", message = "{validation.resume.salary.max}")
     private Double salary;
 
     private boolean active;
-
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
-
 
     @Valid
     private List<WorkExperienceInfoDto> workExperienceInfos;
