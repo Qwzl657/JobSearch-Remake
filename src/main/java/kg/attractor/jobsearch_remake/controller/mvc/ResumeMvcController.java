@@ -1,6 +1,5 @@
 package kg.attractor.jobsearch_remake.controller.mvc;
 
-import jakarta.validation.Valid;
 import kg.attractor.jobsearch_remake.dto.ResumeDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.service.ResumeService;
@@ -11,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,66 +37,33 @@ public class ResumeMvcController {
     }
 
     @GetMapping("/create")
+    @PreAuthorize("hasRole('APPLICANT')")
     public String createPage(Model model) {
         model.addAttribute("resumeDto", new ResumeDto());
         return "resumes/form";
     }
 
-    @PostMapping("/create")
-    public String create(@Valid ResumeDto resumeDto,
-                         BindingResult bindingResult,
-                         Model model,
-                         Authentication auth) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("resumeDto", resumeDto);
-            model.addAttribute("errors", bindingResult.getFieldErrors()
-                    .stream().map(e -> e.getDefaultMessage()).toList());
-            return "resumes/form";
-        }
-        UserDto user = userService.getByEmail(auth.getName());
-        resumeDto.setApplicantId(user.getId());
-        resumeService.create(resumeDto);
-        return "redirect:/profile";
-    }
-
     @GetMapping("/{id}/edit")
-    public String editPage(@PathVariable Long id, Model model, Authentication auth) {
+    @PreAuthorize("hasRole('APPLICANT')")
+    public String editPage(@PathVariable Long id,
+                           Model model,
+                           Authentication auth) {
         ResumeDto resume = resumeService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
         if (!resume.getApplicantId().equals(user.getId())) {
-            return "redirect:/resumes/all";
+            return "redirect:/profile";
         }
         model.addAttribute("resumeDto", resume);
         return "resumes/form";
     }
 
-    @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Long id,
-                       @Valid ResumeDto resumeDto,
-                       BindingResult bindingResult,
-                       Model model,
-                       Authentication auth) {
-        ResumeDto existing = resumeService.getById(id);
-        UserDto user = userService.getByEmail(auth.getName());
-        if (!existing.getApplicantId().equals(user.getId())) {
-            return "redirect:/resumes/all";
-        }
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("resumeDto", resumeDto);
-            model.addAttribute("errors", bindingResult.getFieldErrors()
-                    .stream().map(e -> e.getDefaultMessage()).toList());
-            return "resumes/form";
-        }
-        resumeService.update(id, resumeDto);
-        return "redirect:/profile";
-    }
-
     @PostMapping("/{id}/delete")
+    @PreAuthorize("hasRole('APPLICANT')")
     public String delete(@PathVariable Long id, Authentication auth) {
         ResumeDto existing = resumeService.getById(id);
         UserDto user = userService.getByEmail(auth.getName());
         if (!existing.getApplicantId().equals(user.getId())) {
-            return "redirect:/resumes/all";
+            return "redirect:/profile";
         }
         resumeService.delete(id);
         return "redirect:/profile";
