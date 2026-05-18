@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 
 @Slf4j
@@ -37,14 +37,18 @@ public class AuthMvcController {
     @PostMapping("/register")
     public String register(@Valid UserCreateDto userCreateDto,
                            BindingResult bindingResult,
-                           Model model) {
+                           Model model,
+                           HttpServletRequest request,
+                           HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("userCreateDto", userCreateDto);
             return "auth/register";
         }
         userService.create(userCreateDto);
         log.info("Зарегистрирован новый пользователь: {}", userCreateDto.getEmail());
-        userService.autoLogin(userCreateDto.getEmail());
+
+        userService.autoLogin(userCreateDto.getEmail(), request, response);
+
         if ("EMPLOYER".equals(userCreateDto.getAccountType())) {
             return "redirect:/resumes/all";
         }

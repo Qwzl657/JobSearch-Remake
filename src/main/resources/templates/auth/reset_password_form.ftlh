@@ -9,9 +9,6 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
 </head>
 <body class="bg-light">
 <div class="container">
@@ -22,33 +19,25 @@
                     <h4 class="card-title text-center mb-4">
                         <@spring.message 'auth.reset.title'/>
                     </h4>
-
                     <#if message??>
                         <div class="alert alert-success">
                             <@spring.message 'auth.reset.success'/>
                         </div>
-                        <div class="text-center mt-3">
-                            <a href="/auth/login" class="btn btn-primary btn-sm">
-                                <@spring.message 'auth.login.title'/>
-                            </a>
-                        </div>
-                    <#elseif error??>
+                    </#if>
+                    <#if error??>
                         <div class="alert alert-danger">
                             <@spring.message 'auth.reset.error'/>
                         </div>
-                        <div class="text-center mt-3">
-                            <a href="/auth/forgot-password" class="btn btn-outline-secondary btn-sm">
-                                <@spring.message 'auth.forgot.title'/>
-                            </a>
-                        </div>
-                    <#else>
+                    </#if>
+
+                    <#if token??>
                         <form method="post" action="/auth/reset-password">
                             <#if _csrf??>
                                 <input type="hidden"
                                        name="${(_csrf.parameterName)!'csrf-param-name'}"
                                        value="${(_csrf.token)!'csrf-token'}"/>
                             </#if>
-                            <input type="hidden" name="token" value="${token!}"/>
+                            <input type="hidden" name="token" value="${token}"/>
                             <div class="mb-3">
                                 <label class="form-label">
                                     <@spring.message 'auth.reset.password'/>
@@ -66,8 +55,8 @@
                         </form>
                     </#if>
 
-                    <div class="text-center mt-3">
-                        <a href="/auth/login" class="text-muted small">
+                    <div class="text-center small mt-3">
+                        <a href="/auth/login">
                             <@spring.message 'auth.forgot.back'/>
                         </a>
                     </div>

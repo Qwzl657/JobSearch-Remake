@@ -2,6 +2,7 @@ package kg.attractor.jobsearch_remake.service.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kg.attractor.jobsearch_remake.common.UrlBuilder;
 import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
@@ -20,10 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void autoLogin(String email) {
+    public void autoLogin(String email, HttpServletRequest request, HttpServletResponse response) {
         log.info("Автоматический вход для: {}", email);
         UserDetails userDetails = loadUserByUsername(email);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -172,6 +172,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 userDetails.getAuthorities()
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        HttpSessionSecurityContextRepository repo =
+                new HttpSessionSecurityContextRepository();
+        repo.saveContext(SecurityContextHolder.getContext(), request, response);
     }
 
     private UserDto toDto(User u) {

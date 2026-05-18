@@ -9,6 +9,7 @@ import kg.attractor.jobsearch_remake.service.ResponseService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import kg.attractor.jobsearch_remake.service.VacancyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/vacancies")
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class VacancyMvcController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacanciesPage.getTotalPages());
         model.addAttribute("sort", sort);
+        model.addAttribute("size", size);
         return "vacancies/list";
     }
 
@@ -65,6 +68,7 @@ public class VacancyMvcController {
         UserDto user = userService.getByEmail(auth.getName());
         vacancyDto.setAuthorId(user.getId());
         vacancyService.create(vacancyDto);
+        log.info("Вакансия создана пользователем: {}", auth.getName());
         return "redirect:/profile";
     }
 
@@ -97,6 +101,7 @@ public class VacancyMvcController {
             return "vacancies/form";
         }
         vacancyService.update(id, vacancyDto);
+        log.info("Вакансия {} обновлена пользователем: {}", id, auth.getName());
         return "redirect:/profile";
     }
 
@@ -108,6 +113,7 @@ public class VacancyMvcController {
             return "redirect:/vacancies";
         }
         vacancyService.delete(id);
+        log.info("Вакансия {} удалена пользователем: {}", id, auth.getName());
         return "redirect:/profile";
     }
 
@@ -124,8 +130,17 @@ public class VacancyMvcController {
 
     @PostMapping("/{id}/respond")
     public String respond(@PathVariable Long id,
-                          @RequestParam Long resumeId) {
-        responseService.respond(resumeId, id);
+                          @RequestParam Long resumeId,
+                          Model model,
+                          Authentication auth) {
+        boolean success = responseService.respond(resumeId, id);
+        if (!success) {
+            UserDto user = userService.getByEmail(auth.getName());
+            model.addAttribute("alreadyResponded", true);
+            model.addAttribute("vacancy", vacancyService.getById(id));
+            model.addAttribute("resumes", resumeService.getByApplicant(user.getId()));
+            return "vacancies/respond";
+        }
         return "redirect:/vacancies";
     }
 

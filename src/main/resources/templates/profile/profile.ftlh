@@ -111,13 +111,28 @@
                                        class="btn btn-outline-secondary btn-sm">
                                         <@spring.message 'vacancy.edit'/>
                                     </a>
+                                    <form method="post" action="/resumes/${resume.id}/delete">
+                                        <#if _csrf??>
+                                            <input type="hidden"
+                                                   name="${(_csrf.parameterName)!'_csrf'}"
+                                                   value="${(_csrf.token)!''}"/>
+                                        </#if>
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('<@spring.message "confirm.resume.delete"/>')">
+                                            <@spring.message 'resume.delete'/>
+                                        </button>
+                                    </form>
+
                                     <form method="post" action="/vacancies/${vacancy.id}/delete">
                                         <#if _csrf??>
                                             <input type="hidden"
                                                    name="${(_csrf.parameterName)!'_csrf'}"
                                                    value="${(_csrf.token)!''}"/>
                                         </#if>
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <button type="submit"
+                                                class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('<@spring.message "confirm.vacancy.delete"/>')">
                                             <@spring.message 'vacancy.delete'/>
                                         </button>
                                     </form>

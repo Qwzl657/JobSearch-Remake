@@ -10,7 +10,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import java.time.Duration;
 import java.util.Locale;
 
 @Configuration
@@ -20,6 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
     public LocaleResolver localeResolver() {
         CookieLocaleResolver resolver = new CookieLocaleResolver("lang");
         resolver.setDefaultLocale(new Locale("ru"));
+        resolver.setCookieMaxAge(Duration.ofDays(365));
         return resolver;
     }
 
@@ -39,6 +41,13 @@ public class WebConfig implements WebMvcConfigurer {
         return messageSource;
     }
 
+    @Bean
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
@@ -48,5 +57,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/avatars/**")
                 .addResourceLocations("file:uploads/avatars/");
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("classpath:/static/js/");
     }
 }

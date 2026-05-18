@@ -2,7 +2,7 @@ package kg.attractor.jobsearch_remake.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +25,7 @@ public class VacancyDto {
 
     private Integer categoryId;
 
-    @Positive(message = "{validation.vacancy.salary.positive}")
+    @PositiveOrZero(message = "{validation.vacancy.salary.positive}")
     private Double salary;
 
     @Min(value = 0, message = "{validation.vacancy.expFrom.min}")
