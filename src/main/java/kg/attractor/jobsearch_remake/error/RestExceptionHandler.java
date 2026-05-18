@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 
 @Slf4j
-@RestControllerAdvice(basePackages = "kg.attractor.jobsearch_remake.controller.rest")
+@RestControllerAdvice(basePackages = "kg.attractor.jobsearch_remake.controller")
 public class RestExceptionHandler {
 
     @ExceptionHandler({
@@ -35,7 +35,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> serverErrorHandler(HttpServletRequest request,
-                                                                   Exception e) {
+                                                                  Exception e) {
         log.error("REST Server error on: {}, reason: {}", request.getRequestURI(), e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                 "status", HttpStatus.INTERNAL_SERVER_ERROR.value(),
