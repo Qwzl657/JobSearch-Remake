@@ -11,6 +11,7 @@ import kg.attractor.jobsearch_remake.service.VacancyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -124,8 +125,18 @@ public class VacancyMvcController {
 
     @PostMapping("/{id}/respond")
     public String respond(@PathVariable Long id,
-                          @RequestParam Long resumeId) {
-        responseService.respond(resumeId, id);
+                          @RequestParam Long resumeId,
+                          Model model) {
+        boolean success = responseService.respond(resumeId, id);
+        if (!success) {
+            model.addAttribute("alreadyResponded", true);
+            UserDto user = userService.getByEmail(
+                    SecurityContextHolder.getContext().getAuthentication().getName()
+            );
+            model.addAttribute("vacancy", vacancyService.getById(id));
+            model.addAttribute("resumes", resumeService.getByApplicant(user.getId()));
+            return "vacancies/respond";
+        }
         return "redirect:/vacancies";
     }
 
