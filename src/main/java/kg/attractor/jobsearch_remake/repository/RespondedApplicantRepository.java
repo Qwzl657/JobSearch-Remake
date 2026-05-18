@@ -13,4 +13,5 @@ public interface RespondedApplicantRepository extends JpaRepository<RespondedApp
     List<RespondedApplicant> findByResume(Resume resume);
     List<RespondedApplicant> findByVacancy(Vacancy vacancy);
     boolean existsByResumeAndVacancy(Resume resume, Vacancy vacancy);
+    void deleteByResume(Resume resume);
 }

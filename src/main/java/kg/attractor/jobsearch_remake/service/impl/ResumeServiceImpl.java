@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import kg.attractor.jobsearch_remake.repository.RespondedApplicantRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,6 +26,7 @@ public class ResumeServiceImpl implements ResumeService {
     private final WorkExperienceInfoService workExperienceInfoService;
     private final EducationInfoService educationInfoService;
     private final ContactInfoService contactInfoService;
+    private final RespondedApplicantRepository respondedApplicantRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -119,6 +120,10 @@ public class ResumeServiceImpl implements ResumeService {
     @Transactional
     public void delete(Long id) {
         log.warn("Удаление резюме id: {}", id);
+        Resume resume = resumeRepository.findById(id)
+                .orElseThrow(ResumeNotFoundException::new);
+        respondedApplicantRepository.deleteByResume(resume);
+
         workExperienceInfoService.deleteByResumeId(id);
         educationInfoService.deleteByResumeId(id);
         contactInfoService.deleteByResumeId(id);
