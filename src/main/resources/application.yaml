@@ -1,6 +1,3 @@
-server:
-  port: 9092
-
 spring:
   application:
     name: jobsearch-remake
@@ -37,9 +34,8 @@ spring:
     init:
       mode: never
 
-    freemarker:
-      expose-session-attributes: true
-
+  freemarker:
+    expose-session-attributes: true
 
   mail:
     host: smtp.gmail.com
