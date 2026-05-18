@@ -79,16 +79,16 @@ public class VacancyController {
 
     @PostMapping("/{id}/respond")
     public ResponseEntity<Void> respondToVacancy(@PathVariable Long id,
+                                                 @RequestParam Long resumeId,
                                                  Authentication auth) {
         UserDto user = userService.getByEmail(auth.getName());
-        List<ResumeDto> resumes = resumeService.getByApplicant(user.getId().longValue());
+        ResumeDto resume = resumeService.getById(resumeId);
 
-        if (resumes.isEmpty()) {
-            log.warn("У пользователя {} нет резюме для отклика", auth.getName());
-            return ResponseEntity.badRequest().build();
+        if (!resume.getApplicantId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        boolean responded = responseService.respond(resumes.get(0).getId().longValue(), id);
+        boolean responded = responseService.respond(resumeId, id);
         if (!responded) {
             return ResponseEntity.badRequest().build();
         }
