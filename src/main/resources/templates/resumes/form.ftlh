@@ -7,6 +7,31 @@
     <meta name="_csrf_header" content="${(_csrf.headerName)!'X-CSRF-TOKEN'}"/>
     <meta name="_resume_id" content="${resumeDto.id!}"/>
 
+    <script id="existing-work-data" type="application/json">
+        [<#if resumeDto.workExperienceInfos?has_content>
+        <#list resumeDto.workExperienceInfos as w>
+            {
+                "companyName": "${w.companyName!?js_string}",
+                "position": "${w.position!?js_string}",
+                "years": ${w.years!0},
+                "responsibilities": "${w.responsibilities!?js_string}"
+            }<#if w?has_next>,</#if>
+        </#list>
+        </#if>]
+    </script>
+
+    <script id="existing-edu-data" type="application/json">
+        [<#if resumeDto.educationInfos?has_content>
+        <#list resumeDto.educationInfos as e>
+            {
+                "institution": "${e.institution!?js_string}",
+                "program": "${e.program!?js_string}",
+                "degree": "${e.degree!?js_string}"
+            }<#if e?has_next>,</#if>
+        </#list>
+        </#if>]
+    </script>
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
@@ -45,18 +70,18 @@
 
                     <hr/>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold mb-0">Опыт работы</h6>
+                        <h6 class="fw-bold mb-0"><@spring.message 'resume.work.title'/></h6>
                         <button type="button" id="add-work-btn" class="btn btn-outline-primary btn-sm">
-                            + Добавить
+                            + <@spring.message 'resume.work.add'/>
                         </button>
                     </div>
                     <div id="work-container"></div>
 
                     <hr/>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold mb-0">Образование</h6>
+                        <h6 class="fw-bold mb-0"><@spring.message 'resume.edu.title'/></h6>
                         <button type="button" id="add-edu-btn" class="btn btn-outline-primary btn-sm">
-                            + Добавить
+                            + <@spring.message 'resume.edu.add'/>
                         </button>
                     </div>
                     <div id="edu-container"></div>
