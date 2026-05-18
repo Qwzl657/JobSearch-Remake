@@ -42,19 +42,21 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item <#if (currentPage == 0)>disabled</#if>">
                     <a class="page-link"
-                       href="/resumes/all?page=${currentPage - 1}&size=${param.size!5}">
+                       href="/resumes/all?page=${currentPage - 1}&size=${size}">
                         <@spring.message 'page.prev'/>
                     </a>
                 </li>
                 <#list 0..(totalPages-1) as p>
                     <li class="page-item <#if (p == currentPage)>active</#if>">
                         <a class="page-link"
-                           href="/resumes/all?page=${p}&size=${param.size!5}">${p + 1}</a>
+                           href="/resumes/all?page=${p}&size=${size}">
+                            ${p + 1}
+                        </a>
                     </li>
                 </#list>
                 <li class="page-item <#if (currentPage >= totalPages - 1)>disabled</#if>">
                     <a class="page-link"
-                       href="/resumes/all?page=${currentPage + 1}&size=${param.size!5}">
+                       href="/resumes/all?page=${currentPage + 1}&size=${size}">
                         <@spring.message 'page.next'/>
                     </a>
                 </li>

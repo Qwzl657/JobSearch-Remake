@@ -5,6 +5,7 @@ import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.service.ResumeService;
 import kg.attractor.jobsearch_remake.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @Controller
 @RequestMapping("/resumes")
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class ResumeMvcController {
         model.addAttribute("resumes", resumePage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", resumePage.getTotalPages());
+        model.addAttribute("size", size);
         return "resumes/list";
     }
 
@@ -66,6 +69,7 @@ public class ResumeMvcController {
             return "redirect:/profile";
         }
         resumeService.delete(id);
+        log.info("Резюме {} удалено пользователем: {}", id, auth.getName());
         return "redirect:/profile";
     }
 }

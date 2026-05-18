@@ -64,9 +64,6 @@
                                 SPRING_SECURITY_CONTEXT.authentication.principal>
                                 <#list currentUser.authorities as auth>
 
-                                <#-- Источник: Конспект Lesson #57 — условный рендеринг
-                                     Показываем Edit только автору вакансии
-                                     Код препода layout.ftlh — паттерн проверки principal -->
                                     <#if auth.authority == "ROLE_EMPLOYER"
                                     && vacancy.authorId == currentUser.id>
                                         <a href="/vacancies/${vacancy.id}/edit"
@@ -123,21 +120,21 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item <#if (currentPage == 0)>disabled</#if>">
                     <a class="page-link"
-                       href="/vacancies?page=${currentPage - 1}&size=${param.size!5}&sort=${sort}">
+                       href="/vacancies?page=${currentPage - 1}&size=${size}&sort=${sort}">
                         <@spring.message 'page.prev'/>
                     </a>
                 </li>
                 <#list 0..(totalPages-1) as p>
                     <li class="page-item <#if (p == currentPage)>active</#if>">
                         <a class="page-link"
-                           href="/vacancies?page=${p}&size=${param.size!5}&sort=${sort}">
+                           href="/vacancies?page=${p}&size=${size}&sort=${sort}">
                             ${p + 1}
                         </a>
                     </li>
                 </#list>
                 <li class="page-item <#if (currentPage >= totalPages - 1)>disabled</#if>">
                     <a class="page-link"
-                       href="/vacancies?page=${currentPage + 1}&size=${param.size!5}&sort=${sort}">
+                       href="/vacancies?page=${currentPage + 1}&size=${size}&sort=${sort}">
                         <@spring.message 'page.next'/>
                     </a>
                 </li>

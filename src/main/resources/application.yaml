@@ -55,3 +55,6 @@ logging:
     root: INFO
     kg.attractor: DEBUG
     org.springframework.security: DEBUG
+
+server:
+  port: 9092
