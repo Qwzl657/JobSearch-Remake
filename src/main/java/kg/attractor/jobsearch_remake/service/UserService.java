@@ -5,7 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import kg.attractor.jobsearch_remake.dto.UserCreateDto;
 import kg.attractor.jobsearch_remake.dto.UserDto;
 import kg.attractor.jobsearch_remake.exception.UserNotFoundException;
-
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface UserService {
     void create(UserCreateDto dto);
     void update(Long id, UserDto dto);
     void delete(Long id);
-    void autoLogin(String email);
+    void autoLogin(String email, HttpServletRequest request, HttpServletResponse response);
 
     void makeResetPwdLink(HttpServletRequest request)
             throws UserNotFoundException, MessagingException, UnsupportedEncodingException;

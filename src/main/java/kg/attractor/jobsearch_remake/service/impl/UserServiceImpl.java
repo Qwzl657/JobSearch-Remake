@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -163,7 +166,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void autoLogin(String email) {
+    public void autoLogin(String email, HttpServletRequest request, HttpServletResponse response) {
         log.info("Автоматический вход для: {}", email);
         UserDetails userDetails = loadUserByUsername(email);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -172,6 +175,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 userDetails.getAuthorities()
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        HttpSessionSecurityContextRepository repo =
+                new HttpSessionSecurityContextRepository();
+        repo.saveContext(SecurityContextHolder.getContext(), request, response);
     }
 
     private UserDto toDto(User u) {
